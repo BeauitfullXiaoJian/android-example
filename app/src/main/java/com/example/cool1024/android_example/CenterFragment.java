@@ -47,7 +47,7 @@ public class CenterFragment extends Fragment {
 
     private void initView(View view){
         Glide.with(CenterFragment.this)
-             .load("https://hello1024.oss-cn-beijing.aliyuncs.com/upload/banner/201808310313105b88b246cb80c.jpg")
+             .load("https://hello1024.oss-cn-beijing.aliyuncs.com/upload/banner/201808310313195b88b24fe6db3.png")
              .into(mBackgroundImageView);
     }
 
@@ -56,6 +56,12 @@ public class CenterFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getActivity().startActivity(new Intent(getActivity(), SettingsActivity.class));
+            }
+        });
+        view.findViewById(R.id.image_user_info).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().startActivity(new Intent(getActivity(), UserInfoActivity.class));
             }
         });
     }

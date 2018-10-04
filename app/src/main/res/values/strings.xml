@@ -6,13 +6,15 @@
     <string name="avatar">头像</string>
     <string name="image">图片</string>
     <string name="setting">设置</string>
+    <string name="use_info">个人信息</string>
     <string name="download_cache">下载缓存</string>
     <string name="video_manager">视频文件管理</string>
     <string name="share_app">分享应用</string>
     <string name="message_request">意见反馈</string>
     <string name="setting_notify">接收新消息通知</string>
-    <string name="setting_request">运行视频通话和语音请求</string>
+    <string name="setting_request">允许视频通话和语音请求</string>
     <string name="setting_sound">声音</string>
+    <string name="setting_shake">震动</string>
     <string name="link">link</string>
     <string name="comment">comment</string>
     <string name="date_desc">2d ago</string>
