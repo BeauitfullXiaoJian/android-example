@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.cool1024.android_example">
 
+    <!-- 权限列表 -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -19,8 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".Main2Activity" />
-        <activity android:name=".UserInfoActivity"></activity>
+        <activity android:name=".UserInfoActivity" />
     </application>
 
 </manifest>

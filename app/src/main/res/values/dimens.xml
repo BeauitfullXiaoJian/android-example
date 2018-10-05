@@ -10,4 +10,5 @@
     <dimen name="default_body_size">16sp</dimen>
     <dimen name="default_title_size">18sp</dimen>
     <dimen name="content_line_height">6</dimen>
+    <dimen name="avatar_size">50dp</dimen>
 </resources>

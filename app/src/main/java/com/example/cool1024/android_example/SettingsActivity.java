@@ -5,8 +5,12 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Switch;
+import android.widget.Toast;
 
 public class SettingsActivity extends AppCompatActivity {
+
+    public static final  String TAG = "SettingsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,5 +32,24 @@ public class SettingsActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        findViewById(R.id.setting_notify_item).setTag(R.id.setting_notify_switch);
+    }
+
+    public void switchClick(View target){
+        Integer targetId = target.getId();
+        Switch targetSwitch = null;
+        switch (targetId){
+            case R.id.setting_notify_switch:
+                targetSwitch = (Switch)target;
+                String prefixStr = ((Switch) target).isChecked()?"开启":"关闭";
+                String toastText = prefixStr + target.getTag().toString();
+                Toast.makeText(SettingsActivity.this,toastText,Toast.LENGTH_SHORT).show();
+                break;
+            default:{
+                targetSwitch = findViewById(Integer.valueOf(target.getTag().toString()));
+                targetSwitch.toggle();
+                targetSwitch.callOnClick();
+            }
+        }
     }
 }
