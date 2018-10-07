@@ -4,6 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.cool1024.android_example"
+        vectorDrawables.useSupportLibrary = true
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1

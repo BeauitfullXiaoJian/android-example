@@ -182,7 +182,7 @@
                                 android:layout_centerVertical="true"
                                 android:textSize="@dimen/default_title_size"
                                 android:textColor="@color/colorBlack"
-                                android:text="@string/qrcode" />
+                                android:text="@string/qr_code" />
                         </RelativeLayout>
 
                         <RelativeLayout
@@ -196,7 +196,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_alignParentTop="true"
                                 app:srcCompat="@drawable/ic_qr_code"
-                                android:contentDescription="@string/qrcode" />
+                                android:contentDescription="@string/qr_code" />
                         </RelativeLayout>
 
                     </LinearLayout>

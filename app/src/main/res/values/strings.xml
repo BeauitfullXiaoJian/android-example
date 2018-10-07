@@ -25,6 +25,6 @@
     <string name="football">Football</string>
     <string name="easel">Easel</string>
     <string name="nick">昵称</string>
-    <string name="qrcode">二维码名片</string>
+    <string name="qr_code">二维码名片</string>
     <string name="address">我的地址</string>
 </resources>

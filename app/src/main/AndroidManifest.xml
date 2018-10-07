@@ -3,8 +3,18 @@
     package="com.example.cool1024.android_example">
 
     <!-- 权限列表 -->
+    <!-- 网络权限，加载网络图片，其他相关数据使用 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!-- 安装应用权限 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!-- 本地存储读取权限，选择头像（相册）使用 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- 本地存储写入权限，文件下载使用 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--VISIBILITY_HIDDEN表示不显示任何通知栏提示的权限-->
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
+    <!--DownloadManager-->
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
 
     <application
         android:allowBackup="true"
@@ -13,6 +23,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- 7.0版本开始需要共享 -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,6 +44,15 @@
         </activity>
         <activity android:name=".SettingsActivity" />
         <activity android:name=".UserInfoActivity" />
+
+        <service
+            android:name=".services.MusicService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".services.DownloadService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

@@ -12,6 +12,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.cool1024.android_example.fragments.CenterFragment;
+import com.example.cool1024.android_example.fragments.DashboardFragment;
+import com.example.cool1024.android_example.fragments.HomeFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
