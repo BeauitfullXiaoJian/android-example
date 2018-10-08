@@ -1,6 +1,7 @@
 package com.example.cool1024.android_example.services;
 
 import android.app.DownloadManager;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,7 +16,11 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.RecoverySystem;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
+
+import com.example.cool1024.android_example.R;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -28,6 +33,8 @@ public class DownloadService extends Service {
     public static final String SAVE_DIR_TYPE = "";
     public static final String SAVE_FILE_PATH = "new.apk";
     public static final Integer DOWNLOAD_HANDLE = 0;
+    private static final String CHANNEL_ID = "DownloadService";
+    private static final Integer mNotificationId = 1;
 
     private String mDownloadUrl;
     private Long mDownloadId;
@@ -39,6 +46,8 @@ public class DownloadService extends Service {
     private ScheduledExecutorService mScheduledExecutorService;
     private Runnable mUpdateProgressRunnable;
     private ProgressListener mProgressListener;
+    private NotificationCompat.Builder mBuilder;
+    private NotificationManagerCompat mNotificationManagerCompat;
 
     @Override
     public void onCreate() {
@@ -50,7 +59,15 @@ public class DownloadService extends Service {
                 super.handleMessage(msg);
                 if (msg.what == DOWNLOAD_HANDLE) {
                     // 接受到下载进度消息
-                    mProgressListener.onProgress((DownloadData) msg.obj);
+                    DownloadData downloadData = (DownloadData) msg.obj;
+                    mProgressListener.onProgress(downloadData);
+                    if (downloadData.totalSize > 0) {
+                        mBuilder.setContentText("下载进度" + String.valueOf(
+                                (downloadData.completeSize*100)/downloadData.totalSize)+"%")
+                                .setProgress(downloadData.totalSize, downloadData.completeSize,
+                                        false);
+                        mNotificationManagerCompat.notify(mNotificationId, mBuilder.build());
+                    }
                 }
             }
         };
@@ -60,6 +77,7 @@ public class DownloadService extends Service {
     public IBinder onBind(Intent intent) {
         mDownloadUrl = intent.getStringExtra(DOWNLOAD_URL_KEY);
         Log.d(TAG, "下载服务绑定成功，开始下载文件");
+        createNotify();
         download();
         return mBinder;
     }
@@ -72,6 +90,14 @@ public class DownloadService extends Service {
         Log.d(TAG, "下载服务销毁");
     }
 
+    private void createNotify() {
+        mNotificationManagerCompat = NotificationManagerCompat.from(this);
+        mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
+        mBuilder.setContentTitle("正在下载文件")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setPriority(NotificationCompat.PRIORITY_LOW);
+    }
+
     private void download() {
         // 获取下载管理器
         mDownloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
@@ -82,7 +108,7 @@ public class DownloadService extends Service {
         // 设置用于下载时的网络状态
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
         // 设置通知栏可见
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
         // 设置漫游下禁止下载
         request.setAllowedOverRoaming(false);
         // 允许下载的文件被系统download应用管理
@@ -212,6 +238,10 @@ public class DownloadService extends Service {
                 mProgressListener.onProgress(new DownloadData(true));
                 Uri downIdUri = mDownloadManager.getUriForDownloadedFile(downloadId);
                 Log.d(TAG, "下载完成,文件路径为:" + downIdUri.getPath());
+                mBuilder.setContentTitle("下载完成")
+                        .setContentText("点击安装应用")
+                        .setProgress(1,1,false);
+                mNotificationManagerCompat.notify(mNotificationId, mBuilder.build());
             }
         }
     }

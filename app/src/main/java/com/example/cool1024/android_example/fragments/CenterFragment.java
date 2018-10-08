@@ -92,7 +92,7 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
             Log.d(TAG,"成功授权，可以写入本地文件");
             Intent intent = new Intent(getActivity(), DownloadService.class);
             intent.putExtra(DownloadService.DOWNLOAD_URL_KEY,
-                    "http://zzxx.anasit.com/app.apk");
+                    "https://cool1024.com/upload/47e0b428f30fde9a0395b18e6db62ddd.mp4");
             getActivity().bindService(intent, CenterFragment.this, Context.BIND_AUTO_CREATE);
         }else{
             Log.d(TAG,"拒绝授权，无法写入本地文件");
