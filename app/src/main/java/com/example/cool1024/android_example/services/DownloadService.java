@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.database.ContentObservable;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Handler;
@@ -48,6 +49,7 @@ public class DownloadService extends Service {
     private ProgressListener mProgressListener;
     private NotificationCompat.Builder mBuilder;
     private NotificationManagerCompat mNotificationManagerCompat;
+    private Boolean mDownloadIsOk = false;
 
     @Override
     public void onCreate() {
@@ -61,7 +63,7 @@ public class DownloadService extends Service {
                     // 接受到下载进度消息
                     DownloadData downloadData = (DownloadData) msg.obj;
                     mProgressListener.onProgress(downloadData);
-                    if (downloadData.totalSize > 0) {
+                    if (downloadData.totalSize > 0 && !mDownloadIsOk) {
                         mBuilder.setContentText("下载进度" + String.valueOf(
                                 (downloadData.completeSize*100)/downloadData.totalSize)+"%")
                                 .setProgress(downloadData.totalSize, downloadData.completeSize,
@@ -95,6 +97,7 @@ public class DownloadService extends Service {
         mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
         mBuilder.setContentTitle("正在下载文件")
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher))
                 .setPriority(NotificationCompat.PRIORITY_LOW);
     }
 
@@ -234,13 +237,14 @@ public class DownloadService extends Service {
                 return;
             }
             if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
+                mDownloadIsOk = true;
                 closeExecutorService();
                 mProgressListener.onProgress(new DownloadData(true));
                 Uri downIdUri = mDownloadManager.getUriForDownloadedFile(downloadId);
                 Log.d(TAG, "下载完成,文件路径为:" + downIdUri.getPath());
                 mBuilder.setContentTitle("下载完成")
                         .setContentText("点击安装应用")
-                        .setProgress(1,1,false);
+                        .setProgress(0,0,false);
                 mNotificationManagerCompat.notify(mNotificationId, mBuilder.build());
             }
         }
