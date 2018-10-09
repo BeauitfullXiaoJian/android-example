@@ -2,6 +2,7 @@ package com.example.cool1024.android_example.services;
 
 import android.app.DownloadManager;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,16 +14,22 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.RecoverySystem;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 
 import com.example.cool1024.android_example.R;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -31,12 +38,11 @@ public class DownloadService extends Service {
 
     public static final String TAG = "DownloadService";
     public static final String DOWNLOAD_URL_KEY = "DOWNLOAD_URL_KEY";
-    public static final String SAVE_DIR_TYPE = "";
-    public static final String SAVE_FILE_PATH = "new.apk";
     public static final Integer DOWNLOAD_HANDLE = 0;
     private static final String CHANNEL_ID = "DownloadService";
     private static final Integer mNotificationId = 1;
 
+    private String mDownloadFilePath;
     private String mDownloadUrl;
     private Long mDownloadId;
     private DownloadBinder mBinder;
@@ -92,6 +98,14 @@ public class DownloadService extends Service {
         Log.d(TAG, "下载服务销毁");
     }
 
+    private String getDownloadFilePath(){
+        if(mDownloadFilePath == null){
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            mDownloadFilePath = simpleDateFormat.format(new Date()) + ".apk";
+        }
+        return mDownloadFilePath;
+    }
+
     private void createNotify() {
         mNotificationManagerCompat = NotificationManagerCompat.from(this);
         mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
@@ -99,6 +113,21 @@ public class DownloadService extends Service {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher))
                 .setPriority(NotificationCompat.PRIORITY_LOW);
+    }
+
+    private Intent createInstallIntent(Context context,Uri apkUri){
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            String filePath = "file://"
+                    + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()
+                    + "/"
+                    + getDownloadFilePath();
+            apkUri = Uri.parse(filePath);
+            Log.d(TAG,apkUri.getPath());
+        }
+        Intent installIntent = new Intent(Intent.ACTION_VIEW);
+        installIntent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+        return installIntent;
     }
 
     private void download() {
@@ -117,7 +146,9 @@ public class DownloadService extends Service {
         // 允许下载的文件被系统download应用管理
         request.setVisibleInDownloadsUi(true);
         // 设置文件保存地址
-        request.setDestinationInExternalFilesDir(getApplicationContext(), SAVE_DIR_TYPE, SAVE_FILE_PATH);
+        request.setDestinationInExternalPublicDir( Environment.DIRECTORY_DOWNLOADS, getDownloadFilePath());
+        // setting mime type
+        request.setMimeType("application/vnd.android.package-archive");
         // 把下载请求添加到下载队列中
         mDownloadId = mDownloadManager.enqueue(request);
         // 注册广播接收器
@@ -237,15 +268,16 @@ public class DownloadService extends Service {
                 return;
             }
             if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
-                mDownloadIsOk = true;
                 closeExecutorService();
                 mProgressListener.onProgress(new DownloadData(true));
                 Uri downIdUri = mDownloadManager.getUriForDownloadedFile(downloadId);
                 Log.d(TAG, "下载完成,文件路径为:" + downIdUri.getPath());
                 mBuilder.setContentTitle("下载完成")
                         .setContentText("点击安装应用")
-                        .setProgress(0,0,false);
+                        .setProgress(0,0,false)
+                        .setContentIntent(PendingIntent.getActivity(DownloadService.this.getApplicationContext(),0,createInstallIntent(context,downIdUri),0));
                 mNotificationManagerCompat.notify(mNotificationId, mBuilder.build());
+                mDownloadIsOk = true;
             }
         }
     }

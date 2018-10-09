@@ -3,12 +3,15 @@ package com.example.cool1024.android_example.fragments;
 
 import android.Manifest;
 import android.app.DownloadManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -59,7 +62,7 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
 
     private ImageView mBackgroundImageView;
 
-    private NotificationManagerCompat mNotificationManagerCompat;
+    private NotificationManager mNotificationManager;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -92,7 +95,7 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
             Log.d(TAG,"成功授权，可以写入本地文件");
             Intent intent = new Intent(getActivity(), DownloadService.class);
             intent.putExtra(DownloadService.DOWNLOAD_URL_KEY,
-                    "https://cool1024.com/upload/47e0b428f30fde9a0395b18e6db62ddd.mp4");
+                    "http://zzxx.anasit.com/app.apk");
             getActivity().bindService(intent, CenterFragment.this, Context.BIND_AUTO_CREATE);
         }else{
             Log.d(TAG,"拒绝授权，无法写入本地文件");
@@ -117,7 +120,7 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
     }
 
     private void findViewComponent(View view) {
-        mNotificationManagerCompat = NotificationManagerCompat.from(getActivity());
+        mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         mBackgroundImageView = (ImageView) view.findViewById(R.id.image_bg);
     }
 
@@ -177,6 +180,16 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
         Intent intent = new Intent(getActivity(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription("Download task");
+            channel.enableLights(true);
+            channel.setLightColor(Color.RED);
+            channel.enableVibration(true);
+            channel.setShowBadge(false);
+            mNotificationManager.createNotificationChannel(channel);
+        }
+
         // 创建一个NotificationCompat.Builder
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
@@ -188,7 +201,7 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
                         0, intent, 0));
 
         // 显示通知
-        mNotificationManagerCompat.notify(++mNotifyId, mBuilder.build());
+        mNotificationManager.notify(++mNotifyId, mBuilder.build());
     }
 
     /**
@@ -229,7 +242,7 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
             apkUri = FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName(), apkFile);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
-        intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
