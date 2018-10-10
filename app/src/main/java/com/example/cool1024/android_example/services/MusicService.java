@@ -1,13 +1,11 @@
 package com.example.cool1024.android_example.services;
 
-import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.widget.Toast;
-
-import com.example.cool1024.android_example.R;
 
 public class MusicService extends Service {
 
@@ -26,15 +24,27 @@ public class MusicService extends Service {
         super.onCreate();
         if (mMediaPlayer == null) {
             Toast.makeText(this,"成功创建音乐播放组件",Toast.LENGTH_SHORT).show();
-            mMediaPlayer = MediaPlayer.create(this, R.raw.music);
-            mMediaPlayer.setLooping(false);
+            mMediaPlayer = new MediaPlayer();
+            try{
+                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                mMediaPlayer.setDataSource("https://cool1024.com/upload/c2d8f23c236f257039305cc263ec6439.mp3");
+                mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        mMediaPlayer.start();
+                    }
+                });
+                mMediaPlayer.prepareAsync();
+            }catch (Exception  e){
+                Toast.makeText(this,"音频播放失败，请检查您的网络",Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(this,"成功启动服务，开始播放音乐",Toast.LENGTH_SHORT).show();
-        mMediaPlayer.start();
         return super.onStartCommand(intent, flags, startId);
     }
 

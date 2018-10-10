@@ -137,12 +137,6 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
                 getActivity().startActivity(new Intent(getActivity(), SettingsActivity.class));
             }
         });
-        view.findViewById(R.id.image_user_info).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().startActivity(new Intent(getActivity(), UserInfoActivity.class));
-            }
-        });
         view.findViewById(R.id.notify_item).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,7 +1,11 @@
 package com.example.cool1024.android_example;
 
+import android.content.Intent;
+import android.content.res.Resources;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,7 +14,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.example.cool1024.android_example.fragments.CenterFragment;
 import com.example.cool1024.android_example.fragments.DashboardFragment;
@@ -40,16 +47,42 @@ public class MainActivity extends AppCompatActivity {
 
     private CenterFragment mCenterFragment;
 
+    private Toolbar mToolBar;
+
+    private AppBarLayout mAppBarLayout;
+
+    private Menu mMenu;
+
+    private FrameLayout mFrameLayout;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSavedInstanceState = savedInstanceState;
         setContentView(R.layout.activity_main);
         findViewComponent();
-        if(savedInstanceState !=null){
+        if(savedInstanceState != null){
             loadSaveFragment(savedInstanceState);
         }
         initViewEvent();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Boolean result = super.onCreateOptionsMenu(menu);
+        mMenu = menu;
+        if(mActiveFragmentTag.equals(CenterFragment.TAG)){
+            setCenterMode();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.center_menu_item_settings){
+            startActivity(new Intent(MainActivity.this, UserInfoActivity.class));
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -62,10 +95,12 @@ public class MainActivity extends AppCompatActivity {
      * Find all ui components from view
      */
     private void findViewComponent(){
+        mFrameLayout = (FrameLayout) findViewById(R.id.frame_layout);
         mFragmentManager = (FragmentManager) getSupportFragmentManager();
         mNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
-        Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolBar);
+        mAppBarLayout = (AppBarLayout) findViewById(R.id.main_bar_layout);
+        mToolBar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(mToolBar);
     }
 
     /**
@@ -77,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment oldFragment = mActiveFragment;
             mActiveFragmentTag = HomeFragment.TAG;
-            getSupportActionBar().show();
+            setDefaultMode();
             switch (item.getItemId()){
                 case R.id.navigation_home:
                     if(mHomeFragment == null){
@@ -101,10 +136,11 @@ public class MainActivity extends AppCompatActivity {
                     if(mCenterFragment == null){
                         mCenterFragment = new CenterFragment();
                     }
-                    Log.d(TAG,"CENTER_FRAGMENT_SELECTED");
                     mActiveFragmentTag = CenterFragment.TAG;
                     mActiveFragment = mCenterFragment;
-                    getSupportActionBar().hide();
+                    getSupportActionBar().setTitle(R.string.title_center);
+                    setCenterMode();
+                    Log.d(TAG,"CENTER_FRAGMENT_SELECTED");
                     break;
             }
             mFragmentTransaction = mFragmentManager.beginTransaction();
@@ -132,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Recover fragment from save handle
-     * @param  savedInstanceState
+     * @param  savedInstanceState 保存的数据
      */
     private void loadSaveFragment(Bundle savedInstanceState){
         mActiveFragmentTag = savedInstanceState.getString(SAVE_DATA_TAG);
@@ -145,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         }else if(mActiveFragmentTag.equals(DashboardFragment.TAG)){
             getSupportActionBar().setTitle(R.string.title_dashboard);
         }else if(mActiveFragmentTag.equals(CenterFragment.TAG)){
-            getSupportActionBar().hide();
+            getSupportActionBar().setTitle(R.string.title_center);
         }
         if(home != null){
             mHomeFragment = (HomeFragment)home;
@@ -156,5 +192,32 @@ public class MainActivity extends AppCompatActivity {
         if(center != null){
             mCenterFragment = (CenterFragment)center;
         }
+    }
+
+    /**
+     * 显示设为个人中心模式
+     */
+    private void setCenterMode(){
+        mToolBar.getBackground().setAlpha(20);
+        ViewGroup.MarginLayoutParams params =  (ViewGroup.MarginLayoutParams)mFrameLayout.getLayoutParams();
+        params.topMargin = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+           mAppBarLayout.setElevation(0);
+        }
+        mFrameLayout.setLayoutParams(params);
+        getMenuInflater().inflate(R.menu.center,mMenu);
+    }
+
+    /**
+     * 还原默认模式
+     */
+    private void setDefaultMode(){
+        mToolBar.getBackground().setAlpha(255);
+        ViewGroup.MarginLayoutParams params =  (ViewGroup.MarginLayoutParams)mFrameLayout.getLayoutParams();
+        params.topMargin = mToolBar.getHeight();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mAppBarLayout.setElevation(12);
+        }
+        mMenu.clear();
     }
 }
