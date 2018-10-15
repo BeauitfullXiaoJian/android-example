@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -39,25 +42,44 @@ public class DashboardFragment extends Fragment {
     private void findViewComponent(View view) {
         mProgressBar = (ProgressBar) view.findViewById(R.id.load_bar);
         mWebView = (WebView) view.findViewById(R.id.web_view);
-        mWebView.setWebViewClient(new WebViewClient() {
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setAllowUniversalAccessFromFileURLs(true);
+        webSettings.setAllowFileAccessFromFileURLs(true);
+        webSettings.setAllowContentAccess(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setJavaScriptEnabled(true);
+        mWebView.setWebViewClient(new WebViewClient());
+        mWebView.setWebChromeClient (new WebChromeClient() {
+
             @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-                mProgressBar.setVisibility(View.VISIBLE);
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                return super.onJsAlert(view, url, message, result);
             }
 
             @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                mProgressBar.setVisibility(View.INVISIBLE);
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                if(newProgress >= 100){
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                }
             }
+//            @Override
+//            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+//                super.onPageStarted(view, url, favicon);
+//                mProgressBar.setVisibility(View.VISIBLE);
+//            }
+//
+//            @Override
+//            public void onPageFinished(WebView view, String url) {
+//                super.onPageFinished(view, url);
+//                mProgressBar.setVisibility(View.INVISIBLE);
+//            }
         });
-        mWebView.getSettings().setAllowUniversalAccessFromFileURLs(true);
-        mWebView.getSettings().setAllowFileAccessFromFileURLs(true);
-        mWebView.getSettings().setJavaScriptEnabled(true);
     }
 
     private void initView() {
-        mWebView.loadUrl("file:///android_asset/index.html");
+        // android 8.0 版本无法加载chart.js, e_charts.js(百度图表)
+        // mWebView.loadUrl("file:///android_asset/index.html");
+        mWebView.loadUrl("https://blog.cool1024.com");
     }
 }

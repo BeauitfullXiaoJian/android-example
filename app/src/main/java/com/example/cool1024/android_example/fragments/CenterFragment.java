@@ -2,7 +2,6 @@ package com.example.cool1024.android_example.fragments;
 
 
 import android.Manifest;
-import android.app.DownloadManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -19,12 +18,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,13 +31,8 @@ import com.bumptech.glide.Glide;
 import com.example.cool1024.android_example.MainActivity;
 import com.example.cool1024.android_example.R;
 import com.example.cool1024.android_example.SettingsActivity;
-import com.example.cool1024.android_example.UserInfoActivity;
 import com.example.cool1024.android_example.services.DownloadService;
 import com.example.cool1024.android_example.services.MusicService;
-
-import java.io.File;
-
-import static android.content.Context.DOWNLOAD_SERVICE;
 
 
 /**
@@ -54,15 +44,17 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
 
     public static final String CHANNEL_ID = "CenterFragment";
 
-    public static final Integer INSTALL_PACKAGES_REQUEST_CODE = 1;
-
     public static final Integer REQUEST_STORAGE_WRITE = 1;
+
+    public static final Integer INSTALL_PACKAGES_REQUEST_CODE = 2;
 
     private Integer mNotifyId = 0;
 
     private ImageView mBackgroundImageView;
 
     private NotificationManager mNotificationManager;
+
+    private Uri mApkUri;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -78,29 +70,49 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            if (getActivity().getPackageManager().canRequestPackageInstalls()) {
-                Log.d(TAG, "同意了安装第三方应用的请求，开始安装应用程序");
-            } else {
-                Log.d(TAG, "拒绝了安装第三方应用的请求，无法安装应用程序");
-            }
+        if (requestCode == INSTALL_PACKAGES_REQUEST_CODE) {
+            requestApkInstall();
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d(TAG,"接收到请求回调");
-        if(requestCode == REQUEST_STORAGE_WRITE && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-            Log.d(TAG,"成功授权，可以写入本地文件");
-            Intent intent = new Intent(getActivity(), DownloadService.class);
-            intent.putExtra(DownloadService.DOWNLOAD_URL_KEY,
-                    "http://zzxx.anasit.com/app.apk");
-            getActivity().bindService(intent, CenterFragment.this, Context.BIND_AUTO_CREATE);
-        }else{
-            Log.d(TAG,"拒绝授权，无法写入本地文件");
-            Toast.makeText(getContext(),"拒绝授权,无法下载文件",Toast.LENGTH_SHORT)
-                    .show();
+        Log.d(TAG, "接收到请求回调");
+
+        // 存储卡写入权限
+        if (requestCode == REQUEST_STORAGE_WRITE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "成功授权，可以写入本地文件");
+                Intent intent = new Intent(getActivity(), DownloadService.class);
+                intent.putExtra(DownloadService.DOWNLOAD_URL_KEY,
+                        "https://www.cool1024.com/app-debug.apk");
+                getActivity().bindService(intent, CenterFragment.this, Context.BIND_AUTO_CREATE);
+            } else {
+                Log.d(TAG, "拒绝授权，无法写入本地文件");
+                Toast.makeText(getContext(), "拒绝授权,无法下载文件", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+
+        // 第三方应用安装权限
+        if (requestCode == INSTALL_PACKAGES_REQUEST_CODE) {
+            Log.d(TAG, "长度" + grantResults.length);
+            if (grantResults.length == 0 || grantResults[0] == PackageManager.PERMISSION_GRANTED ) {
+                Log.d(TAG, "成功授权，允许安装第三方应用");
+                Intent installIntent = new Intent(Intent.ACTION_VIEW);
+                installIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                installIntent.setDataAndType(mApkUri, "application/vnd.android.package-archive");
+                startActivity(installIntent);
+            } else {
+                Log.d(TAG, "拒绝授权，不允许安装第三方应用");
+                Toast.makeText(getContext(), "拒绝授权,无法安装最新版本应用", Toast.LENGTH_SHORT)
+                        .show();
+                // 跳转到允许设置页面
+                Uri packageURI = Uri.parse("package:" + getActivity().getPackageName());
+                Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, packageURI);
+                startActivityForResult(intent, INSTALL_PACKAGES_REQUEST_CODE);
+            }
         }
     }
 
@@ -119,6 +131,13 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
         Log.d(TAG, downloadData.toString());
     }
 
+    public void onInstall(Uri apkUri) {
+        Log.d(TAG, "请求安装应用V3");
+        mApkUri = apkUri;
+        Log.d(TAG, apkUri.getPath());
+        requestApkInstall();
+    }
+
     private void findViewComponent(View view) {
         mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         mBackgroundImageView = (ImageView) view.findViewById(R.id.image_bg);
@@ -126,7 +145,7 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
 
     private void initView(View view) {
         Glide.with(CenterFragment.this)
-                .load("https://hello1024.oss-cn-beijing.aliyuncs.com/upload/banner/201808310313195b88b24fe6db3.png")
+                .load("http://p1.pstatp.com/large/166200019850062839d3")
                 .into(mBackgroundImageView);
     }
 
@@ -148,9 +167,9 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
             public void onClick(View v) {
                 // 请求存储卡写入权限
                 requestPermissions(new String[]{
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         REQUEST_STORAGE_WRITE);
-                Log.d(TAG,"请求本地存储授权");
+                Log.d(TAG, "请求本地存储授权");
             }
         });
         view.findViewById(R.id.media_item).setOnClickListener(new View.OnClickListener() {
@@ -210,34 +229,19 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
 
             // 如果不允许安装，跳转到开启授权页面
             if (!packageManager.canRequestPackageInstalls()) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
-                startActivityForResult(intent, INSTALL_PACKAGES_REQUEST_CODE);
+                Log.d(TAG, "请求安装未知应用来源的权限");
+                requestPermissions(new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, INSTALL_PACKAGES_REQUEST_CODE);
+            } else {
+                // 手动通知授权成功
+                onRequestPermissionsResult(INSTALL_PACKAGES_REQUEST_CODE,
+                        new String[]{},
+                        new int[]{PackageManager.PERMISSION_GRANTED});
             }
+
         } else {
             onRequestPermissionsResult(INSTALL_PACKAGES_REQUEST_CODE,
                     new String[]{},
                     new int[]{PackageManager.PERMISSION_GRANTED});
         }
-    }
-
-    /**
-     * 安装apk文件
-     *
-     * @param apkFile apk文件对象
-     */
-    private void installApk(File apkFile) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri apkUri = null;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            apkUri = Uri.fromFile(apkFile);
-
-        } else {
-            // Android7.0之后获取uri要用contentProvider
-            apkUri = FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName(), apkFile);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        }
-            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 }

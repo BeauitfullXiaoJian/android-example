@@ -22,6 +22,10 @@ import android.widget.FrameLayout;
 import com.example.cool1024.android_example.fragments.CenterFragment;
 import com.example.cool1024.android_example.fragments.DashboardFragment;
 import com.example.cool1024.android_example.fragments.HomeFragment;
+import com.hik.mcrsdk.MCRSDK;
+import com.hik.mcrsdk.rtsp.RtspClient;
+import com.hik.mcrsdk.talk.TalkClientSDK;
+import com.hikvision.sdk.VMSNetSDK;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -204,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
            mAppBarLayout.setElevation(0);
         }
-        mFrameLayout.setLayoutParams(params);
         getMenuInflater().inflate(R.menu.center,mMenu);
     }
 
@@ -219,5 +222,21 @@ public class MainActivity extends AppCompatActivity {
             mAppBarLayout.setElevation(12);
         }
         mMenu.clear();
+    }
+
+    /**
+     * 初始化海康SDK
+     */
+    private void initSDK(){
+
+        MCRSDK.init();
+        // 初始视频流客户端
+        RtspClient.initLib();
+        MCRSDK.setPrint(1,null);
+        // 初始化语音对讲
+        TalkClientSDK.initLib();
+        // SDK初始化
+        VMSNetSDK.init(getApplication());
+        VMSNetSDK.getInstance().Login("http://192.168.1.107","admin","anasit123456789+","");
     }
 }
