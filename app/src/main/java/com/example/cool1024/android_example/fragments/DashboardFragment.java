@@ -63,23 +63,12 @@ public class DashboardFragment extends Fragment {
                     mProgressBar.setVisibility(View.INVISIBLE);
                 }
             }
-//            @Override
-//            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-//                super.onPageStarted(view, url, favicon);
-//                mProgressBar.setVisibility(View.VISIBLE);
-//            }
-//
-//            @Override
-//            public void onPageFinished(WebView view, String url) {
-//                super.onPageFinished(view, url);
-//                mProgressBar.setVisibility(View.INVISIBLE);
-//            }
         });
     }
 
     private void initView() {
         // android 8.0 版本无法加载chart.js, e_charts.js(百度图表)
-        // mWebView.loadUrl("file:///android_asset/index.html");
-        mWebView.loadUrl("https://blog.cool1024.com");
+         mWebView.loadUrl("file:///android_asset/dist/index.html");
+//        mWebView.loadUrl("https://blog.cool1024.com");
     }
 }

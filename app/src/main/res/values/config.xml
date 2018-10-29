@@ -2,4 +2,5 @@
 <resources>
     <string name="db_file_path">system.db</string>
     <string name="share_file_path">system</string>
+    <string name="avatar_key">avatar</string>
 </resources>

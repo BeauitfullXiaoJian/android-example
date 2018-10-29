@@ -1,7 +1,9 @@
 package com.example.cool1024.android_example;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,6 +27,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private View mAvatarItem;
     private ImageView mImageAvatar;
     private View mQRCodeItem;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +35,34 @@ public class UserInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_info);
         initView();
         initViewEvent();
+        initSharedPreferences();
+        loadSharedPreferences();
+    }
+
+    private void initSharedPreferences() {
+        Log.d(TAG, "初始化共享数据文件");
+        mSharedPreferences = getSharedPreferences(getResources().getString(R.string.share_file_path), Context.MODE_PRIVATE);
+    }
+
+    private void loadSharedPreferences() {
+        String avatarPath = mSharedPreferences.getString(getResources().getString(R.string.avatar_key), "NONE");
+        if (!avatarPath.equals("NONE")) {
+            try {
+                Uri uri = Uri.parse(avatarPath);
+                Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver()
+                        .openInputStream(uri));
+                mImageAvatar.setImageBitmap(bitmap);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e(TAG, "本地头像数据载入失败：" + avatarPath);
+            }
+        }
     }
 
     /**
-     * Find all ui components from view
+     * 初始化&找到视图组件
      */
-    private void initView(){
+    private void initView() {
         Toolbar toolBar = findViewById(R.id.toolbar);
         toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         setSupportActionBar(toolBar);
@@ -52,11 +77,16 @@ public class UserInfoActivity extends AppCompatActivity {
         mQRCodeItem = findViewById(R.id.code_item);
     }
 
-    private void initViewEvent(){
+
+    /**
+     * 初始化视图事件
+     */
+    private void initViewEvent() {
         mAvatarItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityCompat.requestPermissions(UserInfoActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},REQUEST_STORAGE_READ);
+                ActivityCompat.requestPermissions(UserInfoActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_STORAGE_READ);
             }
         });
         mQRCodeItem.setOnClickListener(new View.OnClickListener() {
@@ -67,31 +97,35 @@ public class UserInfoActivity extends AppCompatActivity {
         });
     }
 
-    private void viewPhotos(){
+    private void viewPhotos() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, IMAGE_PICK_CODE);
     }
 
-    private void viewQRCode(){
-//        LinearLayout parentView = findViewById(R.id.user_info_layout);
-//        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        View qrCodeView = inflater.inflate(R.layout.qrcode_popup, null, false);
-//        PopupWindow popupWindow = new PopupWindow(qrCodeView, WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT);
-//        popupWindow.showAtLocation(parentView, Gravity.CENTER,0,0);
+    private void viewQRCode() {
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == IMAGE_PICK_CODE && resultCode == RESULT_OK){
+        if (requestCode == IMAGE_PICK_CODE && resultCode == RESULT_OK) {
             try {
                 Uri uri = data.getData();
-                Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
-                mImageAvatar.setImageBitmap(bitmap);
-            }catch (Exception e){
+                if (uri != null) {
+                    Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver()
+                            .openInputStream(uri));
+                    SharedPreferences.Editor edit = mSharedPreferences.edit();
+                    edit.putString(getResources().getString(R.string.avatar_key), uri.toString());
+                    edit.apply();
+                    mImageAvatar.setImageBitmap(bitmap);
+                } else {
+                    Log.e(TAG, "相册通信异常");
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
-                Log.e(TAG,"相册数据解析失败");
+                Log.e(TAG, "相册数据解析失败");
             }
         }
     }
@@ -99,13 +133,13 @@ public class UserInfoActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == REQUEST_STORAGE_READ && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-            Log.d(TAG,"成功授权，可以读取本地文件");
+        if (requestCode == REQUEST_STORAGE_READ && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "成功授权，可以读取本地文件");
             viewPhotos();
-        }else{
-            Log.d(TAG,"拒绝授权，无法读取本地文件");
-            Toast.makeText(UserInfoActivity.this,"拒绝授权,无法修改头像",Toast.LENGTH_SHORT)
-                .show();
+        } else {
+            Log.d(TAG, "拒绝授权，无法读取本地文件");
+            Toast.makeText(UserInfoActivity.this, "拒绝授权,无法修改头像", Toast.LENGTH_SHORT)
+                    .show();
         }
     }
 }

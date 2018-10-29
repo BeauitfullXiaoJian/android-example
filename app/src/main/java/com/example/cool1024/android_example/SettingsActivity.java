@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void initSharedPreferences(){
+        Log.d(TAG,"初始化共享数据文件");
         mSharedPreferences = getSharedPreferences(getResources().getString(R.string.share_file_path),Context.MODE_PRIVATE);
     }
 
@@ -32,7 +34,7 @@ public class SettingsActivity extends AppCompatActivity {
      * Find all ui components from view
      */
     private void initView(){
-        Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolBar = findViewById(R.id.toolbar);
         toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         setSupportActionBar(toolBar);
         toolBar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -48,10 +50,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void loadSharedPreferences(){
-        Switch targetSwitch = null;
-        Boolean isChecked = true;
-        targetSwitch = findViewById(R.id.setting_notify_switch);
-        isChecked = mSharedPreferences.getBoolean(String.valueOf(R.id.setting_notify_switch), Boolean.TRUE);
+        Switch targetSwitch = findViewById(R.id.setting_notify_switch);
+        Boolean isChecked = mSharedPreferences.getBoolean(String.valueOf(R.id.setting_notify_switch), Boolean.TRUE);
         targetSwitch.setChecked(isChecked);
         targetSwitch = findViewById(R.id.setting_request_switch);
         isChecked = mSharedPreferences.getBoolean(String.valueOf(R.id.setting_request_switch), Boolean.TRUE);
@@ -76,7 +76,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void switchClick(View target){
         Integer targetId = target.getId();
-        Switch targetSwitch = null;
         switch (targetId){
             case R.id.setting_notify_switch:
                 showSettingMessage(target);
@@ -91,7 +90,7 @@ public class SettingsActivity extends AppCompatActivity {
                 showSettingMessage(target);
                 break;
             default:{
-                targetSwitch = findViewById(Integer.valueOf(target.getTag().toString()));
+                Switch targetSwitch = findViewById(Integer.valueOf(target.getTag().toString()));
                 targetSwitch.toggle();
                 targetSwitch.callOnClick();
             }

@@ -145,7 +145,7 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
 
     private void initView(View view) {
         Glide.with(CenterFragment.this)
-                .load("http://p1.pstatp.com/large/166200019850062839d3")
+                .load("https://hello1024.oss-cn-beijing.aliyuncs.com/upload/banner/201808310312505b88b23288693.jpg")
                 .into(mBackgroundImageView);
     }
 
