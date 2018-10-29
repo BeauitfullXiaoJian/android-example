@@ -20,7 +20,7 @@ import com.example.cool1024.android_example.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DashboardFragment extends Fragment {
+public class DashboardFragment extends BaseTabFragment {
 
     public static final String TAG = "DashboardFragment";
 
@@ -68,7 +68,7 @@ public class DashboardFragment extends Fragment {
 
     private void initView() {
         // android 8.0 版本无法加载chart.js, e_charts.js(百度图表)
-         mWebView.loadUrl("file:///android_asset/dist/index.html");
-//        mWebView.loadUrl("https://blog.cool1024.com");
+        // mWebView.loadUrl("file:///android_asset/dist/index.html");
+        mWebView.loadUrl("https://blog.cool1024.com");
     }
 }

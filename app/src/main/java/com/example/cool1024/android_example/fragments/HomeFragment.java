@@ -3,7 +3,6 @@ package com.example.cool1024.android_example.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,7 +25,7 @@ import com.google.gson.JsonParser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseTabFragment {
 
     public static final String TAG = "HomeFragment";
 

@@ -1,25 +1,47 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context="com.example.cool1024.android_example.fragments.DashboardFragment">
 
-    <WebView
-        android:id="@+id/web_view"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/main_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </WebView>
-
-    <ProgressBar
-        android:id="@+id/load_bar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        tools:layout_editor_absoluteX="148dp"
-        tools:layout_editor_absoluteY="19dp" />
+        android:background="@android:color/transparent">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/main_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="@string/title_dashboard"
+            android:background="@color/primary" />
+    </android.support.design.widget.AppBarLayout>
 
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
+        <WebView
+            android:id="@+id/web_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </WebView>
+
+        <ProgressBar
+            android:id="@+id/load_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            tools:layout_editor_absoluteX="148dp"
+            tools:layout_editor_absoluteY="19dp" />
+
+    </RelativeLayout>
+
+</LinearLayout>

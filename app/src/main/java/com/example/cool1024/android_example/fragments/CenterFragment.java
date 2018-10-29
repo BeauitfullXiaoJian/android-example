@@ -20,6 +20,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,7 @@ import com.example.cool1024.android_example.services.MusicService;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CenterFragment extends Fragment implements ServiceConnection, DownloadService.ProgressListener {
+public class CenterFragment extends BaseTabFragment implements ServiceConnection, DownloadService.ProgressListener {
 
     public static final String TAG = "CenterFragment";
 
@@ -49,6 +50,8 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
     public static final Integer INSTALL_PACKAGES_REQUEST_CODE = 2;
 
     private Integer mNotifyId = 0;
+
+    private Toolbar mToolbar;
 
     private ImageView mBackgroundImageView;
 
@@ -62,7 +65,7 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_center, container, false);
         findViewComponent(view);
-        initView(view);
+        initView();
         initViewEvent(view);
         return view;
     }
@@ -140,13 +143,15 @@ public class CenterFragment extends Fragment implements ServiceConnection, Downl
 
     private void findViewComponent(View view) {
         mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        mBackgroundImageView = (ImageView) view.findViewById(R.id.image_bg);
+        mBackgroundImageView = view.findViewById(R.id.image_bg);
+        mToolbar = view.findViewById(R.id.center_toolbar);
     }
 
-    private void initView(View view) {
+    private void initView() {
         Glide.with(CenterFragment.this)
                 .load("https://hello1024.oss-cn-beijing.aliyuncs.com/upload/banner/201808310312505b88b23288693.jpg")
                 .into(mBackgroundImageView);
+        mToolbar.getBackground().setAlpha(50);
     }
 
     private void initViewEvent(View view) {
