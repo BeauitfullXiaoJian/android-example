@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.cool1024.android_example.R;
@@ -31,7 +32,7 @@ public class HomeFragment extends BaseTabFragment {
 
     private static final String SAVE_DATA_TAG = "CARD_DATA";
 
-    private List<CardData> mCards = new ArrayList<CardData>();
+    private List<CardData> mCards = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,13 +41,13 @@ public class HomeFragment extends BaseTabFragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        if(savedInstanceState == null){
-            Log.d(TAG,"LOAD_DATA_NEW");
+        if (savedInstanceState == null) {
+            Log.d(TAG, "LOAD_DATA_NEW");
             loadCardData();
-        }else{
-            Log.d(TAG,"LOAD_DATA_SAVE");
+        } else {
+            Log.d(TAG, "LOAD_DATA_SAVE");
             loadCardDataFromSave(savedInstanceState);
         }
         initView(view);
@@ -56,21 +57,21 @@ public class HomeFragment extends BaseTabFragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        Log.d(TAG,"SAVE_DATA");
+        Log.d(TAG, "SAVE_DATA");
         super.onSaveInstanceState(outState);
         outState.putSerializable(SAVE_DATA_TAG, new CardDataList().cardListToJsonString(mCards));
     }
 
-    private void loadCardDataFromSave(Bundle savedInstanceState){
+    private void loadCardDataFromSave(Bundle savedInstanceState) {
         String jsonString = savedInstanceState.getString(SAVE_DATA_TAG);
         mCards = new CardDataList().getCardListFromJsonString(jsonString);
     }
 
-    private void loadCardData(){
-        if(mCards.size()>0){
+    private void loadCardData() {
+        if (mCards.size() > 0) {
             return;
         }
-        Log.d(TAG,"LOAD_CARD_DATA");
+        Log.d(TAG, "LOAD_CARD_DATA");
         mCards.add(new CardData("Marty McFly",
                 "November 5,1955",
                 "Wait a minute. Wait a minute, Doc. Uh... Are you telling me that you built a time machine... out of a DeLorean?!Whoa. This is heavy.",
@@ -88,47 +89,47 @@ public class HomeFragment extends BaseTabFragment {
                 "https://picsum.photos/600/400?30"));
     }
 
-    private void initView(View view){
-        Log.d(TAG,"INIT_VIEW");
-        RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recycler_view);
-        GridLayoutManager layoutManager = new GridLayoutManager(view.getContext(),1);
+    private void initView(View view) {
+        Log.d(TAG, "INIT_VIEW");
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        GridLayoutManager layoutManager = new GridLayoutManager(view.getContext(), 1);
         CardAdapter adapter = new CardAdapter(mCards);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
 
-    public class CardDataList{
+    public class CardDataList {
 
-        public List<CardData> getCardListFromJsonString(String jsonString){
-            List<CardData> cards = new ArrayList<CardData>();
+        List<CardData> getCardListFromJsonString(String jsonString) {
+            List<CardData> cards = new ArrayList<>();
             JsonParser parser = new JsonParser();
             JsonArray array = parser.parse(jsonString).getAsJsonArray();
-            for(JsonElement item : array){
+            for (JsonElement item : array) {
                 JsonObject object = item.getAsJsonObject();
                 String cardTitle = object.get("cardTitle").getAsString();
                 String cardBody = object.get("cardBody").getAsString();
                 String cardContent = object.get("cardContent").getAsString();
                 String cardAvatarUrl = object.get("cardAvatarUrl").getAsString();
                 String cardImageUrl = object.get("cardImageUrl").getAsString();
-                cards.add(new CardData(cardTitle,cardBody,cardContent,cardAvatarUrl,cardImageUrl));
+                cards.add(new CardData(cardTitle, cardBody, cardContent, cardAvatarUrl, cardImageUrl));
             }
             return cards;
         }
 
-        public String cardListToJsonString(List<CardData> cards){
+        String cardListToJsonString(List<CardData> cards) {
             Gson gson = new Gson();
             return gson.toJson(cards);
         }
     }
 
-    public class CardData{
+    public class CardData {
         private String cardTitle;
         private String cardBody;
         private String cardContent;
         private String cardAvatarUrl;
         private String cardImageUrl;
 
-        public CardData(String title, String body, String content, String avatarUrl, String imageUrl){
+        CardData(String title, String body, String content, String avatarUrl, String imageUrl) {
             cardTitle = title;
             cardBody = body;
             cardContent = content;
@@ -136,54 +137,59 @@ public class HomeFragment extends BaseTabFragment {
             cardImageUrl = imageUrl;
         }
 
-        public String getCardTitle() {
+        String getCardTitle() {
             return cardTitle;
         }
 
-        public String getCardBody() { return cardBody;}
+        String getCardBody() {
+            return cardBody;
+        }
 
-        public String getCardAvatarUrl() {
+        String getCardAvatarUrl() {
             return cardAvatarUrl;
         }
 
-        public String getCardImageUrl() {
+        String getCardImageUrl() {
             return cardImageUrl;
         }
 
-        public String getCardContent() { return cardContent; }
+        String getCardContent() {
+            return cardContent;
+        }
     }
 
-    public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
+    public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
         private Context mContext;
 
         private List<CardData> mDataList;
 
-        public CardAdapter(List<CardData> dataList){
+        CardAdapter(List<CardData> dataList) {
             this.mDataList = dataList;
         }
 
+        @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            if(mContext == null){
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            if (mContext == null) {
                 mContext = parent.getContext();
             }
-            View view = LayoutInflater.from(mContext).inflate(R.layout.card_item,parent,false);
+            View view = LayoutInflater.from(mContext).inflate(R.layout.card_item, parent, false);
             return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            if(position == 0){
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            if (position == 0) {
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.cardView.getLayoutParams();
                 Float density = getResources().getDisplayMetrics().density;
-                params.topMargin = (int)(getResources().getInteger(R.integer.default_margin_num)*density);
+                params.topMargin = (int) (getResources().getInteger(R.integer.default_margin_num) * density);
             }
             CardData cardData = mDataList.get(position);
             Glide.with(HomeFragment.this)
-                 .load(cardData.getCardAvatarUrl())
-                 .apply(new RequestOptions().circleCrop())
-                 .into(holder.avatarImageView);
+                    .load(cardData.getCardAvatarUrl())
+                    .apply(new RequestOptions().circleCrop())
+                    .into(holder.avatarImageView);
             Glide.with(HomeFragment.this)
                     .load(cardData.getCardImageUrl())
                     .into(holder.cardImageView);
@@ -198,7 +204,7 @@ public class HomeFragment extends BaseTabFragment {
         }
 
 
-        class ViewHolder extends RecyclerView.ViewHolder{
+        class ViewHolder extends RecyclerView.ViewHolder {
 
             CardView cardView;
             ImageView avatarImageView;
@@ -207,14 +213,14 @@ public class HomeFragment extends BaseTabFragment {
             TextView bodyTextView;
             TextView contentTextView;
 
-            public ViewHolder(View view){
+            ViewHolder(View view) {
                 super(view);
-                cardView = (CardView)view;
-                avatarImageView = (ImageView)view.findViewById(R.id.card_avatar);
-                cardImageView = (ImageView)view.findViewById(R.id.card_image);
-                titleTextView = (TextView) view.findViewById(R.id.card_title);
-                bodyTextView = (TextView)view.findViewById(R.id.card_body);
-                contentTextView = (TextView)view.findViewById(R.id.card_content);
+                cardView = (CardView) view;
+                avatarImageView = view.findViewById(R.id.card_avatar);
+                cardImageView = view.findViewById(R.id.card_image);
+                titleTextView = view.findViewById(R.id.card_title);
+                bodyTextView = view.findViewById(R.id.card_body);
+                contentTextView = view.findViewById(R.id.card_content);
             }
         }
     }

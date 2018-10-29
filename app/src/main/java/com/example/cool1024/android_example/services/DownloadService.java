@@ -20,15 +20,16 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.FileProvider;
 import android.util.Log;
 
 import com.example.cool1024.android_example.R;
 
-import java.io.File;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -116,7 +117,8 @@ public class DownloadService extends Service {
 
     private String getDownloadFilePath() {
         if (mDownloadFilePath == null) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            DateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss",
+                    Locale.getDefault());
             mDownloadFilePath = simpleDateFormat.format(new Date()) + ".apk";
         }
         return mDownloadFilePath;
@@ -227,10 +229,8 @@ public class DownloadService extends Service {
 
     private void updateDownloadProgress() {
         DownloadManager.Query query = new DownloadManager.Query().setFilterById(mDownloadId);
-        Cursor cursor = null;
         DownloadData downloadData = new DownloadData();
-        try {
-            cursor = mDownloadManager.query(query);
+        try(Cursor cursor = mDownloadManager.query(query)) {
             if (cursor != null && cursor.moveToFirst()) {
                 // 已经下载的文件大小
                 downloadData.completeSize = cursor.getInt(
@@ -241,13 +241,10 @@ public class DownloadService extends Service {
                 // 下载状态
                 downloadData.downloadStatus = cursor.getInt(
                         cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS));
-            }
-        } finally {
-            if (cursor != null) {
+                // 关闭
                 cursor.close();
             }
         }
-
         // 发送下载进度消息
         mDownloadHandle.sendMessage(mDownloadHandle.obtainMessage(DOWNLOAD_HANDLE, downloadData));
     }
@@ -255,7 +252,7 @@ public class DownloadService extends Service {
     /**
      * 设置进度监听对象，调用服务的activity可以用这个对象来获取当前的下载状态
      *
-     * @param listener
+     * @param listener 监听器
      */
     public void setProgressListener(ProgressListener listener) {
         mProgressListener = listener;
@@ -271,7 +268,7 @@ public class DownloadService extends Service {
 
     public class DownloadObserver extends ContentObserver {
 
-        public DownloadObserver() {
+        DownloadObserver() {
             super(mDownloadHandle);
             mScheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
             mUpdateProgressRunnable = new Runnable() {
@@ -297,42 +294,38 @@ public class DownloadService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "接收到广播消息");
+            String action = intent.getAction();
             long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
             if (downloadId == 0 || downloadId != mDownloadId || mDownloadManager == null) {
                 return;
             }
-            if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
+            if (action != null && action.equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
                 mDownloadIsOk = true;
-                Log.d(TAG,"接受到下载完成广播");
+                Log.d(TAG, "接受到下载完成广播");
             }
         }
     }
 
     public interface ProgressListener {
         void onProgress(DownloadData downloadData);
+
         void onInstall(Uri apkUri);
     }
 
     public class DownloadData {
-        public int completeSize;
-        public int totalSize;
-        public int downloadStatus;
-        public Boolean isOk;
+        int completeSize;
+        int totalSize;
+        int downloadStatus;
+        Boolean isOk;
 
-        public DownloadData() {
+        DownloadData() {
             completeSize = 0;
             totalSize = 0;
             downloadStatus = 0;
             isOk = false;
         }
 
-        public DownloadData(boolean isOk) {
-            completeSize = 0;
-            totalSize = 0;
-            downloadStatus = 0;
-            this.isOk = isOk;
-        }
-
+        @NonNull
         @Override
         public String toString() {
             return "(" + completeSize + "," + totalSize + "," + downloadStatus + "," + isOk + ")";

@@ -2,6 +2,7 @@ package com.example.cool1024.android_example.fragments;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -20,11 +21,13 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -39,7 +42,8 @@ import com.example.cool1024.android_example.services.MusicService;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CenterFragment extends BaseTabFragment implements ServiceConnection, DownloadService.ProgressListener {
+public class CenterFragment extends BaseTabFragment implements ServiceConnection,
+        DownloadService.ProgressListener, ViewTreeObserver.OnScrollChangedListener {
 
     public static final String TAG = "CenterFragment";
 
@@ -51,9 +55,10 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
 
     private Integer mNotifyId = 0;
 
+    private Activity mParentActivity;
     private Toolbar mToolbar;
-
     private ImageView mBackgroundImageView;
+    private NestedScrollView mScrollView;
 
     private NotificationManager mNotificationManager;
 
@@ -70,9 +75,21 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
         return view;
     }
 
+    /**
+     * 视图发生滚动执行方法
+     */
+    @Override
+    public void onScrollChanged() {
+        int offset = mScrollView.getTop() + mScrollView.getScrollY();
+        int maxOffset = 700;
+        float ratio = (float) Math.min(offset, maxOffset) / maxOffset;
+        mToolbar.getBackground().setAlpha((int) (255 * ratio));
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // 如果是来自第三方包安装授权，那么执行安装请求（安装请求中会校验是否授权了）
         if (requestCode == INSTALL_PACKAGES_REQUEST_CODE) {
             requestApkInstall();
         }
@@ -90,7 +107,7 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
                 Intent intent = new Intent(getActivity(), DownloadService.class);
                 intent.putExtra(DownloadService.DOWNLOAD_URL_KEY,
                         "https://www.cool1024.com/app-debug.apk");
-                getActivity().bindService(intent, CenterFragment.this, Context.BIND_AUTO_CREATE);
+                mParentActivity.bindService(intent, CenterFragment.this, Context.BIND_AUTO_CREATE);
             } else {
                 Log.d(TAG, "拒绝授权，无法写入本地文件");
                 Toast.makeText(getContext(), "拒绝授权,无法下载文件", Toast.LENGTH_SHORT)
@@ -101,18 +118,18 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
         // 第三方应用安装权限
         if (requestCode == INSTALL_PACKAGES_REQUEST_CODE) {
             Log.d(TAG, "长度" + grantResults.length);
-            if (grantResults.length == 0 || grantResults[0] == PackageManager.PERMISSION_GRANTED ) {
+            if (grantResults.length == 0 || grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d(TAG, "成功授权，允许安装第三方应用");
                 Intent installIntent = new Intent(Intent.ACTION_VIEW);
                 installIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 installIntent.setDataAndType(mApkUri, "application/vnd.android.package-archive");
                 startActivity(installIntent);
-            } else {
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Log.d(TAG, "拒绝授权，不允许安装第三方应用");
                 Toast.makeText(getContext(), "拒绝授权,无法安装最新版本应用", Toast.LENGTH_SHORT)
                         .show();
                 // 跳转到允许设置页面
-                Uri packageURI = Uri.parse("package:" + getActivity().getPackageName());
+                Uri packageURI = Uri.parse("package:" + mParentActivity.getPackageName());
                 Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, packageURI);
                 startActivityForResult(intent, INSTALL_PACKAGES_REQUEST_CODE);
             }
@@ -135,36 +152,43 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
     }
 
     public void onInstall(Uri apkUri) {
-        Log.d(TAG, "请求安装应用V3");
+        Log.d(TAG, "请求安装应用");
         mApkUri = apkUri;
         Log.d(TAG, apkUri.getPath());
         requestApkInstall();
     }
 
+    /**
+     * 找到视图中的相关组件
+     *
+     * @param view 当前视图
+     */
     private void findViewComponent(View view) {
-        mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        Context context = getContext();
+        mParentActivity = getActivity();
+        mNotificationManager = context != null ? (NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE) : null;
         mBackgroundImageView = view.findViewById(R.id.image_bg);
         mToolbar = view.findViewById(R.id.center_toolbar);
+        mScrollView = view.findViewById(R.id.scroll_view);
     }
 
-    private void initView() {
-        Glide.with(CenterFragment.this)
-                .load("https://hello1024.oss-cn-beijing.aliyuncs.com/upload/banner/201808310312505b88b23288693.jpg")
-                .into(mBackgroundImageView);
-        mToolbar.getBackground().setAlpha(50);
-    }
-
+    /**
+     * 初始化视图组件相关事件
+     *
+     * @param view 当前视图
+     */
     private void initViewEvent(View view) {
         view.findViewById(R.id.settings_item).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().startActivity(new Intent(getActivity(), SettingsActivity.class));
+                mParentActivity.startActivity(new Intent(getActivity(), SettingsActivity.class));
             }
         });
         view.findViewById(R.id.notify_item).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showNotifyMessage("通知标题", "测试发送通知相关内容");
+                showNotifyMessage("通知标题" + mNotifyId, "测试发送通知相关内容" + mNotifyId);
             }
         });
         view.findViewById(R.id.download_item).setOnClickListener(new View.OnClickListener() {
@@ -181,9 +205,20 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MusicService.class);
-                getActivity().startService(intent);
+                mParentActivity.startService(intent);
             }
         });
+        mScrollView.getViewTreeObserver().addOnScrollChangedListener(CenterFragment.this);
+    }
+
+    /**
+     * 初始化视图
+     */
+    private void initView() {
+        Glide.with(CenterFragment.this)
+                .load("https://hello1024.oss-cn-beijing.aliyuncs.com/upload/banner/201808310312505b88b23288693.jpg")
+                .into(mBackgroundImageView);
+        mToolbar.getBackground().setAlpha(0);
     }
 
     /**
@@ -199,7 +234,8 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_HIGH);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID,
+                    NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("Download task");
             channel.enableLights(true);
             channel.setLightColor(Color.RED);
@@ -209,7 +245,8 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
         }
 
         // 创建一个NotificationCompat.Builder
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mParentActivity,
+                CHANNEL_ID)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
@@ -230,7 +267,7 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
         // 判断是否允许安装第三方来源apk--26版本以上需要请求权限
         Log.d(TAG, "SDK_INIT:" + Build.VERSION.SDK_INT);
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            PackageManager packageManager = getActivity().getPackageManager();
+            PackageManager packageManager = mParentActivity.getPackageManager();
 
             // 如果不允许安装，跳转到开启授权页面
             if (!packageManager.canRequestPackageInstalls()) {
