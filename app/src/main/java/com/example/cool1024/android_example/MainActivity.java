@@ -1,5 +1,8 @@
 package com.example.cool1024.android_example;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        // getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         mSavedInstanceState = savedInstanceState;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -52,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(MainActivity.SAVE_DATA_TAG,mActiveFragment.getFragmentTag());
+        outState.putString(MainActivity.SAVE_DATA_TAG, mActiveFragment.getFragmentTag());
     }
 
     @Override
@@ -119,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements
             mActiveFragment = mHomeFragment;
             mFragmentTransaction = mFragmentManager.beginTransaction();
             mFragmentTransaction.add(R.id.frame_layout, mActiveFragment, HomeFragment.TAG).commit();
-        }else{
+        } else {
             String activeFragmentTag = mSavedInstanceState.getString(SAVE_DATA_TAG,
                     BaseTabFragment.EMPTY_TAG);
             mActiveFragment = (BaseTabFragment) mFragmentManager.findFragmentByTag(activeFragmentTag);

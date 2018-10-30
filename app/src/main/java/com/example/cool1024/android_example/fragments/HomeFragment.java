@@ -1,5 +1,6 @@
 package com.example.cool1024.android_example.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,9 +14,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.cool1024.android_example.R;
+import com.example.cool1024.android_example.http.HttpQueue;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -23,35 +31,32 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends BaseTabFragment {
+public class HomeFragment extends BaseTabFragment implements Response.Listener<JSONObject> {
 
     public static final String TAG = "HomeFragment";
 
     private static final String SAVE_DATA_TAG = "CARD_DATA";
 
+    private Bundle mSavedInstanceState;
+
+    private RecyclerView mRecyclerView;
+
+    private RequestQueue mRequestQueue;
+
     private List<CardData> mCards = new ArrayList<>();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mSavedInstanceState = savedInstanceState;
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        if (savedInstanceState == null) {
-            Log.d(TAG, "LOAD_DATA_NEW");
-            loadCardData();
-        } else {
-            Log.d(TAG, "LOAD_DATA_SAVE");
-            loadCardDataFromSave(savedInstanceState);
-        }
-        initView(view);
-        onHiddenChanged(false);
+        findView(view);
+        initView();
+        recoverState();
         return view;
     }
 
@@ -62,40 +67,64 @@ public class HomeFragment extends BaseTabFragment {
         outState.putSerializable(SAVE_DATA_TAG, new CardDataList().cardListToJsonString(mCards));
     }
 
-    private void loadCardDataFromSave(Bundle savedInstanceState) {
-        String jsonString = savedInstanceState.getString(SAVE_DATA_TAG);
-        mCards = new CardDataList().getCardListFromJsonString(jsonString);
+    @Override
+    public void onResponse(JSONObject response) {
+        Log.d(TAG, response.toString());
     }
 
-    private void loadCardData() {
-        if (mCards.size() > 0) {
-            return;
-        }
-        Log.d(TAG, "LOAD_CARD_DATA");
-        mCards.add(new CardData("Marty McFly",
-                "November 5,1955",
-                "Wait a minute. Wait a minute, Doc. Uh... Are you telling me that you built a time machine... out of a DeLorean?!Whoa. This is heavy.",
-                "https://www.cool1024.com/ng/assets/images/avatar/0.jpg",
-                "https://picsum.photos/600/400?10"));
-        mCards.add(new CardData("Sarah Connor",
-                "May 12,1984",
-                "I face the unknown future, with a sense of hope. Because if a machine, a Terminator, can learn the value ofhuman life, maybe we can too.",
-                "https://www.cool1024.com/ng/assets/images/avatar/2.jpg",
-                "https://picsum.photos/600/400?20"));
-        mCards.add(new CardData("Dr.lan Malcolm",
-                "June 28,1990",
-                "Your scientists were so preoccupied with whether or not they could, that they didn't stop to think if they should",
-                "https://www.cool1024.com/ng/assets/images/avatar/3.jpg",
-                "https://picsum.photos/600/400?30"));
-    }
-
-    private void initView(View view) {
+    private void initView() {
         Log.d(TAG, "INIT_VIEW");
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
-        GridLayoutManager layoutManager = new GridLayoutManager(view.getContext(), 1);
+        Activity parentActivity = getActivity();
+        if (parentActivity != null) {
+            mRequestQueue = HttpQueue.getInstance(parentActivity);
+        }
+    }
+
+    private void updateView() {
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 1);
         CardAdapter adapter = new CardAdapter(mCards);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(adapter);
+    }
+
+    private void findView(View view) {
+        mRecyclerView = view.findViewById(R.id.recycler_view);
+    }
+
+    /**
+     * Recover state from saved
+     */
+    private void recoverState() {
+        if (mSavedInstanceState == null) {
+            Log.d(TAG, "LOAD_DATA_NEW");
+            if (mCards.size() > 0) {
+                return;
+            }
+            Log.d(TAG, "LOAD_CARD_DATA");
+            mCards.add(new CardData("Marty McFly",
+                    "November 5,1955",
+                    "Wait a minute. Wait a minute, Doc. Uh... Are you telling me that you built a time machine... out of a DeLorean?!Whoa. This is heavy.",
+                    "https://www.cool1024.com/ng/assets/images/avatar/0.jpg",
+                    "https://picsum.photos/600/400?10"));
+            mCards.add(new CardData("Sarah Connor",
+                    "May 12,1984",
+                    "I face the unknown future, with a sense of hope. Because if a machine, a Terminator, can learn the value ofhuman life, maybe we can too.",
+                    "https://www.cool1024.com/ng/assets/images/avatar/2.jpg",
+                    "https://picsum.photos/600/400?20"));
+            mCards.add(new CardData("Dr.lan Malcolm",
+                    "June 28,1990",
+                    "Your scientists were so preoccupied with whether or not they could, that they didn't stop to think if they should",
+                    "https://www.cool1024.com/ng/assets/images/avatar/3.jpg",
+                    "https://picsum.photos/600/400?30"));
+//            mRequestQueue.add(new JsonObjectRequest(Request.Method.GET,
+//                    "https://randomuser.me/api/?page=1&results=10", null,
+//                    HomeFragment.this, HomeFragment.this));
+        } else {
+            Log.d(TAG, "LOAD_DATA_SAVE");
+            String jsonString = mSavedInstanceState.getString(SAVE_DATA_TAG);
+            mCards = new CardDataList().getCardListFromJsonString(jsonString);
+        }
+        updateView();
     }
 
     public class CardDataList {
