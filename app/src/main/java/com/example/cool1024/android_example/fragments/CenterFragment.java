@@ -2,7 +2,6 @@ package com.example.cool1024.android_example.fragments;
 
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -22,9 +21,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -35,6 +38,7 @@ import com.bumptech.glide.Glide;
 import com.example.cool1024.android_example.MainActivity;
 import com.example.cool1024.android_example.R;
 import com.example.cool1024.android_example.SettingsActivity;
+import com.example.cool1024.android_example.UserInfoActivity;
 import com.example.cool1024.android_example.services.DownloadService;
 import com.example.cool1024.android_example.services.MusicService;
 
@@ -55,7 +59,7 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
 
     private Integer mNotifyId = 0;
 
-    private Activity mParentActivity;
+    private AppCompatActivity mParentActivity;
     private Toolbar mToolbar;
     private ImageView mBackgroundImageView;
     private NestedScrollView mScrollView;
@@ -65,14 +69,37 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
     private Uri mApkUri;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_center, container, false);
+        setHasOptionsMenu(true);
         findViewComponent(view);
         initView();
         initViewEvent(view);
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.d(TAG, "添加菜单项");
+        inflater.inflate(R.menu.center, menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.center_menu_item_settings: {
+                startActivity(new Intent(mParentActivity, UserInfoActivity.class));
+            }
+        }
+        return true;
     }
 
     /**
@@ -96,7 +123,8 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.d(TAG, "接收到请求回调");
 
@@ -165,7 +193,7 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
      */
     private void findViewComponent(View view) {
         Context context = getContext();
-        mParentActivity = getActivity();
+        mParentActivity = (AppCompatActivity) getActivity();
         mNotificationManager = context != null ? (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE) : null;
         mBackgroundImageView = view.findViewById(R.id.image_bg);
@@ -219,6 +247,7 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
                 .load("https://hello1024.oss-cn-beijing.aliyuncs.com/upload/banner/201808310312505b88b23288693.jpg")
                 .into(mBackgroundImageView);
         mToolbar.getBackground().setAlpha(0);
+        mParentActivity.setSupportActionBar(mToolbar);
     }
 
     /**

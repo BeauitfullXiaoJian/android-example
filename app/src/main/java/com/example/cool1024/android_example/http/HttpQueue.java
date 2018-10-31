@@ -18,7 +18,8 @@ public class HttpQueue {
         if (instance == null) {
             // Instantiate the cache
 
-            Cache cache = new DiskBasedCache(context.getExternalCacheDir(), 1024 * 1024);
+            Cache cache = new DiskBasedCache(context.getExternalCacheDir(),
+                    1024 * 1024);
 
             // Set up the network to use HttpURLConnection as the HTTP client.
             Network network = new BasicNetwork(new HurlStack());

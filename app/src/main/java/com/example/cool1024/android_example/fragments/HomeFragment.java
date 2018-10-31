@@ -2,8 +2,10 @@ package com.example.cool1024.android_example.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,34 +19,44 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.cool1024.android_example.DetailActivity;
 import com.example.cool1024.android_example.R;
 import com.example.cool1024.android_example.http.HttpQueue;
+import com.example.cool1024.android_example.http.Pagination;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends BaseTabFragment implements Response.Listener<JSONObject> {
+public class HomeFragment extends BaseTabFragment implements Response.Listener<JSONObject>,
+        SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = "HomeFragment";
 
     private static final String SAVE_DATA_TAG = "CARD_DATA";
 
+    private static final Pagination page = new Pagination();
+
+    private Activity mParentActivity;
+
     private Bundle mSavedInstanceState;
 
     private RecyclerView mRecyclerView;
+
+    private CardAdapter mCardAdapter;
+
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private RequestQueue mRequestQueue;
 
@@ -70,29 +82,79 @@ public class HomeFragment extends BaseTabFragment implements Response.Listener<J
     @Override
     public void onResponse(JSONObject response) {
         Log.d(TAG, response.toString());
+        try {
+            JSONArray rows = response.getJSONArray("rows");
+            page.total = response.getInt("total");
+            for (int i = 0; i < rows.length(); i++) {
+                JSONObject item = rows.getJSONObject(i);
+                mCards.add(0, new CardData(
+                        item.getString("title"),
+                        item.getString("body"),
+                        item.getString("content"),
+                        item.getString("avatarUrl"),
+                        item.getString("imageUrl")
+                ));
+            }
+            updateView();
+            showToast("成功加载条" + rows.length() + "数据");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            showToast("接口数据解析失败");
+        }
+        mSwipeRefreshLayout.setRefreshing(false);
+        page.setComplete();
+    }
+
+    @Override
+    public void onRefresh() {
+        if (page.hasNext()) {
+            loadData();
+        } else {
+            showToast("没有新数据了～");
+            mSwipeRefreshLayout.setRefreshing(false);
+            updateView();
+            Log.d(TAG, "当前数量" + mCards.size());
+        }
+    }
+
+    /**
+     * 数据载入方法
+     */
+    public void loadData() {
+        if (!page.loading) {
+            page.setLoading();
+            page.nextPage();
+            mRequestQueue.add(new JsonObjectRequest(Request.Method.GET,
+                    "https://www.cool1024.com:8000/list?" + page.toQueryString(), null,
+                    HomeFragment.this, HomeFragment.this));
+        }
     }
 
     private void initView() {
         Log.d(TAG, "INIT_VIEW");
-        Activity parentActivity = getActivity();
-        if (parentActivity != null) {
-            mRequestQueue = HttpQueue.getInstance(parentActivity);
+        mParentActivity = getActivity();
+        if (mParentActivity != null) {
+            mRequestQueue = HttpQueue.getInstance(mParentActivity);
         }
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 1);
+        mCardAdapter = new CardAdapter(mCards);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mCardAdapter);
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
+        mSwipeRefreshLayout.setOnRefreshListener(HomeFragment.this);
     }
 
     private void updateView() {
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 1);
-        CardAdapter adapter = new CardAdapter(mCards);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(adapter);
+        mCardAdapter.notifyDataSetChanged();
     }
 
     private void findView(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view);
+        mSwipeRefreshLayout = view.findViewById(R.id.home_swipe);
     }
 
     /**
-     * Recover state from saved
+     * 从之前保存的数据中尝试恢复页面状态
      */
     private void recoverState() {
         if (mSavedInstanceState == null) {
@@ -101,30 +163,15 @@ public class HomeFragment extends BaseTabFragment implements Response.Listener<J
                 return;
             }
             Log.d(TAG, "LOAD_CARD_DATA");
-            mCards.add(new CardData("Marty McFly",
-                    "November 5,1955",
-                    "Wait a minute. Wait a minute, Doc. Uh... Are you telling me that you built a time machine... out of a DeLorean?!Whoa. This is heavy.",
-                    "https://www.cool1024.com/ng/assets/images/avatar/0.jpg",
-                    "https://picsum.photos/600/400?10"));
-            mCards.add(new CardData("Sarah Connor",
-                    "May 12,1984",
-                    "I face the unknown future, with a sense of hope. Because if a machine, a Terminator, can learn the value ofhuman life, maybe we can too.",
-                    "https://www.cool1024.com/ng/assets/images/avatar/2.jpg",
-                    "https://picsum.photos/600/400?20"));
-            mCards.add(new CardData("Dr.lan Malcolm",
-                    "June 28,1990",
-                    "Your scientists were so preoccupied with whether or not they could, that they didn't stop to think if they should",
-                    "https://www.cool1024.com/ng/assets/images/avatar/3.jpg",
-                    "https://picsum.photos/600/400?30"));
-//            mRequestQueue.add(new JsonObjectRequest(Request.Method.GET,
-//                    "https://randomuser.me/api/?page=1&results=10", null,
-//                    HomeFragment.this, HomeFragment.this));
+            loadData();
         } else {
-            Log.d(TAG, "LOAD_DATA_SAVE");
+            Log.d(TAG, "LOAD_DATA_SAVE:");
             String jsonString = mSavedInstanceState.getString(SAVE_DATA_TAG);
-            mCards = new CardDataList().getCardListFromJsonString(jsonString);
+            mCards.clear();
+            mCards.addAll(new CardDataList().getCardListFromJsonString(jsonString));
+            Log.d(TAG, "LOAD_DATA_SAVE:" + mCards.size());
+            updateView();
         }
-        updateView();
     }
 
     public class CardDataList {
@@ -151,7 +198,7 @@ public class HomeFragment extends BaseTabFragment implements Response.Listener<J
         }
     }
 
-    public class CardData {
+    public static class CardData {
         private String cardTitle;
         private String cardBody;
         private String cardContent;
@@ -166,24 +213,40 @@ public class HomeFragment extends BaseTabFragment implements Response.Listener<J
             cardImageUrl = imageUrl;
         }
 
-        String getCardTitle() {
+        public String getCardTitle() {
             return cardTitle;
         }
 
-        String getCardBody() {
+        public String getCardBody() {
             return cardBody;
         }
 
-        String getCardAvatarUrl() {
+        public String getCardAvatarUrl() {
             return cardAvatarUrl;
         }
 
-        String getCardImageUrl() {
+        public String getCardImageUrl() {
             return cardImageUrl;
         }
 
-        String getCardContent() {
+        public String getCardContent() {
             return cardContent;
+        }
+
+        String toJsonString() {
+            Gson gson = new Gson();
+            return gson.toJson(this);
+        }
+
+        public static CardData formJsonString(String jsonString) {
+            JsonParser parser = new JsonParser();
+            JsonObject jsonObject = parser.parse(jsonString).getAsJsonObject();
+            String cardTitle = jsonObject.get("cardTitle").getAsString();
+            String cardBody = jsonObject.get("cardBody").getAsString();
+            String cardContent = jsonObject.get("cardContent").getAsString();
+            String cardAvatarUrl = jsonObject.get("cardAvatarUrl").getAsString();
+            String cardImageUrl = jsonObject.get("cardImageUrl").getAsString();
+            return new CardData(cardTitle, cardBody, cardContent, cardAvatarUrl, cardImageUrl);
         }
     }
 
@@ -208,13 +271,13 @@ public class HomeFragment extends BaseTabFragment implements Response.Listener<J
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+            final CardData cardData = mDataList.get(position);
             if (position == 0) {
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.cardView.getLayoutParams();
                 Float density = getResources().getDisplayMetrics().density;
                 params.topMargin = (int) (getResources().getInteger(R.integer.default_margin_num) * density);
             }
-            CardData cardData = mDataList.get(position);
             Glide.with(HomeFragment.this)
                     .load(cardData.getCardAvatarUrl())
                     .apply(new RequestOptions().circleCrop())
@@ -222,6 +285,13 @@ public class HomeFragment extends BaseTabFragment implements Response.Listener<J
             Glide.with(HomeFragment.this)
                     .load(cardData.getCardImageUrl())
                     .into(holder.cardImageView);
+            holder.cardImageView.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = new Intent(mParentActivity, DetailActivity.class);
+                    intent.putExtra(DetailActivity.TAG, cardData.toJsonString());
+                    startActivity(intent);
+                }
+            });
             holder.titleTextView.setText(cardData.getCardTitle());
             holder.bodyTextView.setText(cardData.getCardBody());
             holder.contentTextView.setText(cardData.getCardContent());

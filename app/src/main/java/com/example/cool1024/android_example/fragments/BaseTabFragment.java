@@ -15,6 +15,13 @@ public class BaseTabFragment extends Fragment implements Response.ErrorListener 
         return EMPTY_TAG;
     }
 
+    public void showToast(String message) {
+        Activity activity = getActivity();
+        if (activity != null) {
+            Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public void onErrorResponse(VolleyError error) {
         Activity activity = getActivity();
@@ -23,5 +30,4 @@ public class BaseTabFragment extends Fragment implements Response.ErrorListener 
                     .show();
         }
     }
-
 }
