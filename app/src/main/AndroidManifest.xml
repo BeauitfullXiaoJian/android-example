@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.cool1024.android_example">
 
     <!-- 权限列表 -->
@@ -44,6 +45,7 @@
         </activity>
         <activity android:name=".SettingsActivity" />
         <activity android:name=".UserInfoActivity" />
+        <activity android:name=".DetailActivity" />
 
         <service
             android:name=".services.MusicService"
@@ -54,7 +56,17 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".DetailActivity"></activity>
+        <receiver
+            android:name=".receivers.ApkInstallReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -5,8 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.cool1024.android_example.fragments.HomeFragment;
 
 public class DetailActivity extends AppCompatActivity {
@@ -19,6 +22,11 @@ public class DetailActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     private ActionBar mActionBar;
+    private ImageView mAvatarView;
+    private ImageView mCardImageView;
+    private TextView mAuthorNickView;
+    private TextView mLabelView;
+    private TextView mDetailContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +40,26 @@ public class DetailActivity extends AppCompatActivity {
     private void findView() {
         mToolbar = findViewById(R.id.detail_toolbar);
         setSupportActionBar(mToolbar);
-        mActionBar =  getSupportActionBar();
+        mActionBar = getSupportActionBar();
+        mAvatarView = findViewById(R.id.author_avatar);
+        mAuthorNickView = findViewById(R.id.author_nick);
+        mLabelView = findViewById(R.id.label_string);
+        mDetailContent = findViewById(R.id.detail_content);
+        mCardImageView = findViewById(R.id.card_image);
     }
 
     private void initView() {
         mActionBar.setDisplayHomeAsUpEnabled(true);
-        mToolbar.setTitle(cardData.getCardTitle());
+        mActionBar.setTitle(cardData.getCardTitle());
+        Glide.with(getBaseContext())
+                .load(cardData.getCardAvatarUrl())
+                .apply(new RequestOptions().circleCrop())
+                .into(mAvatarView);
+        Glide.with(getBaseContext())
+                .load(cardData.getCardImageUrl())
+                .into(mCardImageView);
+        mAuthorNickView.setText(cardData.getCardTitle());
+        mDetailContent.setText(cardData.getCardContent());
     }
 
     @Override

@@ -13,6 +13,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -230,7 +231,7 @@ public class DownloadService extends Service {
     private void updateDownloadProgress() {
         DownloadManager.Query query = new DownloadManager.Query().setFilterById(mDownloadId);
         DownloadData downloadData = new DownloadData();
-        try(Cursor cursor = mDownloadManager.query(query)) {
+        try (Cursor cursor = mDownloadManager.query(query)) {
             if (cursor != null && cursor.moveToFirst()) {
                 // 已经下载的文件大小
                 downloadData.completeSize = cursor.getInt(
