@@ -111,6 +111,9 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
         int maxOffset = 700;
         float ratio = (float) Math.min(offset, maxOffset) / maxOffset;
         mToolbar.getBackground().setAlpha((int) (255 * ratio));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mToolbar.setElevation(offset >= maxOffset ? 26 : 0);
+        }
     }
 
     @Override
