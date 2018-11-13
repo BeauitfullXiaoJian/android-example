@@ -2,6 +2,9 @@ package com.example.cool1024.android_example.http;
 
 public class Pagination {
 
+    public final static int REFRESH = 0;
+    public final static int LOAD_MORE = 1;
+
     // 数据加载状态
     public boolean loading = false;
 
@@ -13,6 +16,9 @@ public class Pagination {
 
     // 数据总数
     public int total = 0;
+
+    // 加载模式
+    public int loadModel = LOAD_MORE;
 
     // 偏移量，当前已经显示的数据量
     public int offset() {
