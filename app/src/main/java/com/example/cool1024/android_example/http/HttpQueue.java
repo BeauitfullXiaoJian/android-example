@@ -1,7 +1,6 @@
 package com.example.cool1024.android_example.http;
 
 import android.content.Context;
-import android.os.Environment;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;

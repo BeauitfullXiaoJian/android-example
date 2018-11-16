@@ -9,7 +9,7 @@ public class Pagination {
     public boolean loading = false;
 
     // 当前页面
-    public int currentPage = 1;
+    private int currentPage = 1;
 
     // 每页显示的数据量
     public int limit = 10;
@@ -26,19 +26,19 @@ public class Pagination {
     }
 
     // 最大页数
-    public int maxPage() {
+    private int maxPage() {
         return (int) Math.ceil((double) this.total / this.limit);
     }
 
     // 判断是否有下一页
     public boolean hasNext() {
-        return this.currentPage < maxPage();
+        return this.currentPage == 1 ||this.currentPage < maxPage();
     }
 
     // 判断是否有上一页
-    public boolean hasPre() {
-        return this.currentPage > 1;
-    }
+    // public boolean hasPre() {
+    //     return this.currentPage > 1;
+    // }
 
     // 重置分页
     public void reset() {
@@ -56,16 +56,11 @@ public class Pagination {
     }
 
     // 上一页
-    public void prePage() {
-        if (hasPre()) {
-            currentPage--;
-        }
-    }
-
-    // 获取分页参数,可以附带额外参数
-    public void params() {
-
-    }
+    // public void prePage() {
+    //     if (hasPre()) {
+    //        currentPage--;
+    //    }
+    // }
 
     // 转化为queryParams串
     public String toQueryString() {

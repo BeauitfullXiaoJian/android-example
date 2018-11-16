@@ -106,6 +106,7 @@ public class HomeFragment extends BaseTabFragment implements Response.Listener<J
             }
             updateView();
             showToast("成功加载条" + rows.length() + "数据");
+            page.nextPage();
         } catch (JSONException e) {
             e.printStackTrace();
             showToast("接口数据解析失败");
@@ -117,6 +118,7 @@ public class HomeFragment extends BaseTabFragment implements Response.Listener<J
     @Override
     public void onErrorResponse(VolleyError error) {
         super.onErrorResponse(error);
+        mSwipeRefreshLayout.setRefreshing(Boolean.FALSE);
         page.setComplete();
     }
 
@@ -141,7 +143,6 @@ public class HomeFragment extends BaseTabFragment implements Response.Listener<J
      */
     public void loadData() {
         page.setLoading();
-        page.nextPage();
         mRequestQueue.add(new JsonObjectRequest(Request.Method.GET,
                 "https://www.cool1024.com:8000/list?" + page.toQueryString(), null,
                 HomeFragment.this, HomeFragment.this));
