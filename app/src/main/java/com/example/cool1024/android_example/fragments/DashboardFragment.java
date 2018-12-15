@@ -47,6 +47,7 @@ public class DashboardFragment extends BaseTabFragment {
         webSettings.setAllowContentAccess(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setJavaScriptEnabled(true);
+        mWebView.setWebViewClient(new WebViewClient());
         mWebView.setWebChromeClient(new WebChromeClient() {
 
             @Override

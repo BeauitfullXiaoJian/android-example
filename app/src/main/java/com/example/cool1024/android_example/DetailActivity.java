@@ -16,11 +16,8 @@ public class DetailActivity extends AppCompatActivity {
 
     public static final String TAG = "DetailActivity";
 
-    public static final String EMPTY_TAG = "NONE";
-
     private HomeFragment.CardData cardData;
 
-    private Toolbar mToolbar;
     private ActionBar mActionBar;
     private ImageView mAvatarView;
     private ImageView mCardImageView;
@@ -38,8 +35,8 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void findView() {
-        mToolbar = findViewById(R.id.detail_toolbar);
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = findViewById(R.id.detail_toolbar);
+        setSupportActionBar(toolbar);
         mActionBar = getSupportActionBar();
         mAvatarView = findViewById(R.id.author_avatar);
         mAuthorNickView = findViewById(R.id.author_nick);
@@ -60,6 +57,7 @@ public class DetailActivity extends AppCompatActivity {
                 .into(mCardImageView);
         mAuthorNickView.setText(cardData.getCardTitle());
         mDetailContent.setText(cardData.getCardContent());
+        mLabelView.setText(cardData.getCardBody());
     }
 
     @Override

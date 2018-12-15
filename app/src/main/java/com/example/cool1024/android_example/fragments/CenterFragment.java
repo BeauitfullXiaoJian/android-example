@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.cool1024.android_example.MainActivity;
+import com.example.cool1024.android_example.PhotoViewActivity;
 import com.example.cool1024.android_example.R;
 import com.example.cool1024.android_example.SettingsActivity;
 import com.example.cool1024.android_example.UserInfoActivity;
@@ -237,6 +238,12 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MusicService.class);
                 mParentActivity.startService(intent);
+            }
+        });
+        view.findViewById(R.id.btn_image_page).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mParentActivity.startActivity(new Intent(getActivity(), PhotoViewActivity.class));
             }
         });
         mScrollView.getViewTreeObserver().addOnScrollChangedListener(CenterFragment.this);

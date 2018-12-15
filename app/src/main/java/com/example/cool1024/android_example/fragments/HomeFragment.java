@@ -3,22 +3,26 @@ package com.example.cool1024.android_example.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -87,16 +91,22 @@ public class HomeFragment extends BaseTabFragment implements Response.Listener<J
             page.total = response.getInt("total");
             for (int i = 0; i < rows.length(); i++) {
                 JSONObject item = rows.getJSONObject(i);
-                mCards.add(0, new CardData(
+                CardData cardData = new CardData(
                         item.getString("title"),
                         item.getString("body"),
                         item.getString("content"),
                         item.getString("avatarUrl"),
                         item.getString("imageUrl")
-                ));
+                );
+                if (page.loadModel == Pagination.LOAD_MORE) {
+                    mCards.add(cardData);
+                } else {
+                    mCards.add(0, cardData);
+                }
             }
             updateView();
             showToast("成功加载条" + rows.length() + "数据");
+            page.nextPage();
         } catch (JSONException e) {
             e.printStackTrace();
             showToast("接口数据解析失败");
@@ -106,8 +116,19 @@ public class HomeFragment extends BaseTabFragment implements Response.Listener<J
     }
 
     @Override
+    public void onErrorResponse(VolleyError error) {
+        super.onErrorResponse(error);
+        mSwipeRefreshLayout.setRefreshing(Boolean.FALSE);
+        page.setComplete();
+    }
+
+    @Override
     public void onRefresh() {
+        if (page.loading){
+            return;
+        }
         if (page.hasNext()) {
+            page.loadModel =Pagination.REFRESH;
             loadData();
         } else {
             showToast("没有新数据了～");
@@ -121,13 +142,29 @@ public class HomeFragment extends BaseTabFragment implements Response.Listener<J
      * 数据载入方法
      */
     public void loadData() {
-        if (!page.loading) {
-            page.setLoading();
-            page.nextPage();
-            mRequestQueue.add(new JsonObjectRequest(Request.Method.GET,
-                    "https://www.cool1024.com:8000/list?" + page.toQueryString(), null,
-                    HomeFragment.this, HomeFragment.this));
+        page.setLoading();
+        mRequestQueue.add(new JsonObjectRequest(Request.Method.GET,
+                "https://www.cool1024.com:8000/list?" + page.toQueryString(), null,
+                HomeFragment.this, HomeFragment.this));
+    }
+
+    private void loadMore(){
+        if (page.loading){
+            return;
         }
+        if (page.hasNext()) {
+            page.loadModel =Pagination.LOAD_MORE;
+            loadData();
+        } else {
+            showToast("没有更多数据了～");
+            updateView();
+            Log.d(TAG, "当前数量" + mCards.size());
+        }
+    }
+
+    private void findView(View view) {
+        mRecyclerView = view.findViewById(R.id.recycler_view);
+        mSwipeRefreshLayout = view.findViewById(R.id.home_swipe);
     }
 
     private void initView() {
@@ -140,17 +177,29 @@ public class HomeFragment extends BaseTabFragment implements Response.Listener<J
         mCardAdapter = new CardAdapter(mCards);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mCardAdapter);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int count = 0;
+                int nowShowIndex = 0;
+                int visibleThreshold = 1;
+                if (linearLayoutManager != null) {
+                    count = linearLayoutManager.getItemCount();
+                    nowShowIndex = linearLayoutManager.findLastVisibleItemPosition();
+                }
+                if (count <= (nowShowIndex + visibleThreshold)) {
+                    loadMore();
+                    Log.d(TAG, "加载更多数据");
+                }
+            }
+        });
         mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         mSwipeRefreshLayout.setOnRefreshListener(HomeFragment.this);
     }
 
     private void updateView() {
         mCardAdapter.notifyDataSetChanged();
-    }
-
-    private void findView(View view) {
-        mRecyclerView = view.findViewById(R.id.recycler_view);
-        mSwipeRefreshLayout = view.findViewById(R.id.home_swipe);
     }
 
     /**
