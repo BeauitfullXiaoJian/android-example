@@ -3,28 +3,24 @@ package com.example.cool1024.android_example;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
+import com.example.cool1024.android_example.classes.Album;
+import com.example.cool1024.android_example.fragments.AlbumFragment;
 import com.myclass.stream.CFileReader;
 import com.myclass.stream.CFileWriter;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import javax.xml.transform.Result;
 
 public class PhotoViewActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -36,9 +32,18 @@ public class PhotoViewActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_view);
-        findViewById(R.id.btn_file_open).setOnClickListener(PhotoViewActivity.this);
-        findViewById(R.id.btn_file_read).setOnClickListener(PhotoViewActivity.this);
+        showFragment(AlbumFragment.newInstance(1));
     }
+
+    private void showFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (fragmentManager != null) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.photo_view_layout, fragment)
+                    .commit();
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -71,17 +76,17 @@ public class PhotoViewActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_file_open: {
-                this.showFileDialog();
-                break;
-            }
-            case R.id.btn_file_read: {
-                try {
-                    this.encodeSaveImageDataFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+//            case R.id.btn_file_open: {
+//                this.showFileDialog();
+//                break;
+//            }
+//            case R.id.btn_file_read: {
+//                try {
+//                    this.encodeSaveImageDataFile();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
         }
     }
 

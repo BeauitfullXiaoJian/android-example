@@ -1,9 +1,10 @@
 package com.example.cool1024.android_example.http;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import okhttp3.FormBody;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -12,15 +13,36 @@ import okhttp3.ResponseBody;
 
 public class RequestAsyncTask extends AsyncTask<RequestParam, Integer, ApiData> {
 
-    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static OkHttpClient sOkHttpClient;
-    public static final String GET = "GET";
-    public static final String DELETE = "DELETE";
-    public static final String POST = "POST";
-    public static final String PUT = "PUT";
+    private static Context sAppContext;
+    private static final String GET = "GET";
+    private static final String DELETE = "DELETE";
+    private static final String POST = "POST";
+    private static final String PUT = "PUT";
 
     private String mRequestUrl;
     private String mRequestMethod;
+    private ResponseCallback mResponseCallback;
+
+    public static RequestAsyncTask get(String requestUrl, ResponseCallback responseCallback) {
+        return new RequestAsyncTask(requestUrl, GET, responseCallback);
+    }
+
+    public static RequestAsyncTask post(String requestUrl, ResponseCallback responseCallback) {
+        return new RequestAsyncTask(requestUrl, POST, responseCallback);
+    }
+
+    public static RequestAsyncTask put(String requestUrl, ResponseCallback responseCallback) {
+        return new RequestAsyncTask(requestUrl, PUT, responseCallback);
+    }
+
+    public static RequestAsyncTask delete(String requestUrl, ResponseCallback responseCallback) {
+        return new RequestAsyncTask(requestUrl, DELETE, responseCallback);
+    }
+
+    public static void setContext(Context context) {
+        sAppContext = context;
+    }
 
     private static OkHttpClient getRequestClient() {
         if (sOkHttpClient == null) {
@@ -29,25 +51,11 @@ public class RequestAsyncTask extends AsyncTask<RequestParam, Integer, ApiData> 
         return sOkHttpClient;
     }
 
-    public static RequestAsyncTask get(String requestUrl) {
-        return new RequestAsyncTask(requestUrl, GET);
-    }
-
-    public static RequestAsyncTask post(String requestUrl) {
-        return new RequestAsyncTask(requestUrl, POST);
-    }
-
-    public static RequestAsyncTask put(String requestUrl) {
-        return new RequestAsyncTask(requestUrl, PUT);
-    }
-
-    public static RequestAsyncTask delete(String requestUrl) {
-        return new RequestAsyncTask(requestUrl, DELETE);
-    }
-
-    public RequestAsyncTask(String requestUrl, String requestMethod) {
+    private RequestAsyncTask(String requestUrl, String requestMethod,
+                             ResponseCallback responseCallback) {
         mRequestUrl = requestUrl;
         mRequestMethod = requestMethod;
+        mResponseCallback = responseCallback;
     }
 
     @Override
@@ -84,7 +92,19 @@ public class RequestAsyncTask extends AsyncTask<RequestParam, Integer, ApiData> 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return apiData;
+    }
+
+    @Override
+    protected void onPostExecute(ApiData apiData) {
+        if (apiData != null && apiData.getResult()) {
+            mResponseCallback.onResponse(apiData);
+        } else {
+            Toast.makeText(sAppContext, "数据请求失败", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public interface ResponseCallback {
+        void onResponse(ApiData apiData);
     }
 }
