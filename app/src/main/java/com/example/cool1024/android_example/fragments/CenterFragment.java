@@ -35,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.cool1024.android_example.FragmentDevActivity;
 import com.example.cool1024.android_example.MainActivity;
 import com.example.cool1024.android_example.PhotoViewActivity;
 import com.example.cool1024.android_example.R;
@@ -240,10 +241,12 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
                 mParentActivity.startService(intent);
             }
         });
-        view.findViewById(R.id.btn_image_page).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.btn_draw_page).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mParentActivity.startActivity(new Intent(getActivity(), PhotoViewActivity.class));
+                Intent intent = new Intent(getActivity(), FragmentDevActivity.class);
+                intent.putExtra(FragmentDevActivity.FRAGMENT_NAME_PARAM, ImageDrawFragment.TAG);
+                mParentActivity.startActivity(intent);
             }
         });
         mScrollView.getViewTreeObserver().addOnScrollChangedListener(CenterFragment.this);

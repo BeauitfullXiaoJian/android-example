@@ -17,14 +17,12 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.LayoutDirection;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -36,7 +34,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class ImageDrawFragment extends Fragment implements View.OnClickListener {
-    private static final String TAG = "ImageDrawFragmentLog";
+    public static final String TAG = "ImageDrawFragmentLog";
+    public static final int DRAW_IMAGE_SELECT_CODE = 1;
     private static final String IMAGE_PATH = "IMAGE_PATH";
 
     private Context mContext;

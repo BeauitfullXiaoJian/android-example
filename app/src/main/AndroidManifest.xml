@@ -69,7 +69,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".PhotoViewActivity"></activity>
+        <activity android:name=".PhotoViewActivity" />
+        <activity android:name=".FragmentDevActivity"></activity>
     </application>
 
 </manifest>

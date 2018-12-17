@@ -54,15 +54,15 @@
                             android:layout_weight="1">
 
                             <Button
-                                android:id="@+id/btn_image_page"
+                                android:id="@+id/btn_draw_page"
                                 android:layout_width="75dp"
                                 android:layout_height="75dp"
                                 android:layout_centerHorizontal="true"
                                 android:layout_centerVertical="true"
                                 android:background="?android:attr/selectableItemBackground"
-                                android:drawableTop="@drawable/ic_angular"
+                                android:drawableTop="@drawable/ic_palette_black_40dp"
                                 android:padding="10dp"
-                                android:text="@string/angular"
+                                android:text="@string/draw_picture"
                                 android:textAllCaps="false"
                                 android:textColor="@color/colorPrimary" />
 
@@ -200,7 +200,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:contentDescription="@string/angular"
+                            android:contentDescription="@string/draw_picture"
                             android:padding="@dimen/button_padding"
                             app:srcCompat="@drawable/ic_file_download_black_24dp" />
 
@@ -233,7 +233,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:contentDescription="@string/angular"
+                            android:contentDescription="@string/draw_picture"
                             android:padding="@dimen/button_padding"
                             app:srcCompat="@drawable/ic_live_tv_black_24dp" />
 
@@ -265,7 +265,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:contentDescription="@string/angular"
+                            android:contentDescription="@string/share_app"
                             android:padding="@dimen/button_padding"
                             app:srcCompat="@drawable/ic_share_black_24dp" />
 
@@ -298,7 +298,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:contentDescription="@string/angular"
+                            android:contentDescription="@string/message_request"
                             android:padding="@dimen/button_padding"
                             app:srcCompat="@drawable/ic_send_black_24dp" />
 
@@ -331,7 +331,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:contentDescription="@string/angular"
+                            android:contentDescription="@string/setting"
                             android:padding="@dimen/button_padding"
                             app:srcCompat="@drawable/ic_settings_black_24dp" />
 
