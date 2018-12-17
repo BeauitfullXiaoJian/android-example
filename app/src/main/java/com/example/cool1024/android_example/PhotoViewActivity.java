@@ -12,8 +12,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
-import com.example.cool1024.android_example.classes.Album;
-import com.example.cool1024.android_example.fragments.AlbumFragment;
+import com.example.cool1024.android_example.fragments.ImageDrawFragment;
 import com.myclass.stream.CFileReader;
 import com.myclass.stream.CFileWriter;
 
@@ -26,13 +25,14 @@ public class PhotoViewActivity extends AppCompatActivity implements View.OnClick
 
     private static final String TAG = "PhotoViewActivityLog";
     private static final int FILE_SELECT_CODE = 0;
+    private static final int DRAW_IMAGE_SELECT_CODE = 1;
     private static final String dataFileName = "PICTURE.DATA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_view);
-        showFragment(AlbumFragment.newInstance(1));
+        showImageFileDialog();
     }
 
     private void showFragment(Fragment fragment) {
@@ -40,54 +40,61 @@ public class PhotoViewActivity extends AppCompatActivity implements View.OnClick
         if (fragmentManager != null) {
             fragmentManager.beginTransaction()
                     .replace(R.id.photo_view_layout, fragment)
-                    .commit();
+                    .commitAllowingStateLoss ();
         }
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == FILE_SELECT_CODE && resultCode == RESULT_OK && data != null) {
-            try {
-                Uri uri = data.getData();
-                if (uri != null) {
-                    ContentResolver contentResolver = getContentResolver();
-                    InputStream stream = contentResolver.openInputStream(uri);
-                    if (stream != null) {
-                        String imageString = decodeImageFile(stream);
-                        File saveFile = new File(this.getFilesDir(), dataFileName);
-                        if (saveFile.exists() || saveFile.createNewFile()) {
-                            CFileWriter cFileWriter = new CFileWriter(saveFile.getAbsolutePath());
-                            cFileWriter.write(imageString.getBytes());
-                            cFileWriter.close();
+        if(resultCode == RESULT_OK && data != null){
+            switch (requestCode){
+                case FILE_SELECT_CODE:{
+                    try {
+                        Uri uri = data.getData();
+                        if (uri != null) {
+                            ContentResolver contentResolver = getContentResolver();
+                            InputStream stream = contentResolver.openInputStream(uri);
+                            if (stream != null) {
+                                String imageString = decodeImageFile(stream);
+                                File saveFile = new File(this.getFilesDir(), dataFileName);
+                                if (saveFile.exists() || saveFile.createNewFile()) {
+                                    CFileWriter cFileWriter = new CFileWriter(saveFile.getAbsolutePath());
+                                    cFileWriter.write(imageString.getBytes());
+                                    cFileWriter.close();
+                                }
+                                stream.close();
+                                new File(uri.getEncodedPath()).delete();
+                            }
                         }
-                        stream.close();
-                        new File(uri.getEncodedPath()).delete();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.d(TAG, "文件编码失败");
                     }
+                    break;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.d(TAG, "文件编码失败");
+                case DRAW_IMAGE_SELECT_CODE:{
+                    Log.d(TAG,"显示绘图界面");
+                    Uri uri = data.getData();
+                    showFragment(ImageDrawFragment.newInstance(uri.toString()));
+                    break;
+                }
             }
         }
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-//            case R.id.btn_file_open: {
-//                this.showFileDialog();
-//                break;
-//            }
-//            case R.id.btn_file_read: {
-//                try {
-//                    this.encodeSaveImageDataFile();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-        }
+    }
+
+    /**
+     * 打开图片选择对话框
+     */
+    private void showImageFileDialog() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(Intent.createChooser(intent, "请选择要绘制的图片"), DRAW_IMAGE_SELECT_CODE);
     }
 
     private void showFileDialog() {
