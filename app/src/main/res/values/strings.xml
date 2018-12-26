@@ -18,7 +18,7 @@
     <string name="link">link</string>
     <string name="comment">comment</string>
     <string name="date_desc">2d ago</string>
-    <string name="angular">Angular</string>
+    <string name="draw_picture">涂鸦</string>
     <string name="app_store">AppStore</string>
     <string name="boat">Boast</string>
     <string name="briefcase">Briefcase</string>
@@ -27,4 +27,9 @@
     <string name="nick">昵称</string>
     <string name="qr_code">二维码名片</string>
     <string name="address">我的地址</string>
+    <string name="focus">关注</string>
+    <string name="view_total">11-02 22.3.万浏览</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

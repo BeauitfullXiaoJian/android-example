@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.cool1024.android_example.fragments.BaseTabFragment;
 import com.example.cool1024.android_example.fragments.CenterFragment;
@@ -39,8 +40,11 @@ public class MainActivity extends AppCompatActivity implements
 
     private BaseTabFragment mCenterFragment;
 
+    private long mExitClickTime = 0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        // getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         mSavedInstanceState = savedInstanceState;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -52,7 +56,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(MainActivity.SAVE_DATA_TAG,mActiveFragment.getFragmentTag());
+        outState.putString(MainActivity.SAVE_DATA_TAG,
+                mActiveFragment == null ? BaseTabFragment.EMPTY_TAG
+                        : mActiveFragment.getFragmentTag());
     }
 
     @Override
@@ -96,7 +102,21 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     /**
-     * Find all ui components from view
+     * 按2次退出应用
+     */
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - mExitClickTime > 2000) {
+            Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT)
+                    .show();
+            mExitClickTime = System.currentTimeMillis();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    /**
+     * 获取到所有相关的视图组件
      */
     private void findViewComponent() {
         mFragmentManager = getSupportFragmentManager();
@@ -104,14 +124,14 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     /**
-     * Init view event
+     * 初始化相关视图组件事件
      */
     private void initViewEvent() {
         mNavigationView.setOnNavigationItemSelectedListener(MainActivity.this);
     }
 
     /**
-     * Recover state from saved
+     * 从之前保存的数据中尝试恢复页面状态
      */
     private void recoverState() {
         if (mSavedInstanceState == null) {
@@ -119,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements
             mActiveFragment = mHomeFragment;
             mFragmentTransaction = mFragmentManager.beginTransaction();
             mFragmentTransaction.add(R.id.frame_layout, mActiveFragment, HomeFragment.TAG).commit();
-        }else{
+        } else {
             String activeFragmentTag = mSavedInstanceState.getString(SAVE_DATA_TAG,
                     BaseTabFragment.EMPTY_TAG);
             mActiveFragment = (BaseTabFragment) mFragmentManager.findFragmentByTag(activeFragmentTag);

@@ -1,6 +1,5 @@
 package com.example.cool1024.android_example.fragments;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -40,8 +39,8 @@ public class DashboardFragment extends BaseTabFragment {
     }
 
     private void findViewComponent(View view) {
-        mProgressBar = (ProgressBar) view.findViewById(R.id.load_bar);
-        mWebView = (WebView) view.findViewById(R.id.web_view);
+        mProgressBar = view.findViewById(R.id.load_bar);
+        mWebView = view.findViewById(R.id.web_view);
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setAllowUniversalAccessFromFileURLs(true);
         webSettings.setAllowFileAccessFromFileURLs(true);
@@ -49,7 +48,7 @@ public class DashboardFragment extends BaseTabFragment {
         webSettings.setDomStorageEnabled(true);
         webSettings.setJavaScriptEnabled(true);
         mWebView.setWebViewClient(new WebViewClient());
-        mWebView.setWebChromeClient (new WebChromeClient() {
+        mWebView.setWebChromeClient(new WebChromeClient() {
 
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
@@ -59,7 +58,7 @@ public class DashboardFragment extends BaseTabFragment {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
-                if(newProgress >= 100){
+                if (newProgress >= 100) {
                     mProgressBar.setVisibility(View.INVISIBLE);
                 }
             }

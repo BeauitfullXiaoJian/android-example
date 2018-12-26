@@ -18,6 +18,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 public class UserInfoActivity extends AppCompatActivity {
 
     public static final int REQUEST_STORAGE_READ = 1;
@@ -49,9 +51,9 @@ public class UserInfoActivity extends AppCompatActivity {
         if (!avatarPath.equals("NONE")) {
             try {
                 Uri uri = Uri.parse(avatarPath);
-                Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver()
-                        .openInputStream(uri));
-                mImageAvatar.setImageBitmap(bitmap);
+                Glide.with(UserInfoActivity.this)
+                        .load(uri)
+                        .into(mImageAvatar);
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e(TAG, "本地头像数据载入失败：" + avatarPath);
@@ -114,12 +116,12 @@ public class UserInfoActivity extends AppCompatActivity {
             try {
                 Uri uri = data.getData();
                 if (uri != null) {
-                    Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver()
-                            .openInputStream(uri));
+                    Glide.with(UserInfoActivity.this)
+                            .load(uri)
+                            .into(mImageAvatar);
                     SharedPreferences.Editor edit = mSharedPreferences.edit();
                     edit.putString(getResources().getString(R.string.avatar_key), uri.toString());
                     edit.apply();
-                    mImageAvatar.setImageBitmap(bitmap);
                 } else {
                     Log.e(TAG, "相册通信异常");
                 }

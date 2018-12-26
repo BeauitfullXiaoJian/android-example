@@ -7,9 +7,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
-        <!--toolbar标题文字颜色-->
+        <!-- toolbar标题文字颜色 -->
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="colorControlNormal">@android:color/white</item>
+        <!-- 背景图片 -->
+        <!--<item name="android:windowBackground">@drawable/splash</item>-->
     </style>
 
 </resources>
