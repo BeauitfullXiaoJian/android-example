@@ -37,7 +37,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.cool1024.android_example.FragmentDevActivity;
 import com.example.cool1024.android_example.MainActivity;
-import com.example.cool1024.android_example.PhotoViewActivity;
 import com.example.cool1024.android_example.R;
 import com.example.cool1024.android_example.SettingsActivity;
 import com.example.cool1024.android_example.UserInfoActivity;
@@ -49,18 +48,14 @@ import com.example.cool1024.android_example.services.MusicService;
  * A simple {@link Fragment} subclass.
  */
 public class CenterFragment extends BaseTabFragment implements ServiceConnection,
-        DownloadService.ProgressListener, ViewTreeObserver.OnScrollChangedListener {
+        DownloadService.ProgressListener, ViewTreeObserver.OnScrollChangedListener, View.OnClickListener {
 
     public static final String TAG = "CenterFragment";
-
     public static final String CHANNEL_ID = "CenterFragment";
-
     public static final Integer REQUEST_STORAGE_WRITE = 1;
-
     public static final Integer INSTALL_PACKAGES_REQUEST_CODE = 2;
 
     private Integer mNotifyId = 0;
-
     private AppCompatActivity mParentActivity;
     private Toolbar mToolbar;
     private ImageView mBackgroundImageView;
@@ -82,8 +77,8 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
         View view = inflater.inflate(R.layout.fragment_center, container, false);
         setHasOptionsMenu(true);
         findViewComponent(view);
-        initView();
         initViewEvent(view);
+        initView();
         return view;
     }
 
@@ -191,6 +186,44 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
         requestApkInstall();
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_camera_page:{
+                Intent intent = new Intent(getActivity(), FragmentDevActivity.class);
+                intent.putExtra(FragmentDevActivity.FRAGMENT_NAME_PARAM, FlvFragment.TAG);
+                mParentActivity.startActivity(intent);
+                break;
+            }
+            case R.id.btn_draw_page: {
+                Intent intent = new Intent(getActivity(), FragmentDevActivity.class);
+                intent.putExtra(FragmentDevActivity.FRAGMENT_NAME_PARAM, ImageDrawFragment.TAG);
+                mParentActivity.startActivity(intent);
+                break;
+            }
+            case R.id.media_item: {
+                Intent intent = new Intent(getActivity(), MusicService.class);
+                mParentActivity.startService(intent);
+                break;
+            }
+            case R.id.download_item: {
+                Log.d(TAG, "请求本地存储授权");
+                requestPermissions(new String[]{
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_STORAGE_WRITE);
+                break;
+            }
+            case R.id.notify_item: {
+                showNotifyMessage("通知标题" + mNotifyId, "测试发送通知相关内容" + mNotifyId);
+                break;
+            }
+            case R.id.settings_item: {
+                mParentActivity.startActivity(new Intent(getActivity(), SettingsActivity.class));
+                break;
+            }
+        }
+    }
+
     /**
      * 找到视图中的相关组件
      *
@@ -212,43 +245,12 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
      * @param view 当前视图
      */
     private void initViewEvent(View view) {
-        view.findViewById(R.id.settings_item).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mParentActivity.startActivity(new Intent(getActivity(), SettingsActivity.class));
-            }
-        });
-        view.findViewById(R.id.notify_item).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showNotifyMessage("通知标题" + mNotifyId, "测试发送通知相关内容" + mNotifyId);
-            }
-        });
-        view.findViewById(R.id.download_item).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 请求存储卡写入权限
-                requestPermissions(new String[]{
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        REQUEST_STORAGE_WRITE);
-                Log.d(TAG, "请求本地存储授权");
-            }
-        });
-        view.findViewById(R.id.media_item).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MusicService.class);
-                mParentActivity.startService(intent);
-            }
-        });
-        view.findViewById(R.id.btn_draw_page).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FragmentDevActivity.class);
-                intent.putExtra(FragmentDevActivity.FRAGMENT_NAME_PARAM, ImageDrawFragment.TAG);
-                mParentActivity.startActivity(intent);
-            }
-        });
+        view.findViewById(R.id.settings_item).setOnClickListener(CenterFragment.this);
+        view.findViewById(R.id.notify_item).setOnClickListener(CenterFragment.this);
+        view.findViewById(R.id.download_item).setOnClickListener(CenterFragment.this);
+        view.findViewById(R.id.media_item).setOnClickListener(CenterFragment.this);
+        view.findViewById(R.id.btn_draw_page).setOnClickListener(CenterFragment.this);
+        view.findViewById(R.id.btn_camera_page).setOnClickListener(CenterFragment.this);
         mScrollView.getViewTreeObserver().addOnScrollChangedListener(CenterFragment.this);
     }
 

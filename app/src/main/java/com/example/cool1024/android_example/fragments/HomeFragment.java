@@ -3,7 +3,6 @@ package com.example.cool1024.android_example.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,55 +14,36 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.cool1024.android_example.DetailActivity;
 import com.example.cool1024.android_example.R;
-import com.example.cool1024.android_example.http.HttpQueue;
+import com.example.cool1024.android_example.http.ApiData;
 import com.example.cool1024.android_example.http.Pagination;
+import com.example.cool1024.android_example.http.RequestAsyncTask;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends BaseTabFragment implements Response.Listener<JSONObject>,
-        SwipeRefreshLayout.OnRefreshListener {
+public class HomeFragment extends BaseTabFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = "HomeFragment";
-
     private static final String SAVE_DATA_TAG = "CARD_DATA";
-
     private static final Pagination page = new Pagination();
 
     private Activity mParentActivity;
-
     private Bundle mSavedInstanceState;
-
     private RecyclerView mRecyclerView;
-
     private CardAdapter mCardAdapter;
-
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
-    private RequestQueue mRequestQueue;
-
     private List<CardData> mCards = new ArrayList<>();
 
     @Override
@@ -84,51 +64,44 @@ public class HomeFragment extends BaseTabFragment implements Response.Listener<J
     }
 
     @Override
-    public void onResponse(JSONObject response) {
-        Log.d(TAG, response.toString());
-        try {
-            JSONArray rows = response.getJSONArray("rows");
-            page.total = response.getInt("total");
-            for (int i = 0; i < rows.length(); i++) {
-                JSONObject item = rows.getJSONObject(i);
-                CardData cardData = new CardData(
-                        item.getString("title"),
-                        item.getString("body"),
-                        item.getString("content"),
-                        item.getString("avatarUrl"),
-                        item.getString("imageUrl")
-                );
-                if (page.loadModel == Pagination.LOAD_MORE) {
-                    mCards.add(cardData);
-                } else {
-                    mCards.add(0, cardData);
-                }
+    public void onResponse(ApiData apiData) {
+        Log.d(TAG, apiData.toString());
+        ApiData.PageData pageData = apiData.getPageData();
+        JsonArray rows = pageData.getRows();
+        page.total = pageData.getTotal();
+        for (int i = 0; i < rows.size(); i++) {
+            JsonObject item = rows.get(i).getAsJsonObject();
+            CardData cardData = new CardData(
+                    item.get("title").getAsString(),
+                    item.get("body").getAsString(),
+                    item.get("content").getAsString(),
+                    item.get("avatarUrl").getAsString(),
+                    item.get("imageUrl").getAsString()
+            );
+            if (page.loadModel == Pagination.LOAD_MORE) {
+                mCards.add(cardData);
+            } else {
+                mCards.add(0, cardData);
             }
-            updateView();
-            showToast("成功加载条" + rows.length() + "数据");
-            page.nextPage();
-        } catch (JSONException e) {
-            e.printStackTrace();
-            showToast("接口数据解析失败");
         }
+        updateView();
+        showToast("成功加载条" + rows.size() + "数据");
+        page.nextPage();
+    }
+
+    @Override
+    public void onComplete() {
         mSwipeRefreshLayout.setRefreshing(false);
         page.setComplete();
     }
 
     @Override
-    public void onErrorResponse(VolleyError error) {
-        super.onErrorResponse(error);
-        mSwipeRefreshLayout.setRefreshing(Boolean.FALSE);
-        page.setComplete();
-    }
-
-    @Override
     public void onRefresh() {
-        if (page.loading){
+        if (page.loading) {
             return;
         }
         if (page.hasNext()) {
-            page.loadModel =Pagination.REFRESH;
+            page.loadModel = Pagination.REFRESH;
             loadData();
         } else {
             showToast("没有新数据了～");
@@ -143,17 +116,16 @@ public class HomeFragment extends BaseTabFragment implements Response.Listener<J
      */
     public void loadData() {
         page.setLoading();
-        mRequestQueue.add(new JsonObjectRequest(Request.Method.GET,
-                "https://www.cool1024.com:8000/list?" + page.toQueryString(), null,
-                HomeFragment.this, HomeFragment.this));
+        RequestAsyncTask.get("https://www.cool1024.com:8000/list?" + page.toQueryString()
+                , HomeFragment.this).execute();
     }
 
-    private void loadMore(){
-        if (page.loading){
+    private void loadMore() {
+        if (page.loading) {
             return;
         }
         if (page.hasNext()) {
-            page.loadModel =Pagination.LOAD_MORE;
+            page.loadModel = Pagination.LOAD_MORE;
             loadData();
         } else {
             showToast("没有更多数据了～");
@@ -170,9 +142,6 @@ public class HomeFragment extends BaseTabFragment implements Response.Listener<J
     private void initView() {
         Log.d(TAG, "INIT_VIEW");
         mParentActivity = getActivity();
-        if (mParentActivity != null) {
-            mRequestQueue = HttpQueue.getInstance(mParentActivity);
-        }
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 1);
         mCardAdapter = new CardAdapter(mCards);
         mRecyclerView.setLayoutManager(layoutManager);

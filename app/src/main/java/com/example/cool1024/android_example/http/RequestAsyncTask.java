@@ -1,8 +1,6 @@
 package com.example.cool1024.android_example.http;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -14,7 +12,6 @@ import okhttp3.ResponseBody;
 public class RequestAsyncTask extends AsyncTask<RequestParam, Integer, ApiData> {
 
     private static OkHttpClient sOkHttpClient;
-    private static Context sAppContext;
     private static final String GET = "GET";
     private static final String DELETE = "DELETE";
     private static final String POST = "POST";
@@ -38,10 +35,6 @@ public class RequestAsyncTask extends AsyncTask<RequestParam, Integer, ApiData> 
 
     public static RequestAsyncTask delete(String requestUrl, ResponseCallback responseCallback) {
         return new RequestAsyncTask(requestUrl, DELETE, responseCallback);
-    }
-
-    public static void setContext(Context context) {
-        sAppContext = context;
     }
 
     private static OkHttpClient getRequestClient() {
@@ -97,14 +90,24 @@ public class RequestAsyncTask extends AsyncTask<RequestParam, Integer, ApiData> 
 
     @Override
     protected void onPostExecute(ApiData apiData) {
-        if (apiData != null && apiData.getResult()) {
-            mResponseCallback.onResponse(apiData);
+        if (apiData != null) {
+            if (apiData.getResult()) {
+                mResponseCallback.onResponse(apiData);
+            } else {
+                mResponseCallback.onError(apiData.getMessage());
+            }
         } else {
-            Toast.makeText(sAppContext, "数据请求失败", Toast.LENGTH_SHORT).show();
+            mResponseCallback.onError("数据请求失败");
         }
+        mResponseCallback.onComplete();
     }
+
 
     public interface ResponseCallback {
         void onResponse(ApiData apiData);
+
+        void onError(String errorMsg);
+
+        void onComplete();
     }
 }

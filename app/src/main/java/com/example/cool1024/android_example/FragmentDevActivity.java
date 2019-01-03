@@ -10,7 +10,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.cool1024.android_example.fragments.BluetoothFragment;
+import com.example.cool1024.android_example.fragments.FlvFragment;
 import com.example.cool1024.android_example.fragments.ImageDrawFragment;
+import com.example.cool1024.android_example.fragments.LiveFragment;
 
 public class FragmentDevActivity extends AppCompatActivity {
 
@@ -55,6 +58,18 @@ public class FragmentDevActivity extends AppCompatActivity {
             case ImageDrawFragment.TAG: {
                 openFileDialog("image/*", "请选择要涂鸦的图片",
                         ImageDrawFragment.DRAW_IMAGE_SELECT_CODE);
+                break;
+            }
+            case LiveFragment.TAG: {
+                showFragment(LiveFragment.newInstance("暂无直播地址"));
+                break;
+            }
+            case BluetoothFragment.TAG: {
+                showFragment(new BluetoothFragment());
+                break;
+            }
+            case FlvFragment.TAG:{
+                showFragment(new FlvFragment());
                 break;
             }
             default: {

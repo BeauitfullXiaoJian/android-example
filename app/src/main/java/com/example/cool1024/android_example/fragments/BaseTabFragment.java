@@ -1,13 +1,15 @@
 package com.example.cool1024.android_example.fragments;
 
 import android.app.Activity;
+import android.content.Context;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.example.cool1024.android_example.http.ApiData;
+import com.example.cool1024.android_example.http.RequestAsyncTask;
 
-public class BaseTabFragment extends Fragment implements Response.ErrorListener {
+public class BaseTabFragment extends Fragment implements RequestAsyncTask.ResponseCallback {
 
     public static final String EMPTY_TAG = "NONE";
 
@@ -15,19 +17,29 @@ public class BaseTabFragment extends Fragment implements Response.ErrorListener 
         return EMPTY_TAG;
     }
 
-    public void showToast(String message) {
-        Activity activity = getActivity();
-        if (activity != null) {
-            Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-        }
+    @Override
+    public void onResponse(ApiData apiData) {
     }
 
     @Override
-    public void onErrorResponse(VolleyError error) {
-        Activity activity = getActivity();
+    public void onComplete() {
+
+    }
+
+    @Override
+    public void onError(String errorMsg) {
+        this.showToast(errorMsg);
+    }
+
+    public void showToast(final String message) {
+        final Activity activity = this.getActivity();
         if (activity != null) {
-            Toast.makeText(activity.getApplicationContext(), "网络请求错误", Toast.LENGTH_SHORT)
-                    .show();
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 }

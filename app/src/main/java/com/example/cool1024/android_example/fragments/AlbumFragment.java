@@ -16,7 +16,7 @@ import com.example.cool1024.android_example.classes.Album;
 import com.example.cool1024.android_example.http.ApiData;
 import com.example.cool1024.android_example.http.RequestAsyncTask;
 
-public class AlbumFragment extends Fragment implements RequestAsyncTask.ResponseCallback {
+public class AlbumFragment extends BaseTabFragment {
 
     private static final String TAG = "AlbumFragmentLog";
     private static final String ALBUM_ID = "albumId";
@@ -68,7 +68,6 @@ public class AlbumFragment extends Fragment implements RequestAsyncTask.Response
     }
 
     private void loadData() {
-        RequestAsyncTask.setContext(getActivity().getApplicationContext());
         RequestAsyncTask.get("https://www.cool1024.com:8000/album?id=" + mAlbum.getId(),
                 AlbumFragment.this).execute();
     }
