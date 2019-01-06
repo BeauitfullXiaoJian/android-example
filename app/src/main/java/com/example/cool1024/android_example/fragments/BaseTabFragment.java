@@ -1,8 +1,6 @@
 package com.example.cool1024.android_example.fragments;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
@@ -24,6 +22,10 @@ public class BaseTabFragment extends Fragment implements RequestAsyncTask.Respon
     @Override
     public void onComplete() {
 
+    }
+
+    public boolean onBackPressed() {
+        return true;
     }
 
     @Override

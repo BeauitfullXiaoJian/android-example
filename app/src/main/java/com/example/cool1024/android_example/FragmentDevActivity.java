@@ -1,6 +1,7 @@
 package com.example.cool1024.android_example;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.cool1024.android_example.fragments.BaseTabFragment;
 import com.example.cool1024.android_example.fragments.BluetoothFragment;
 import com.example.cool1024.android_example.fragments.FlvFragment;
 import com.example.cool1024.android_example.fragments.ImageDrawFragment;
@@ -19,6 +21,7 @@ public class FragmentDevActivity extends AppCompatActivity {
 
     public static final String TAG = "FragmentDevActivityLog";
     public static final String FRAGMENT_NAME_PARAM = "fragment_name";
+    private BaseTabFragment mActiveFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +29,19 @@ public class FragmentDevActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fragment_dev);
         // 载入选中的碎片
         setActiveFragment();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "按下返回键盘");
+        if (mActiveFragment.onBackPressed()) {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -68,7 +84,7 @@ public class FragmentDevActivity extends AppCompatActivity {
                 showFragment(new BluetoothFragment());
                 break;
             }
-            case FlvFragment.TAG:{
+            case FlvFragment.TAG: {
                 showFragment(new FlvFragment());
                 break;
             }
@@ -89,6 +105,7 @@ public class FragmentDevActivity extends AppCompatActivity {
             fragmentManager.beginTransaction()
                     .replace(R.id.photo_view_layout, fragment)
                     .commitAllowingStateLoss();
+            mActiveFragment = (BaseTabFragment) fragment;
         }
     }
 

@@ -18,12 +18,15 @@
     <!-- 使用蓝牙 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATIONS" />
     <!-- 使用摄像头 -->
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -54,6 +57,10 @@
         <activity android:name=".SettingsActivity" />
         <activity android:name=".UserInfoActivity" />
         <activity android:name=".DetailActivity" />
+        <activity android:name=".PhotoViewActivity" />
+        <activity
+            android:name=".FragmentDevActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <service
             android:name=".services.MusicService"
@@ -77,8 +84,6 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".PhotoViewActivity" />
-        <activity android:name=".FragmentDevActivity"></activity>
     </application>
 
 </manifest>
