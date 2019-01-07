@@ -10,4 +10,5 @@
     <color name="colorSuccess">#34df9e</color>
     <color name="colorWarning">#f7f26f</color>
     <color name="colorEarth">#845d30</color>
+    <color name="colorLine">#0d000000</color>
 </resources>

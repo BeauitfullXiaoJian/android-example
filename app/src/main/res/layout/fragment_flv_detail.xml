@@ -5,10 +5,150 @@
     android:layout_height="match_parent"
     tools:context=".fragments.FlvFragments.FlvDetailFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/default_padding">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:contentDescription="@string/avatar"
+                    android:src="@drawable/avatar"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="3dp"
+                        android:text="梦想的乡"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/item_subject_size" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+                        android:text="2.7万粉丝"
+                        android:textColor="@color/colorSecondary"
+                        android:textSize="@dimen/item_tag_size" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="70dp"
+                    android:layout_height="30dp"
+                    android:background="@color/colorPrimary"
+                    android:drawableStart="@drawable/ic_focus"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:paddingStart="@dimen/default_padding"
+                    android:paddingEnd="@dimen/default_padding"
+                    android:text="@string/focus" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="本文为博主原创文章，未经博主允许不得转载"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/item_title_size" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/item_icon_size"
+                        android:layout_height="@dimen/item_icon_size"
+                        android:layout_marginEnd="@dimen/default_margin"
+                        android:contentDescription="@string/comment"
+                        android:src="@drawable/ic_play" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="21.3万"
+                        android:textSize="@dimen/item_tag_size" />
+
+                    <ImageView
+                        android:layout_width="@dimen/item_icon_size"
+                        android:layout_height="@dimen/item_icon_size"
+                        android:layout_marginStart="@dimen/default_margin"
+                        android:layout_marginEnd="@dimen/default_margin"
+                        android:contentDescription="@string/comment"
+                        android:src="@drawable/ic_comment" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3209"
+                        android:textSize="@dimen/item_tag_size" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/default_margin"
+                        android:text="2018-12-20"
+                        android:textSize="@dimen/item_tag_size" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/default_margin"
+                        android:text="AV23795430"
+                        android:textSize="@dimen/item_tag_size" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorLine" />
+
+        <include layout="@layout/flv_item" />
+
+        <include layout="@layout/flv_item" />
+
+        <include layout="@layout/flv_item" />
+
+        <include layout="@layout/flv_item" />
+
+        <include layout="@layout/flv_item" />
+    </LinearLayout>
 
 </FrameLayout>

@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.example.cool1024.android_example.fragments.BaseTabFragment;
 import com.example.cool1024.android_example.fragments.BluetoothFragment;
-import com.example.cool1024.android_example.fragments.FlvFragment;
+import com.example.cool1024.android_example.fragments.FlvFragments.FlvFragment;
 import com.example.cool1024.android_example.fragments.ImageDrawFragment;
 import com.example.cool1024.android_example.fragments.LiveFragment;
 

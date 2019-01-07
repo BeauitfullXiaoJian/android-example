@@ -40,6 +40,7 @@ import com.example.cool1024.android_example.MainActivity;
 import com.example.cool1024.android_example.R;
 import com.example.cool1024.android_example.SettingsActivity;
 import com.example.cool1024.android_example.UserInfoActivity;
+import com.example.cool1024.android_example.fragments.FlvFragments.FlvFragment;
 import com.example.cool1024.android_example.services.DownloadService;
 import com.example.cool1024.android_example.services.MusicService;
 

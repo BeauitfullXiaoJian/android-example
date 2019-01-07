@@ -1,4 +1,4 @@
-package com.example.cool1024.android_example.fragments;
+package com.example.cool1024.android_example.fragments.FlvFragments;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -25,17 +25,17 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.example.cool1024.android_example.R;
 import com.example.cool1024.android_example.classes.FragmentPage;
+import com.example.cool1024.android_example.fragments.BaseTabFragment;
+import com.example.cool1024.android_example.fragments.CenterFragment;
+import com.example.cool1024.android_example.fragments.DashboardFragment;
+import com.example.cool1024.android_example.fragments.HomeFragment;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
@@ -356,11 +356,9 @@ public class FlvFragment extends BaseTabFragment implements
 
         FlvFragmentPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
-            Map map = new HashMap<Fragment, String>();
             pages = new ArrayList<>();
-            pages.add(new FragmentPage(new HomeFragment(),"首页"));
-            pages.add(new FragmentPage(new CenterFragment(),"个人中心"));
-            pages.add(new FragmentPage(new DashboardFragment(),"网站"));
+            pages.add(new FragmentPage(FlvDetailFragment.newInstance(null), "详情"));
+            pages.add(new FragmentPage(FlvCommentFragment.newInstance(1), "评论"));
         }
 
         @Override
