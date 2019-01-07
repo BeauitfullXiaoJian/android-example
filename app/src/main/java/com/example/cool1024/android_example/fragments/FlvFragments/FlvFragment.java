@@ -1,11 +1,16 @@
 package com.example.cool1024.android_example.fragments;
 
-
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -20,11 +25,17 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.example.cool1024.android_example.R;
+import com.example.cool1024.android_example.classes.FragmentPage;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
@@ -40,7 +51,7 @@ public class FlvFragment extends BaseTabFragment implements
 
     public final static String TAG = "FlvFragmentLog";
 
-    private Activity mParentActivity;
+    private AppCompatActivity mParentActivity;
     private IjkMediaPlayer mIjkMediaPlayer;
     private SurfaceView mPlayView;
     private SeekBar mSeekBar;
@@ -201,7 +212,7 @@ public class FlvFragment extends BaseTabFragment implements
                              Bundle savedInstanceState) {
         View mainView = inflater.inflate(R.layout.fragment_flv, container, false);
         mainView.findViewById(R.id.btn_play).setOnClickListener(FlvFragment.this);
-        mParentActivity = getActivity();
+        mParentActivity = (AppCompatActivity) getActivity();
         mSeekBar = mainView.findViewById(R.id.play_progress);
         mLoadingBar = mainView.findViewById(R.id.play_loading);
         mPlayBtn = mainView.findViewById(R.id.btn_play);
@@ -213,6 +224,12 @@ public class FlvFragment extends BaseTabFragment implements
         mPlayView.setOnTouchListener(FlvFragment.this);
         gestureDetector = new GestureDetector(mParentActivity, new GestureListener());
         setDefaultScreen();
+        FragmentManager fragmentManager = mParentActivity.getSupportFragmentManager();
+        TabLayout tabLayout = mainView.findViewById(R.id.tab_layout);
+        ViewPager viewPager = mainView.findViewById(R.id.view_pager);
+        tabLayout.setupWithViewPager(viewPager);
+        viewPager.setAdapter(new FlvFragmentPagerAdapter(fragmentManager));
+        viewPager.setCurrentItem(0);
         return mainView;
     }
 
@@ -266,7 +283,7 @@ public class FlvFragment extends BaseTabFragment implements
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        preparePlayer();
+        // preparePlayer();
     }
 
     @Override
@@ -330,6 +347,36 @@ public class FlvFragment extends BaseTabFragment implements
             Log.d(TAG, "双击事件");
             setFullScreen();
             return true;
+        }
+    }
+
+    class FlvFragmentPagerAdapter extends FragmentPagerAdapter {
+
+        private ArrayList<FragmentPage> pages;
+
+        FlvFragmentPagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+            Map map = new HashMap<Fragment, String>();
+            pages = new ArrayList<>();
+            pages.add(new FragmentPage(new HomeFragment(),"首页"));
+            pages.add(new FragmentPage(new CenterFragment(),"个人中心"));
+            pages.add(new FragmentPage(new DashboardFragment(),"网站"));
+        }
+
+        @Override
+        public int getCount() {
+            return pages.size();
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return pages.get(position).getFragment();
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return pages.get(position).getTitle();
         }
     }
 }
