@@ -4,13 +4,17 @@ package com.example.cool1024.android_example.fragments.FlvFragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.cool1024.android_example.R;
+import com.example.cool1024.android_example.fragments.HomeFragment;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class FlvDetailFragment extends Fragment {
 
@@ -33,10 +37,41 @@ public class FlvDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull  LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_flv_detail, container, false);
+        View mainView = inflater.inflate(R.layout.fragment_flv_detail, container, false);
+        RecyclerView recyclerView = mainView.findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(new RecyclerAdapter());
+        return mainView;
     }
 
+    class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.flv_item, parent, false);
+            return new RecyclerAdapter.ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return 10;
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            ViewHolder(View view) {
+                super(view);
+            }
+        }
+    }
 }

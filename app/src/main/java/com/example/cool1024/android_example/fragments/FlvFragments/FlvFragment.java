@@ -30,9 +30,6 @@ import android.widget.TextView;
 import com.example.cool1024.android_example.R;
 import com.example.cool1024.android_example.classes.FragmentPage;
 import com.example.cool1024.android_example.fragments.BaseTabFragment;
-import com.example.cool1024.android_example.fragments.CenterFragment;
-import com.example.cool1024.android_example.fragments.DashboardFragment;
-import com.example.cool1024.android_example.fragments.HomeFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
