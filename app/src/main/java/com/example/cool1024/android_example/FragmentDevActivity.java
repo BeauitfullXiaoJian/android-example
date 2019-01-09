@@ -12,7 +12,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.cool1024.android_example.fragments.BaseTabFragment;
-import com.example.cool1024.android_example.fragments.BluetoothFragment;
 import com.example.cool1024.android_example.fragments.FlvFragments.FlvFragment;
 import com.example.cool1024.android_example.fragments.ImageDrawFragment;
 import com.example.cool1024.android_example.fragments.LiveFragment;
@@ -78,10 +77,6 @@ public class FragmentDevActivity extends AppCompatActivity {
             }
             case LiveFragment.TAG: {
                 showFragment(LiveFragment.newInstance("暂无直播地址"));
-                break;
-            }
-            case BluetoothFragment.TAG: {
-                showFragment(new BluetoothFragment());
                 break;
             }
             case FlvFragment.TAG: {

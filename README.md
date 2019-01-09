@@ -16,5 +16,12 @@
 8. flv视频播放
 9. 图片涂鸦
 
+## Material Design Component && Other Support Component
+* CardView 卡片 `com.android.support:cardview-v7:28.0.0`
+* RecyclerView 列表 `com.android.support:recyclerview-v7:28.0.0`
+* SwipeRefreshLayout 下拉刷新/上滑更多
+* NestedScrollView 滚动视图
+* TabLayout & ViewPager页面切换
+
 ## 预览
 ![预览图](preview.jpg)

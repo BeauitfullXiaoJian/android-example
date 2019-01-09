@@ -5,10 +5,12 @@
     <color name="colorPrimaryDark">#2467a9</color>
     <color name="colorAccent">#00ff4081</color>
     <color name="colorBlack">#000000</color>
-    <color name="colorSecondary">#AFAFAF</color>
     <color name="colorDanger">#f95757</color>
     <color name="colorSuccess">#34df9e</color>
     <color name="colorWarning">#f7f26f</color>
     <color name="colorEarth">#845d30</color>
+    <color name="colorSecondary">#AFAFAF</color>
+    <color name="colorMuted">#d1d1d1</color>
+    <color name="colorLight">#f4f4f4</color>
     <color name="colorLine">#0d000000</color>
 </resources>

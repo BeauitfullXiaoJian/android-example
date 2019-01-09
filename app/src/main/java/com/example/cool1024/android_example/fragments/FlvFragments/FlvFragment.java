@@ -73,7 +73,7 @@ public class FlvFragment extends BaseTabFragment implements
         // mIjkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
         IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
         try {
-            mIjkMediaPlayer.setDataSource("http://192.168.1.100:8080/html/live.flv");
+            mIjkMediaPlayer.setDataSource("http://192.168.0.103:8080/html/live.flv");
             mIjkMediaPlayer.setDisplay(mPlayView.getHolder());
             mIjkMediaPlayer.prepareAsync();
         } catch (IOException e) {
@@ -280,7 +280,7 @@ public class FlvFragment extends BaseTabFragment implements
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        // preparePlayer();
+         preparePlayer();
     }
 
     @Override
@@ -354,7 +354,7 @@ public class FlvFragment extends BaseTabFragment implements
         FlvFragmentPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
             pages = new ArrayList<>();
-            pages.add(new FragmentPage(FlvDetailFragment.newInstance(null), "详情"));
+            pages.add(new FragmentPage(FlvDetailFragment.newInstance(1), "详情"));
             pages.add(new FragmentPage(FlvCommentFragment.newInstance(1), "评论"));
         }
 

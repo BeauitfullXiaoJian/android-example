@@ -22,6 +22,7 @@
             android:padding="@dimen/default_padding">
 
             <ImageView
+                android:id="@+id/flv_thumb"
                 android:layout_width="130dp"
                 android:layout_height="90dp"
                 android:contentDescription="@string/image"
@@ -37,70 +38,55 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/flv_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/default_margin"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:text="本文为博主原创文章，未经博主允许不得转载"
+                    android:minLines="2"
+                    android:text="@string/flv_title"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/item_title_size" />
+
+                <TextView
+                    android:id="@+id/flv_up"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/default_sm_margin"
+                    android:drawableStart="@drawable/ic_user"
+                    android:drawablePadding="@dimen/default_padding"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/flv_up"
+                    android:textSize="@dimen/item_tag_size" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
+                    android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="@dimen/item_icon_size"
-                        android:layout_height="@dimen/item_icon_size"
-                        android:layout_marginEnd="@dimen/default_margin"
-                        android:contentDescription="@string/comment"
-                        android:src="@drawable/ic_user" />
-
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text="梦想的乡"
-                        android:textSize="@dimen/item_tag_size" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="@dimen/item_icon_size"
-                        android:layout_height="@dimen/item_icon_size"
-                        android:layout_marginEnd="@dimen/default_margin"
-                        android:contentDescription="@string/comment"
-                        android:src="@drawable/ic_play" />
-
-                    <TextView
+                        android:id="@+id/flv_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="21.3万"
+                        android:drawableStart="@drawable/ic_play"
+                        android:drawablePadding="@dimen/default_padding"
+                        android:text="@string/flv_view"
                         android:textSize="@dimen/item_tag_size" />
 
-                    <ImageView
-                        android:layout_width="@dimen/item_icon_size"
-                        android:layout_height="@dimen/item_icon_size"
-                        android:layout_marginEnd="@dimen/default_margin"
-                        android:contentDescription="@string/comment"
-                        android:src="@drawable/ic_comment" />
-
                     <TextView
+                        android:id="@+id/flv_comment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="3209"
+                        android:drawableStart="@drawable/ic_comment"
+                        android:drawablePadding="@dimen/default_padding"
+                        android:text="@string/flv_comment"
                         android:textSize="@dimen/item_tag_size" />
+
                 </LinearLayout>
             </LinearLayout>
 

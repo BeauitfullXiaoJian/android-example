@@ -1,14 +1,387 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context=".fragments.FlvFragments.FlvCommentFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
 
-</FrameLayout>
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/default_padding"
+                    android:paddingTop="@dimen/default_padding"
+                    android:paddingEnd="@dimen/default_padding">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="评论(951)"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/item_title_size" />
+
+                    <ImageView
+                        android:layout_width="@dimen/item_btn_size"
+                        android:layout_height="@dimen/item_btn_size"
+                        android:contentDescription="@string/more"
+                        android:src="@drawable/ic_more" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/default_padding">
+
+                    <ImageView
+                        android:layout_width="@dimen/item_avatar_size"
+                        android:layout_height="@dimen/item_avatar_size"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/avatar" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/default_margin"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="243dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="梦想的乡"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/item_title_size" />
+
+                            <Button
+                                android:layout_width="70dp"
+                                android:layout_height="30dp"
+                                android:background="@android:color/transparent"
+                                android:drawableStart="@drawable/ic_focus_o"
+                                android:foreground="?attr/selectableItemBackground"
+                                android:paddingStart="@dimen/default_padding"
+                                android:paddingEnd="@dimen/default_padding"
+                                android:text="@string/focus"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/item_title_size" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/default_margin"
+                            android:text="#14  2018-12-20"
+                            android:textColor="@color/colorSecondary"
+                            android:textSize="@dimen/item_tag_size" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/default_margin"
+                            android:maxLines="10"
+                            android:text="端到端测试是一种用于测试应用程序流程是否按照设计从头到尾执行的方法。 执行端到端测试的目的是识别系统依赖性并确保在各种系统组件和系统之间传递正确的信息。"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/item_title_size" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="@dimen/default_margin"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="30dp"
+                                android:drawableStart="@drawable/ic_good_o"
+                                android:drawablePadding="@dimen/default_sm_margin"
+                                android:gravity="center_vertical"
+                                android:text="232810"
+                                android:textSize="@dimen/item_tag_size" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="30dp"
+                                android:drawableStart="@drawable/ic_good_o"
+                                android:textSize="@dimen/item_tag_size" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/ic_share_o"
+                                android:textSize="@dimen/item_tag_size" />
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1">
+
+                                <ImageView
+                                    android:layout_width="@dimen/item_btn_size"
+                                    android:layout_height="@dimen/item_btn_size"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_gravity="center_vertical"
+                                    android:contentDescription="@string/more"
+                                    android:src="@drawable/ic_more" />
+                            </RelativeLayout>
+
+                        </LinearLayout>
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="#ededed">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:padding="@dimen/default_padding">
+
+                                <TextView
+                                    android:id="@+id/reply_user_nick"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/default_sm_margin"
+                                    android:maxLines="2"
+                                    android:text="棒棒糖：很好的创意，不知道什么时候可以开放出来～"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="@dimen/item_title_size" />
+
+                                <TextView
+                                    android:id="@+id/textView8"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:drawableEnd="@drawable/ic_angle_right"
+                                    android:gravity="center_vertical"
+                                    android:text="共34条回复"
+                                    android:textColor="@color/colorPrimary" />
+
+                            </LinearLayout>
+
+                        </android.support.v7.widget.CardView>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorLine" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/default_padding">
+
+                    <ImageView
+                        android:layout_width="@dimen/item_avatar_size"
+                        android:layout_height="@dimen/item_avatar_size"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/avatar" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/default_margin"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="243dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="梦想的乡"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/item_title_size" />
+
+                            <Button
+                                android:layout_width="70dp"
+                                android:layout_height="30dp"
+                                android:background="@android:color/transparent"
+                                android:drawableStart="@drawable/ic_focus_o"
+                                android:foreground="?attr/selectableItemBackground"
+                                android:paddingStart="@dimen/default_padding"
+                                android:paddingEnd="@dimen/default_padding"
+                                android:text="@string/focus"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/item_title_size" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/default_margin"
+                            android:text="#14  2018-12-20"
+                            android:textColor="@color/colorSecondary"
+                            android:textSize="@dimen/item_tag_size" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/default_margin"
+                            android:maxLines="10"
+                            android:text="端到端测试是一种用于测试应用程序流程是否按照设计从头到尾执行的方法。 执行端到端测试的目的是识别系统依赖性并确保在各种系统组件和系统之间传递正确的信息。"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/item_title_size" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="@dimen/default_margin"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="30dp"
+                                android:drawableStart="@drawable/ic_good_o"
+                                android:drawablePadding="@dimen/default_sm_margin"
+                                android:gravity="center_vertical"
+                                android:text="232810"
+                                android:textSize="@dimen/item_tag_size" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="30dp"
+                                android:drawableStart="@drawable/ic_good_o"
+                                android:textSize="@dimen/item_tag_size" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/ic_share_o"
+                                android:textSize="@dimen/item_tag_size" />
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1">
+
+                                <ImageView
+                                    android:layout_width="@dimen/item_btn_size"
+                                    android:layout_height="@dimen/item_btn_size"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_gravity="center_vertical"
+                                    android:contentDescription="@string/more"
+                                    android:src="@drawable/ic_more" />
+                            </RelativeLayout>
+
+                        </LinearLayout>
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="#ededed">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:padding="@dimen/default_padding">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/default_sm_margin"
+                                    android:maxLines="2"
+                                    android:text="棒棒糖：很好的创意，不知道什么时候可以开放出来～"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="@dimen/item_title_size" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:drawableEnd="@drawable/ic_angle_right"
+                                    android:gravity="center_vertical"
+                                    android:text="共34条回复"
+                                    android:textColor="@color/colorPrimary" />
+
+                            </LinearLayout>
+
+                        </android.support.v7.widget.CardView>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorLight"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:padding="@dimen/default_padding"
+                android:src="@drawable/ic_smile" />
+
+            <EditText
+                android:id="@+id/input_comment"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="@dimen/default_margin"
+                android:layout_weight="1"
+                android:background="@drawable/input_radius"
+                android:hint="说点什么吧"
+                android:imeOptions="actionSend"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingStart="@dimen/default_padding"
+                android:paddingEnd="@dimen/default_padding"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/item_title_size" />
+
+            <ImageView
+                android:id="@+id/btn_send"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:padding="@dimen/default_padding"
+                android:src="@drawable/ic_send" />
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.v4.widget.SwipeRefreshLayout>

@@ -39,7 +39,7 @@ public class BaseTabFragment extends Fragment implements RequestAsyncTask.Respon
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 }
             });
         }
