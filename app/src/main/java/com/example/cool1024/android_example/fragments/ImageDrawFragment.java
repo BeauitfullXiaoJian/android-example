@@ -1,6 +1,7 @@
 package com.example.cool1024.android_example.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -10,16 +11,19 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.PixelCopy;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -33,7 +37,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class ImageDrawFragment extends Fragment implements View.OnClickListener {
+public class ImageDrawFragment extends BaseTabFragment implements View.OnClickListener {
     public static final String TAG = "ImageDrawFragmentLog";
     public static final int DRAW_IMAGE_SELECT_CODE = 1;
     private static final String IMAGE_PATH = "IMAGE_PATH";
@@ -211,8 +215,8 @@ public class ImageDrawFragment extends Fragment implements View.OnClickListener 
     }
 
     public class DrawLine {
-        public ArrayList<Point> points;
-        public Paint paint;
+        ArrayList<Point> points;
+        Paint paint;
 
         DrawLine(ArrayList<Point> drawPoints, Paint drawPaint) {
             this.points = drawPoints;
@@ -308,6 +312,18 @@ public class ImageDrawFragment extends Fragment implements View.OnClickListener 
         public Bitmap getImageBitmap() {
             this.setDrawingCacheEnabled(true);
             return this.getDrawingCache();
+        }
+
+        public void getImageBitmap(PixelCopy.OnPixelCopyFinishedListener listener) {
+            Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+            int[] location = {0, 0};
+            getLocationInWindow(location);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                PixelCopy.request(((Activity) mContext).getWindow(),
+                        new Rect(location[0], location[1], location[0] + getWidth(),
+                                location[1] + getHeight()),
+                        bitmap, listener, new Handler());
+            }
         }
     }
 }

@@ -54,13 +54,33 @@
                             android:layout_weight="1">
 
                             <Button
+                                android:id="@+id/btn_banner_page"
+                                android:layout_width="75dp"
+                                android:layout_height="75dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:drawableTop="@drawable/ic_banner"
+                                android:padding="10dp"
+                                android:text="@string/banner"
+                                android:textAllCaps="false"
+                                android:textColor="@color/colorPrimary" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+
+                            <Button
                                 android:id="@+id/btn_draw_page"
                                 android:layout_width="75dp"
                                 android:layout_height="75dp"
                                 android:layout_centerHorizontal="true"
                                 android:layout_centerVertical="true"
                                 android:background="?android:attr/selectableItemBackground"
-                                android:drawableTop="@drawable/ic_palette_black_40dp"
+                                android:drawableTop="@drawable/ic_draw"
                                 android:padding="10dp"
                                 android:text="@string/draw_picture"
                                 android:textAllCaps="false"
@@ -80,13 +100,21 @@
                                 android:layout_centerHorizontal="true"
                                 android:layout_centerVertical="true"
                                 android:background="?android:attr/selectableItemBackground"
-                                android:drawableTop="@drawable/ic_app_store"
+                                android:drawableTop="@drawable/ic_flv_play"
                                 android:padding="10dp"
-                                android:text="@string/app_store"
+                                android:text="@string/flv_play"
                                 android:textAllCaps="false"
                                 android:textColor="@color/colorPrimary" />
 
                         </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal">
 
                         <RelativeLayout
                             android:layout_width="0dp"
@@ -106,13 +134,6 @@
                                 android:textColor="@color/colorPrimary" />
 
                         </RelativeLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:baselineAligned="false"
-                        android:orientation="horizontal">
 
                         <RelativeLayout
                             android:layout_width="0dp"
@@ -152,24 +173,6 @@
 
                         </RelativeLayout>
 
-                        <RelativeLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1">
-
-                            <Button
-                                android:layout_width="75dp"
-                                android:layout_height="75dp"
-                                android:layout_centerHorizontal="true"
-                                android:layout_centerVertical="true"
-                                android:background="?android:attr/selectableItemBackground"
-                                android:drawableTop="@drawable/ic_easel"
-                                android:padding="10dp"
-                                android:text="@string/easel"
-                                android:textAllCaps="false"
-                                android:textColor="@color/colorPrimary" />
-
-                        </RelativeLayout>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -236,7 +239,7 @@
                             android:layout_height="wrap_content"
                             android:contentDescription="@string/draw_picture"
                             android:padding="@dimen/button_padding"
-                            app:srcCompat="@drawable/ic_live_tv_black_24dp" />
+                            app:srcCompat="@drawable/ic_flv_play" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"

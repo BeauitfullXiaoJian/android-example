@@ -190,6 +190,12 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btn_banner_page: {
+                Intent intent = new Intent(getActivity(), FragmentDevActivity.class);
+                intent.putExtra(FragmentDevActivity.FRAGMENT_NAME_PARAM, BannerFragment.TAG);
+                mParentActivity.startActivity(intent);
+                break;
+            }
             case R.id.btn_camera_page:{
                 Intent intent = new Intent(getActivity(), FragmentDevActivity.class);
                 intent.putExtra(FragmentDevActivity.FRAGMENT_NAME_PARAM, FlvFragment.TAG);
@@ -252,6 +258,7 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
         view.findViewById(R.id.media_item).setOnClickListener(CenterFragment.this);
         view.findViewById(R.id.btn_draw_page).setOnClickListener(CenterFragment.this);
         view.findViewById(R.id.btn_camera_page).setOnClickListener(CenterFragment.this);
+        view.findViewById(R.id.btn_banner_page).setOnClickListener(CenterFragment.this);
         mScrollView.getViewTreeObserver().addOnScrollChangedListener(CenterFragment.this);
     }
 

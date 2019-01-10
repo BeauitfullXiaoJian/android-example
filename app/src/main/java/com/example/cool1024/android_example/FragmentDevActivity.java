@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.cool1024.android_example.fragments.BannerFragment;
 import com.example.cool1024.android_example.fragments.BaseTabFragment;
 import com.example.cool1024.android_example.fragments.FlvFragments.FlvFragment;
 import com.example.cool1024.android_example.fragments.ImageDrawFragment;
@@ -33,7 +34,7 @@ public class FragmentDevActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Log.d(TAG, "按下返回键盘");
-        if (mActiveFragment.onBackPressed()) {
+        if (mActiveFragment == null || mActiveFragment.onBackPressed()) {
             super.onBackPressed();
         }
     }
@@ -73,6 +74,14 @@ public class FragmentDevActivity extends AppCompatActivity {
             case ImageDrawFragment.TAG: {
                 openFileDialog("image/*", "请选择要涂鸦的图片",
                         ImageDrawFragment.DRAW_IMAGE_SELECT_CODE);
+                break;
+            }
+            case BannerFragment.TAG: {
+                showFragment(BannerFragment.newInstance(new String[]{
+                        "https://hello1024.oss-cn-beijing.aliyuncs.com/upload/banner/201808310312505b88b23288693.jpg",
+                        "https://hello1024.oss-cn-beijing.aliyuncs.com/upload/banner/201808310313105b88b246cb80c.jpg",
+                        "https://hello1024.oss-cn-beijing.aliyuncs.com/upload/banner/201808310313295b88b2595bfb5.jpg"
+                }));
                 break;
             }
             case LiveFragment.TAG: {

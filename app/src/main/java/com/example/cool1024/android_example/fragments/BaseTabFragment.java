@@ -9,6 +9,8 @@ import com.example.cool1024.android_example.http.RequestAsyncTask;
 
 public class BaseTabFragment extends Fragment implements RequestAsyncTask.ResponseCallback {
 
+    public static final int MIN_TOAST_TIME = 3000;
+    private static long sToastShowTime = 0;
     public static final String EMPTY_TAG = "NONE";
 
     public String getFragmentTag() {
@@ -35,13 +37,14 @@ public class BaseTabFragment extends Fragment implements RequestAsyncTask.Respon
 
     public void showToast(final String message) {
         final Activity activity = this.getActivity();
-        if (activity != null) {
+        if (activity != null && System.currentTimeMillis() - sToastShowTime > MIN_TOAST_TIME) {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 }
             });
+            sToastShowTime = System.currentTimeMillis();
         }
     }
 }
