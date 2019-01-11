@@ -12,10 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.GridLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.cool1024.android_example.R;
+import com.example.cool1024.android_example.components.TouchImageView;
 
 public class BannerFragment extends BaseTabFragment {
 
@@ -23,10 +24,6 @@ public class BannerFragment extends BaseTabFragment {
     private static final String IMAGE_URLS_PARAM = "IMAGE_URLS_PARAM";
 
     private String[] mImageUrls;
-
-    public BannerFragment() {
-        // Required empty public constructor
-    }
 
     public static BannerFragment newInstance(String[] imageUrls) {
         BannerFragment fragment = new BannerFragment();
@@ -99,7 +96,8 @@ public class BannerFragment extends BaseTabFragment {
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             Context context = getContext();
-            ImageView imageView = new ImageView(context);
+            TouchImageView imageView = new TouchImageView(context);
+            imageView.setLayoutParams(new ViewGroup.LayoutParams(2000, 2000));
             Glide.with(container).load(mImageUrls[position]).into(imageView);
             container.addView(imageView);
             Log.d(TAG, "实例化" + position);
