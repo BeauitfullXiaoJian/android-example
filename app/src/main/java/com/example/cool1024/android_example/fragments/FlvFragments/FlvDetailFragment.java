@@ -22,6 +22,8 @@ import com.example.cool1024.android_example.fragments.BaseTabFragment;
 import com.example.cool1024.android_example.http.ApiData;
 import com.example.cool1024.android_example.http.RequestAsyncTask;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -33,6 +35,7 @@ public class FlvDetailFragment extends BaseTabFragment implements
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private FlvDetail mFlvDetail;
+    private List<FlvDetail> mFlvRecommends = new ArrayList<FlvDetail>();
 
     public static FlvDetailFragment newInstance(int flvId) {
         FlvDetailFragment fragment = new FlvDetailFragment();

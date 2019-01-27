@@ -1,6 +1,8 @@
 package com.example.cool1024.android_example.classes;
 
-public class FlvDetail extends BaseData {
+import java.io.Serializable;
+
+public class FlvDetail extends BaseData implements Serializable {
     private String flvTitle;
     private String flvThumb;
     private int flvComment;
@@ -10,9 +12,18 @@ public class FlvDetail extends BaseData {
     private int flvShare;
     private int flvGood;
     private int flvBad;
+    private String flvUrl;
     private String flvUp;
     private String flvUpAvatar;
     private int flvUpFans;
+
+    public String getFlvUrl() {
+        return flvUrl;
+    }
+
+    public void setFlvUrl(String flvUrl) {
+        this.flvUrl = flvUrl;
+    }
 
     public String getFlvTitle() {
         return flvTitle;

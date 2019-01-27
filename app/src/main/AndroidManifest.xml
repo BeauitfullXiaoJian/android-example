@@ -84,6 +84,9 @@
             </intent-filter>
         </receiver>
 
+        <service
+            android:name=".services.WebSocketService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

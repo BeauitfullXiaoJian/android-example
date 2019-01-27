@@ -28,8 +28,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.cool1024.android_example.R;
+import com.example.cool1024.android_example.classes.FlvDetail;
 import com.example.cool1024.android_example.classes.FragmentPage;
 import com.example.cool1024.android_example.fragments.BaseTabFragment;
+import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
+import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,7 +49,8 @@ public class FlvFragment extends BaseTabFragment implements
         View.OnTouchListener,
         SeekBar.OnSeekBarChangeListener {
 
-    public final static String TAG = "FlvFragmentLog";
+    public static final String TAG = "FlvFragmentLog";
+    private static final String FLV_DETAIL = "FLV_DETAIL";
 
     private AppCompatActivity mParentActivity;
     private IjkMediaPlayer mIjkMediaPlayer;
@@ -57,23 +61,63 @@ public class FlvFragment extends BaseTabFragment implements
     private ImageView mPlayBtn;
     private TextView mPlayTime;
 
-    private int mPlayStatus = 0;
-    private GestureDetector gestureDetector;
-    private Boolean mIsSeeking = false;
+    // 当前的播放状态
+    private int mPlayStatus = PlayStatus.PLAYING;
+    // 当前是否为加载状态
+    private Boolean mIsLoading = Boolean.FALSE;
+    // 当前是否在跳转
+    private Boolean mIsSeeking = Boolean.FALSE;
+    // 播放器快照状态
+    private int mPlaySnapshotStatus = PlayStatus.PLAYING;
+    // 视频相关数据
+    private FlvDetail mFlvDetail;
 
+    private GestureDetector gestureDetector;
     private PlayListener mPlayListener = new PlayListener();
 
+
+    /**
+     * 创建一个相册列表Fragment
+     *
+     * @param flvDetail 视频相关信息
+     * @return FlvFragment
+     */
+    public static FlvFragment newInstance(FlvDetail flvDetail) {
+        FlvFragment fragment = new FlvFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(FLV_DETAIL, flvDetail);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    /**
+     * 准备播放器
+     */
     private void preparePlayer() {
-        setLoadingStatus();
+        // 如果播放器之前已经创建，那么只需要恢复即可
+        if (mIjkMediaPlayer != null) {
+            mIjkMediaPlayer.setDisplay(mPlayView.getHolder());
+            recoverPlaySnapshot();
+            return;
+        }
+
+        // 如果没有播放器，创建播放器
+        PlayerFactory.setPlayManager(IjkPlayerManager.class);
         mIjkMediaPlayer = new IjkMediaPlayer();
         mIjkMediaPlayer.setOnPreparedListener(mPlayListener);
         mIjkMediaPlayer.setOnSeekCompleteListener(mPlayListener);
         mIjkMediaPlayer.setOnErrorListener(mPlayListener);
+        mIjkMediaPlayer.setOnInfoListener(mPlayListener);
         mIjkMediaPlayer.setOnBufferingUpdateListener(mPlayListener);
+        mIjkMediaPlayer.setSpeed(1);
+        mIjkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "reconnect", 1);
+        // mIjkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max_cached_duration",
+        //        60 * 60);
+        // mIjkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "soundtouch", 1);
         // mIjkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
-        IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
+        // IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
         try {
-            mIjkMediaPlayer.setDataSource("http://192.168.0.103:8080/html/live.flv");
+            mIjkMediaPlayer.setDataSource(mFlvDetail.getFlvUrl());
             mIjkMediaPlayer.setDisplay(mPlayView.getHolder());
             mIjkMediaPlayer.prepareAsync();
         } catch (IOException e) {
@@ -82,14 +126,20 @@ public class FlvFragment extends BaseTabFragment implements
         }
     }
 
+    /**
+     * 启动播放器
+     */
     private void startPlayer() {
         Log.d(TAG, "恢复播放器");
         if (mIjkMediaPlayer != null) {
-            mIjkMediaPlayer.start();
             setPlayingStatus();
+            mIjkMediaPlayer.start();
         }
     }
 
+    /**
+     * 暂停播放器
+     */
     private void pausePlayer() {
         Log.d(TAG, "暂停播放器");
         if (mIjkMediaPlayer != null) {
@@ -98,6 +148,9 @@ public class FlvFragment extends BaseTabFragment implements
         }
     }
 
+    /**
+     * 销毁播放器
+     */
     private void destroyPlayer() {
         Log.d(TAG, "销毁播放器");
         if (mIjkMediaPlayer != null) {
@@ -105,27 +158,11 @@ public class FlvFragment extends BaseTabFragment implements
         }
     }
 
-    private void setPlayingStatus() {
-        mPlayStatus = PlayStatus.PLAYING;
-        mParentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mLoadingBar.setVisibility(View.INVISIBLE);
-                mPlayBtn.setImageDrawable(mParentActivity.getDrawable(R.drawable.ic_pause_black_24dp));
-            }
-        });
-    }
-
-    private void setSeekCompleteStatus() {
-        if (mIjkMediaPlayer.isPlaying()) {
-            setPlayingStatus();
-        } else {
-            setPauseStatus();
-        }
-    }
-
+    /**
+     * 设置当前为加载状态
+     */
     private void setLoadingStatus() {
-        mPlayStatus = PlayStatus.LOADING;
+        mIsLoading = Boolean.TRUE;
         mParentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -134,17 +171,70 @@ public class FlvFragment extends BaseTabFragment implements
         });
     }
 
+    /**
+     * 设置当前为就绪状态
+     */
+    private void setPreparedStatus() {
+        mIsLoading = Boolean.FALSE;
+        mParentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mLoadingBar.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    /**
+     * 设置当前为播放状态
+     */
+    private void setPlayingStatus() {
+        mPlayStatus = PlayStatus.PLAYING;
+        mParentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mPlayBtn.setImageDrawable(mParentActivity.getDrawable(R.drawable.ic_pause_black_24dp));
+            }
+        });
+    }
+
+    /**
+     * 设置当前为暂停状态
+     */
     private void setPauseStatus() {
         mPlayStatus = PlayStatus.PAUSED;
         mParentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mLoadingBar.setVisibility(View.INVISIBLE);
                 mPlayBtn.setImageDrawable(mParentActivity.getDrawable(R.drawable.ic_play_arrow_black_24dp));
             }
         });
     }
 
+    /**
+     * 保存播放器快照状态
+     */
+    private void savePlaySnapshot() {
+        mPlaySnapshotStatus = mPlayStatus;
+        mIjkMediaPlayer.pause();
+        Log.d(TAG, "保存快照数据" + mPlayStatus);
+    }
+
+    /**
+     * 恢复播放器快照状态
+     */
+    private void recoverPlaySnapshot() {
+        if (mPlaySnapshotStatus == PlayStatus.PAUSED) {
+            setPauseStatus();
+            mIjkMediaPlayer.pause();
+        } else {
+            setPlayingStatus();
+            mIjkMediaPlayer.start();
+        }
+    }
+
+    /**
+     * 设置全屏状态
+     */
     private void setFullScreen() {
         View decorView = mParentActivity.getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
@@ -156,6 +246,9 @@ public class FlvFragment extends BaseTabFragment implements
         mPlayPad.setLayoutParams(params);
     }
 
+    /**
+     * 设置默认（竖屏）状态
+     */
     private void setDefaultScreen() {
         View decorView = mParentActivity.getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
@@ -167,19 +260,9 @@ public class FlvFragment extends BaseTabFragment implements
         mPlayPad.setLayoutParams(params);
     }
 
-    @Override
-    public boolean onBackPressed() {
-        int orientation = getResources().getConfiguration().orientation;
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // 如果当前是横屏，那么退出横屏（全屏）
-            setDefaultScreen();
-            return Boolean.FALSE;
-        } else {
-            // 如果当前是竖屏，那么退出Activity
-            return Boolean.TRUE;
-        }
-    }
-
+    /**
+     * 更新播放进度条
+     */
     private void updatePlaySeek() {
         // Log.d(TAG, "视频当前位置" + mIjkMediaPlayer.getCurrentPosition());
         // Log.d(TAG, "视频缓冲进度" + mIjkMediaPlayer.getVideoCachedDuration());
@@ -196,12 +279,40 @@ public class FlvFragment extends BaseTabFragment implements
 
     }
 
+    /**
+     * 格式化播放时间
+     *
+     * @param duration 毫秒时长
+     * @return 00:00格式的时长
+     */
     private String formatDuration(long duration) {
         duration = duration / 1000;
         int minute = (int) (duration / 60);
         int second = (int) (duration % 60);
         return String.format("%s:%s", minute > 9 ? minute :
                 "0" + minute, second > 9 ? second : "0" + second);
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // 如果当前是横屏，那么退出横屏（全屏）
+            savePlaySnapshot();
+            setDefaultScreen();
+            return Boolean.FALSE;
+        } else {
+            // 如果当前是竖屏，那么退出Activity
+            return Boolean.TRUE;
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mFlvDetail = (FlvDetail) (getArguments().getSerializable(FLV_DETAIL));
+        }
     }
 
     @Override
@@ -230,6 +341,11 @@ public class FlvFragment extends BaseTabFragment implements
         return mainView;
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        destroyPlayer();
+    }
 
     @Override
     public void onClick(View v) {
@@ -268,7 +384,6 @@ public class FlvFragment extends BaseTabFragment implements
         if (mIsSeeking == Boolean.TRUE) {
             Log.d(TAG, "跳转到指定进度" + seekBar.getProgress());
             mIjkMediaPlayer.seekTo(seekBar.getProgress());
-            setLoadingStatus();
         }
         Log.d(TAG, "解锁进度条更新");
     }
@@ -280,23 +395,22 @@ public class FlvFragment extends BaseTabFragment implements
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-         preparePlayer();
+        preparePlayer();
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        destroyPlayer();
+
     }
 
     final class PlayStatus {
-        static final int LOADING = 0;
         static final int PLAYING = 1;
         static final int PAUSED = 2;
     }
 
     class PlayListener implements IMediaPlayer.OnPreparedListener,
             IMediaPlayer.OnSeekCompleteListener, IMediaPlayer.OnBufferingUpdateListener,
-            IMediaPlayer.OnErrorListener, IMediaPlayer.OnCompletionListener {
+            IMediaPlayer.OnErrorListener, IMediaPlayer.OnCompletionListener, IMediaPlayer.OnInfoListener {
         @Override
         public void onPrepared(IMediaPlayer iMediaPlayer) {
             Log.d(TAG, "视频准备就绪");
@@ -308,12 +422,23 @@ public class FlvFragment extends BaseTabFragment implements
         @Override
         public void onCompletion(IMediaPlayer iMediaPlayer) {
             Log.d(TAG, "播放已经结束");
+            setPauseStatus();
+        }
+
+        @Override
+        public boolean onInfo(IMediaPlayer iMediaPlayer, int what, int extra) {
+            Log.d(TAG, "INFO" + what);
+            if (what == IMediaPlayer.MEDIA_INFO_BUFFERING_START) {
+                setLoadingStatus();
+            } else if (what == IMediaPlayer.MEDIA_INFO_BUFFERING_END) {
+                setPreparedStatus();
+            }
+            return false;
         }
 
         @Override
         public void onSeekComplete(IMediaPlayer iMediaPlayer) {
             Log.d(TAG, "视频跳转成功");
-            setSeekCompleteStatus();
             mIsSeeking = false;
         }
 
@@ -342,6 +467,7 @@ public class FlvFragment extends BaseTabFragment implements
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             Log.d(TAG, "双击事件");
+            savePlaySnapshot();
             setFullScreen();
             return true;
         }
@@ -354,8 +480,8 @@ public class FlvFragment extends BaseTabFragment implements
         FlvFragmentPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
             pages = new ArrayList<>();
-            pages.add(new FragmentPage(FlvDetailFragment.newInstance(1), "详情"));
-            pages.add(new FragmentPage(FlvCommentFragment.newInstance(1), "评论"));
+            pages.add(new FragmentPage(FlvDetailFragment.newInstance(mFlvDetail.getId()), "详情"));
+            pages.add(new FragmentPage(FlvCommentFragment.newInstance(mFlvDetail.getId()), "评论"));
         }
 
         @Override

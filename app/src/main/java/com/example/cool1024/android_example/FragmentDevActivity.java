@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.cool1024.android_example.classes.FlvDetail;
 import com.example.cool1024.android_example.fragments.BannerFragment;
 import com.example.cool1024.android_example.fragments.BaseTabFragment;
 import com.example.cool1024.android_example.fragments.FlvFragments.FlvFragment;
@@ -89,7 +90,9 @@ public class FragmentDevActivity extends AppCompatActivity {
                 break;
             }
             case FlvFragment.TAG: {
-                showFragment(new FlvFragment());
+                FlvDetail flvDetail = new FlvDetail();
+                flvDetail.setFlvUrl("https://www.cool1024.com:8000/flv?video=1.flv");
+                showFragment(FlvFragment.newInstance(flvDetail));
                 break;
             }
             default: {
