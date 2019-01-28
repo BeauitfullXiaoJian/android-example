@@ -40,7 +40,7 @@ public class FlvCommentFragment extends BaseTabFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            getArguments().getString(FLV_ID_PARAM);
+            getArguments().getInt(FLV_ID_PARAM);
         }
     }
 

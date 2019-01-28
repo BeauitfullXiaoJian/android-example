@@ -28,15 +28,19 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.cool1024.android_example.R;
+import com.example.cool1024.android_example.classes.DMManager;
 import com.example.cool1024.android_example.classes.FlvDetail;
 import com.example.cool1024.android_example.classes.FragmentPage;
+import com.example.cool1024.android_example.classes.ViewDisappearHandler;
 import com.example.cool1024.android_example.fragments.BaseTabFragment;
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
+import master.flame.danmaku.controller.IDanmakuView;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
@@ -53,6 +57,7 @@ public class FlvFragment extends BaseTabFragment implements
     private static final String FLV_DETAIL = "FLV_DETAIL";
 
     private AppCompatActivity mParentActivity;
+    private IDanmakuView mMessageView;
     private IjkMediaPlayer mIjkMediaPlayer;
     private SurfaceView mPlayView;
     private SeekBar mSeekBar;
@@ -61,6 +66,8 @@ public class FlvFragment extends BaseTabFragment implements
     private ImageView mPlayBtn;
     private TextView mPlayTime;
 
+    // 弹幕视图管理器
+    private DMManager mDMManager;
     // 当前的播放状态
     private int mPlayStatus = PlayStatus.PLAYING;
     // 当前是否为加载状态
@@ -72,7 +79,8 @@ public class FlvFragment extends BaseTabFragment implements
     // 视频相关数据
     private FlvDetail mFlvDetail;
 
-    private GestureDetector gestureDetector;
+    private ViewDisappearHandler mControlDisappearHandler;
+    private GestureDetector mGestureDetector;
     private PlayListener mPlayListener = new PlayListener();
 
 
@@ -158,6 +166,17 @@ public class FlvFragment extends BaseTabFragment implements
         }
     }
 
+
+    /**
+     * 准备弹幕播放器
+     */
+    private void prepareMessageView() {
+        InputStream inputStream = getResources().openRawResource(R.raw.comments);
+        mMessageView.prepare(mDMManager.createParser(inputStream), mDMManager.getDMContext());
+        mMessageView.showFPS(true);
+        mMessageView.enableDanmakuDrawingCache(true);
+    }
+
     /**
      * 设置当前为加载状态
      */
@@ -216,7 +235,7 @@ public class FlvFragment extends BaseTabFragment implements
     private void savePlaySnapshot() {
         mPlaySnapshotStatus = mPlayStatus;
         mIjkMediaPlayer.pause();
-        Log.d(TAG, "保存快照数据" + mPlayStatus);
+        Log.d(TAG, "保存快照数据，当前播放状态:" + mPlayStatus);
     }
 
     /**
@@ -329,8 +348,10 @@ public class FlvFragment extends BaseTabFragment implements
         mPlayPad = mainView.findViewById(R.id.play_pad);
         mPlayView = mainView.findViewById(R.id.play_view);
         mPlayView.getHolder().addCallback(FlvFragment.this);
+        mMessageView = (IDanmakuView) mainView.findViewById(R.id.message_view);
         mPlayView.setOnTouchListener(FlvFragment.this);
-        gestureDetector = new GestureDetector(mParentActivity, new GestureListener());
+        mControlDisappearHandler = new ViewDisappearHandler(mainView.findViewById(R.id.play_control));
+        mGestureDetector = new GestureDetector(mParentActivity, new GestureListener());
         setDefaultScreen();
         FragmentManager fragmentManager = mParentActivity.getSupportFragmentManager();
         TabLayout tabLayout = mainView.findViewById(R.id.tab_layout);
@@ -338,6 +359,9 @@ public class FlvFragment extends BaseTabFragment implements
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setAdapter(new FlvFragmentPagerAdapter(fragmentManager));
         viewPager.setCurrentItem(0);
+        mControlDisappearHandler.hideView(5000);
+        mDMManager = new DMManager(mMessageView);
+        prepareMessageView();
         return mainView;
     }
 
@@ -364,8 +388,21 @@ public class FlvFragment extends BaseTabFragment implements
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        Boolean result = false;
         v.performClick();
-        return gestureDetector.onTouchEvent(event);
+        switch (v.getId()) {
+            case R.id.play_view: {
+                int action = event.getAction();
+                if (action == MotionEvent.ACTION_DOWN) {
+                    mControlDisappearHandler.showView();
+                }
+                if (action == MotionEvent.ACTION_UP) {
+                    mControlDisappearHandler.hideView(5000);
+                }
+                result = mGestureDetector.onTouchEvent(event);
+            }
+        }
+        return result;
     }
 
     @Override
