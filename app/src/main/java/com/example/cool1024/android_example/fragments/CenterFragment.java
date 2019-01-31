@@ -196,15 +196,22 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
                 mParentActivity.startActivity(intent);
                 break;
             }
-            case R.id.btn_camera_page:{
+            case R.id.btn_draw_page: {
+                Intent intent = new Intent(getActivity(), FragmentDevActivity.class);
+                intent.putExtra(FragmentDevActivity.FRAGMENT_NAME_PARAM, ImageDrawFragment.TAG);
+                mParentActivity.startActivity(intent);
+                break;
+            }
+            case R.id.btn_flv_page: {
                 Intent intent = new Intent(getActivity(), FragmentDevActivity.class);
                 intent.putExtra(FragmentDevActivity.FRAGMENT_NAME_PARAM, FlvFragment.TAG);
                 mParentActivity.startActivity(intent);
                 break;
             }
-            case R.id.btn_draw_page: {
+            case R.id.btn_camera_page: {
+                Log.d(TAG, "打开相机测试页面");
                 Intent intent = new Intent(getActivity(), FragmentDevActivity.class);
-                intent.putExtra(FragmentDevActivity.FRAGMENT_NAME_PARAM, ImageDrawFragment.TAG);
+                intent.putExtra(FragmentDevActivity.FRAGMENT_NAME_PARAM, CameraFragment.TAG);
                 mParentActivity.startActivity(intent);
                 break;
             }
@@ -258,6 +265,7 @@ public class CenterFragment extends BaseTabFragment implements ServiceConnection
         view.findViewById(R.id.media_item).setOnClickListener(CenterFragment.this);
         view.findViewById(R.id.btn_draw_page).setOnClickListener(CenterFragment.this);
         view.findViewById(R.id.btn_camera_page).setOnClickListener(CenterFragment.this);
+        view.findViewById(R.id.btn_flv_page).setOnClickListener(CenterFragment.this);
         view.findViewById(R.id.btn_banner_page).setOnClickListener(CenterFragment.this);
         mScrollView.getViewTreeObserver().addOnScrollChangedListener(CenterFragment.this);
     }

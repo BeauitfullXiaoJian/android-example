@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="#1cffffff"
+            android:background="#89000000"
             android:orientation="horizontal">
 
             <ImageView
@@ -43,8 +43,24 @@
             <SeekBar
                 android:id="@+id/play_progress"
                 android:layout_width="0dp"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_weight="1" />
+
+            <EditText
+                android:id="@+id/msg_input"
+                android:layout_width="200dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:background="@drawable/msg_radius"
+                android:hint="@string/msg_hit"
+                android:imeOptions="actionSend"
+                android:inputType="text"
+                android:maxLines="1"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="@dimen/default_padding"
+                android:paddingEnd="@dimen/default_padding"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/item_title_size" />
 
             <TextView
                 android:id="@+id/play_time"

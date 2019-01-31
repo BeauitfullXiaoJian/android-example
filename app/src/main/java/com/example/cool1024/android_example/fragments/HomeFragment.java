@@ -17,9 +17,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.cool1024.android_example.DetailActivity;
+import com.example.cool1024.android_example.GlideApp;
 import com.example.cool1024.android_example.R;
 import com.example.cool1024.android_example.http.ApiData;
 import com.example.cool1024.android_example.http.Pagination;
@@ -293,16 +293,18 @@ public class HomeFragment extends BaseTabFragment implements SwipeRefreshLayout.
             final CardData cardData = mDataList.get(position);
             if (position == 0) {
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.cardView.getLayoutParams();
-                Float density = getResources().getDisplayMetrics().density;
+                float density = getResources().getDisplayMetrics().density;
                 params.topMargin = (int) (getResources().getInteger(R.integer.default_margin_num) * density);
             }
-            Glide.with(HomeFragment.this)
+            GlideApp.with(HomeFragment.this)
                     .load(cardData.getCardAvatarUrl())
                     .apply(new RequestOptions().circleCrop())
                     .into(holder.avatarImageView);
-            Glide.with(HomeFragment.this)
+            GlideApp.with(HomeFragment.this)
                     .load(cardData.getCardImageUrl())
+                    .placeholder(R.drawable.bg)
                     .into(holder.cardImageView);
+
             holder.cardImageView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = new Intent(mParentActivity, DetailActivity.class);

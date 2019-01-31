@@ -1,7 +1,10 @@
 package com.example.cool1024.android_example.fragments;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.cool1024.android_example.http.ApiData;

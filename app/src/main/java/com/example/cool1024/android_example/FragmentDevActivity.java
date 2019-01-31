@@ -14,9 +14,9 @@ import android.widget.Toast;
 import com.example.cool1024.android_example.classes.FlvDetail;
 import com.example.cool1024.android_example.fragments.BannerFragment;
 import com.example.cool1024.android_example.fragments.BaseTabFragment;
+import com.example.cool1024.android_example.fragments.CameraFragment;
 import com.example.cool1024.android_example.fragments.FlvFragments.FlvFragment;
 import com.example.cool1024.android_example.fragments.ImageDrawFragment;
-import com.example.cool1024.android_example.fragments.LiveFragment;
 
 public class FragmentDevActivity extends AppCompatActivity {
 
@@ -85,8 +85,8 @@ public class FragmentDevActivity extends AppCompatActivity {
                 }));
                 break;
             }
-            case LiveFragment.TAG: {
-                showFragment(LiveFragment.newInstance("暂无直播地址"));
+            case CameraFragment.TAG: {
+                showFragment(CameraFragment.newInstance());
                 break;
             }
             case FlvFragment.TAG: {

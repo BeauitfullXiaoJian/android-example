@@ -20,6 +20,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -65,6 +66,7 @@ public class FlvFragment extends BaseTabFragment implements
     private RelativeLayout mPlayPad;
     private ImageView mPlayBtn;
     private TextView mPlayTime;
+    private EditText mMsgInput;
 
     // 弹幕视图管理器
     private DMManager mDMManager;
@@ -128,6 +130,7 @@ public class FlvFragment extends BaseTabFragment implements
             mIjkMediaPlayer.setDataSource(mFlvDetail.getFlvUrl());
             mIjkMediaPlayer.setDisplay(mPlayView.getHolder());
             mIjkMediaPlayer.prepareAsync();
+            setLoadingStatus();
         } catch (IOException e) {
             e.printStackTrace();
             Log.d(TAG, "视频取流失败");
@@ -263,6 +266,7 @@ public class FlvFragment extends BaseTabFragment implements
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mPlayPad.getLayoutParams();
         params.height = displaymetrics.heightPixels;
         mPlayPad.setLayoutParams(params);
+        mMsgInput.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -277,6 +281,7 @@ public class FlvFragment extends BaseTabFragment implements
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mPlayPad.getLayoutParams();
         params.height = (int) (displaymetrics.widthPixels / (16.0 / 9));
         mPlayPad.setLayoutParams(params);
+        mMsgInput.setVisibility(View.GONE);
     }
 
     /**
@@ -348,7 +353,8 @@ public class FlvFragment extends BaseTabFragment implements
         mPlayPad = mainView.findViewById(R.id.play_pad);
         mPlayView = mainView.findViewById(R.id.play_view);
         mPlayView.getHolder().addCallback(FlvFragment.this);
-        mMessageView = (IDanmakuView) mainView.findViewById(R.id.message_view);
+        mMessageView = mainView.findViewById(R.id.message_view);
+        mMsgInput = mainView.findViewById(R.id.msg_input);
         mPlayView.setOnTouchListener(FlvFragment.this);
         mControlDisappearHandler = new ViewDisappearHandler(mainView.findViewById(R.id.play_control));
         mGestureDetector = new GestureDetector(mParentActivity, new GestureListener());
@@ -388,7 +394,7 @@ public class FlvFragment extends BaseTabFragment implements
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        Boolean result = false;
+        boolean result = Boolean.FALSE;
         v.performClick();
         switch (v.getId()) {
             case R.id.play_view: {
@@ -453,6 +459,7 @@ public class FlvFragment extends BaseTabFragment implements
             Log.d(TAG, "视频准备就绪");
             iMediaPlayer.start();
             updatePlaySeek();
+            setPreparedStatus();
             setPlayingStatus();
         }
 

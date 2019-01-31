@@ -20,7 +20,7 @@
     <string name="date_desc">2d ago</string>
     <string name="draw_picture">涂鸦</string>
     <string name="flv_play">播放器</string>
-    <string name="boat">Boast</string>
+    <string name="camera">相机</string>
     <string name="briefcase">Briefcase</string>
     <string name="football">Football</string>
     <string name="banner">幻灯片</string>
@@ -37,8 +37,5 @@
     <string name="flv_comment">视频评论数</string>
     <string name="flv_fans">粉丝数</string>
     <string name="more">更多</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="msg_hit">发一条友善的弹幕见证一下吧～</string>
 </resources>
