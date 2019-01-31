@@ -32,6 +32,13 @@
 4. WebSocket
 5. 动画、资源文件
 6. 投屏
+7. 高德地图
+
+## 参考文档地址
+* [Android Example Code](http://hmkcode.com)
+* [参考资料](https://github.com/open-android/Android)
+* [Book](https://github.com/justjavac/free-programming-books-zh_CN)
+* [授权管理](https://github.com/permissions-dispatcher/PermissionsDispatcher)
 
 ## 预览
 ![预览图](preview.jpg)
