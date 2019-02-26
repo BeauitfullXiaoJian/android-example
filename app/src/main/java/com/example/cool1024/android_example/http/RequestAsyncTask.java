@@ -20,6 +20,7 @@ public class RequestAsyncTask extends AsyncTask<RequestParam, Integer, ApiData> 
     private String mRequestUrl;
     private String mRequestMethod;
     private ResponseCallback mResponseCallback;
+    private int mRequestCode;
 
     public static RequestAsyncTask get(String requestUrl, ResponseCallback responseCallback) {
         return new RequestAsyncTask(requestUrl, GET, responseCallback);
@@ -49,6 +50,7 @@ public class RequestAsyncTask extends AsyncTask<RequestParam, Integer, ApiData> 
         mRequestUrl = requestUrl;
         mRequestMethod = requestMethod;
         mResponseCallback = responseCallback;
+        mRequestCode = 0;
     }
 
     @Override
@@ -58,7 +60,7 @@ public class RequestAsyncTask extends AsyncTask<RequestParam, Integer, ApiData> 
             OkHttpClient httpClient = RequestAsyncTask.getRequestClient();
             FormBody.Builder builder = new FormBody.Builder();
             for (RequestParam param : params) {
-                builder = builder.add(param.getName(), param.getValue());
+                builder.add(param.getName(), param.getValue());
             }
             RequestBody body = builder.build();
             Request.Builder requestBuilder = new Request.Builder();
@@ -92,6 +94,7 @@ public class RequestAsyncTask extends AsyncTask<RequestParam, Integer, ApiData> 
     protected void onPostExecute(ApiData apiData) {
         if (apiData != null) {
             if (apiData.getResult()) {
+                apiData.setRequestCode(mRequestCode);
                 mResponseCallback.onResponse(apiData);
             } else {
                 mResponseCallback.onError(apiData.getMessage());
@@ -102,6 +105,10 @@ public class RequestAsyncTask extends AsyncTask<RequestParam, Integer, ApiData> 
         mResponseCallback.onComplete();
     }
 
+    public RequestAsyncTask setRequestCode(int requestCode) {
+        mRequestCode = requestCode;
+        return this;
+    }
 
     public interface ResponseCallback {
         void onResponse(ApiData apiData);

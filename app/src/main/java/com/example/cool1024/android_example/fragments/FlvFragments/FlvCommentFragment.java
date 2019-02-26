@@ -1,8 +1,11 @@
 package com.example.cool1024.android_example.fragments.FlvFragments;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
@@ -18,15 +21,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.cool1024.android_example.R;
-import com.example.cool1024.android_example.fragments.BaseTabFragment;
+import com.example.cool1024.android_example.classes.FlvComment;
+import com.example.cool1024.android_example.classes.FlvDetail;
+import com.example.cool1024.android_example.fragments.BaseFragment;
+import com.example.cool1024.android_example.http.ApiData;
+import com.example.cool1024.android_example.http.RequestAsyncTask;
 
-public class FlvCommentFragment extends BaseTabFragment implements
-        TextView.OnEditorActionListener, View.OnClickListener {
+import java.util.Arrays;
+
+public class FlvCommentFragment extends BaseFragment implements
+        TextView.OnEditorActionListener, View.OnClickListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = "FlvCommentFragmentLog";
     private static final String FLV_ID_PARAM = "FLV_ID_PARAM";
+    private static final int FLV_COMMENT_REQUEST_CODE = 1;
 
+    private FlvDetail mFlvDetail;
     private EditText mCommentEditText;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public static FlvCommentFragment newInstance(int flvId) {
         FlvCommentFragment fragment = new FlvCommentFragment();
@@ -40,30 +53,25 @@ public class FlvCommentFragment extends BaseTabFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            getArguments().getInt(FLV_ID_PARAM);
+            mFlvDetail = new FlvDetail();
+            mFlvDetail.setId(getArguments().getInt(FLV_ID_PARAM));
         }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View mainView = inflater.inflate(R.layout.fragment_flv_comment, container, false);
-        mCommentEditText = mainView.findViewById(R.id.input_comment);
-        mCommentEditText.setOnEditorActionListener(FlvCommentFragment.this);
-        mainView.findViewById(R.id.btn_send).setOnClickListener(FlvCommentFragment.this);
-        return mainView;
+        return inflater.inflate(R.layout.fragment_flv_comment, container, false);
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        View mainView = getView();
-        if (mainView == null) return;
-        // 填充评论列表
-        TextView commentView = mainView.findViewById(R.id.reply_user_nick);
-        commentView.setText(getCommentText("很好的创意，不知道什么时候可以开放出来～", "🍭棒棒糖"));
-        commentView.setMovementMethod(LinkMovementMethod.getInstance());
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        mCommentEditText = view.findViewById(R.id.input_comment);
+        mCommentEditText.setOnEditorActionListener(FlvCommentFragment.this);
+        view.findViewById(R.id.btn_send).setOnClickListener(FlvCommentFragment.this);
+        mSwipeRefreshLayout = view.findViewById(R.id.flv_comment_swipe);
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
+        mSwipeRefreshLayout.setOnRefreshListener(FlvCommentFragment.this);
     }
 
     @Override
@@ -89,6 +97,40 @@ public class FlvCommentFragment extends BaseTabFragment implements
                 mCommentEditText.onEditorAction(EditorInfo.IME_ACTION_SEND);
                 break;
             }
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        loadData();
+    }
+
+    @Override
+    public void onResponse(ApiData apiData) {
+        if (apiData.getRequestCode() == FLV_COMMENT_REQUEST_CODE) {
+            mFlvDetail = apiData.getDataObject(FlvDetail.class);
+        }
+        updateView();
+    }
+
+    @Override
+    public void onComplete() {
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    private void loadData() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        RequestAsyncTask.get("https://www.cool1024.com/comment.json?id=" + mFlvDetail.getId(),
+                FlvCommentFragment.this).setRequestCode(FLV_COMMENT_REQUEST_CODE).execute();
+    }
+
+    private void updateView() {
+        View mainView = getView();
+        if (mainView != null) {
+            // 填充评论列表
+            TextView commentView = getView().findViewById(R.id.reply_user_nick);
+            commentView.setText(getCommentText("很好的创意，不知道什么时候可以开放出来～", "🍭棒棒糖"));
+            commentView.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
 

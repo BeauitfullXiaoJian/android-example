@@ -1,21 +1,27 @@
 package com.example.cool1024.android_example;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.cool1024.android_example.fragments.BaseTabFragment;
+import com.example.cool1024.android_example.fragments.AnimationFragment;
+import com.example.cool1024.android_example.fragments.BannerFragment;
+import com.example.cool1024.android_example.fragments.BaseFragment;
 import com.example.cool1024.android_example.fragments.CenterFragment;
-import com.example.cool1024.android_example.fragments.DashboardFragment;
 import com.example.cool1024.android_example.fragments.HomeFragment;
+import com.example.cool1024.android_example.fragments.WebViewFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements
         BottomNavigationView.OnNavigationItemSelectedListener {
@@ -27,18 +33,16 @@ public class MainActivity extends AppCompatActivity implements
     private Bundle mSavedInstanceState;
 
     private FragmentManager mFragmentManager;
-
     private BottomNavigationView mNavigationView;
+    private NavigationView mNavigationSideView;
+    private DrawerLayout mDrawer;
 
     private FragmentTransaction mFragmentTransaction;
 
-    private BaseTabFragment mActiveFragment;
-
-    private BaseTabFragment mHomeFragment;
-
-    private BaseTabFragment mDashboardFragment;
-
-    private BaseTabFragment mCenterFragment;
+    private BaseFragment mActiveFragment;
+    private BaseFragment mHomeFragment;
+    private BaseFragment mDashboardFragment;
+    private BaseFragment mCenterFragment;
 
     private long mExitClickTime = 0;
 
@@ -48,16 +52,24 @@ public class MainActivity extends AppCompatActivity implements
         mSavedInstanceState = savedInstanceState;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewComponent();
+        findViewComponents();
         initViewEvent();
         recoverState();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MenuItem item = mNavigationSideView.getMenu().findItem(R.id.menu_home);
+        item.setCheckable(true);
+        item.setChecked(true);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(MainActivity.SAVE_DATA_TAG,
-                mActiveFragment == null ? BaseTabFragment.EMPTY_TAG
+                mActiveFragment == null ? BaseFragment.EMPTY_TAG
                         : mActiveFragment.getFragmentTag());
     }
 
@@ -74,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.navigation_dashboard:
                 if (mDashboardFragment == null) {
-                    mDashboardFragment = new DashboardFragment();
+                    mDashboardFragment = new WebViewFragment();
                 }
                 mActiveFragment = mDashboardFragment;
                 Log.d(TAG, "DASHBOARD_FRAGMENT_SELECTED");
@@ -89,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements
         }
         mFragmentTransaction = mFragmentManager.beginTransaction();
         if (oldFragment != null) {
+            Log.d(TAG, "之前的不为空");
             mFragmentTransaction.hide(oldFragment);
         }
         if (!mActiveFragment.isAdded()) {
@@ -118,9 +131,12 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * 获取到所有相关的视图组件
      */
-    private void findViewComponent() {
+    private void findViewComponents() {
         mFragmentManager = getSupportFragmentManager();
         mNavigationView = findViewById(R.id.navigation);
+        mNavigationSideView = findViewById(R.id.navigation_side);
+        mNavigationSideView.setItemIconTintList(null);
+        mDrawer = findViewById(R.id.drawer);
     }
 
     /**
@@ -128,6 +144,20 @@ public class MainActivity extends AppCompatActivity implements
      */
     private void initViewEvent() {
         mNavigationView.setOnNavigationItemSelectedListener(MainActivity.this);
+        mNavigationSideView.setNavigationItemSelectedListener((item) -> {
+            item.setCheckable(true);
+            item.setChecked(true);
+            mDrawer.closeDrawers();
+            switch (item.getItemId()) {
+                case R.id.menu_banner: {
+                    Intent intent = new Intent(MainActivity.this, DevActivity.class);
+                    intent.putExtra(DevActivity.FRAGMENT_NAME_PARAM, BannerFragment.TAG);
+                    startActivity(intent);
+                    break;
+                }
+            }
+            return true;
+        });
     }
 
     /**
@@ -141,11 +171,12 @@ public class MainActivity extends AppCompatActivity implements
             mFragmentTransaction.add(R.id.frame_layout, mActiveFragment, HomeFragment.TAG).commit();
         } else {
             String activeFragmentTag = mSavedInstanceState.getString(SAVE_DATA_TAG,
-                    BaseTabFragment.EMPTY_TAG);
-            mActiveFragment = (BaseTabFragment) mFragmentManager.findFragmentByTag(activeFragmentTag);
-            mHomeFragment = (BaseTabFragment) mFragmentManager.findFragmentByTag(HomeFragment.TAG);
-            mDashboardFragment = (BaseTabFragment) mFragmentManager.findFragmentByTag(DashboardFragment.TAG);
-            mCenterFragment = (BaseTabFragment) mFragmentManager.findFragmentByTag(CenterFragment.TAG);
+                    BaseFragment.EMPTY_TAG);
+            Log.d(TAG, "TAG:" + activeFragmentTag);
+            mActiveFragment = (BaseFragment) mFragmentManager.findFragmentByTag(activeFragmentTag);
+            mHomeFragment = (BaseFragment) mFragmentManager.findFragmentByTag(HomeFragment.TAG);
+            mDashboardFragment = (BaseFragment) mFragmentManager.findFragmentByTag(WebViewFragment.TAG);
+            mCenterFragment = (BaseFragment) mFragmentManager.findFragmentByTag(CenterFragment.TAG);
         }
     }
 }

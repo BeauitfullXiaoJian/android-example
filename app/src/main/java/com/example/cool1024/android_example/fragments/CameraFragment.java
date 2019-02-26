@@ -3,10 +3,9 @@ package com.example.cool1024.android_example.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
-import android.graphics.Matrix;
-import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -15,10 +14,8 @@ import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.Size;
 import android.view.LayoutInflater;
@@ -27,15 +24,18 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
 import com.example.cool1024.android_example.R;
 import com.example.cool1024.android_example.components.AutoFitCameraTextureView;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 
 
-public class CameraFragment extends BaseTabFragment {
+public class CameraFragment extends BaseFragment {
 
     public static final String TAG = "LiveFragmentLog";
     private static final int REQUEST_CAMERA_PERMISSION = 1;
@@ -133,7 +133,7 @@ public class CameraFragment extends BaseTabFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_live, container, false);
+        return inflater.inflate(R.layout.fragment_camera, container, false);
     }
 
     @Override
@@ -160,12 +160,12 @@ public class CameraFragment extends BaseTabFragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             prepareCamera();
-        }
-        // else {
-        //     requestCameraPermission();
-        // }
+         }
+//         else {
+//             requestCameraPermission();
+//         }
     }
 
     /**
@@ -196,6 +196,7 @@ public class CameraFragment extends BaseTabFragment {
             } catch (CameraAccessException e) {
                 e.printStackTrace();
                 Log.d(TAG, "摄像头获取失败");
+                openPermissionSetting();
             } catch (NullPointerException e) {
                 e.printStackTrace();
                 Log.d(TAG, "设备不支持Camera2API");
@@ -294,13 +295,11 @@ public class CameraFragment extends BaseTabFragment {
             // 摄像头尺寸为可拍摄的最大值
             mCameraSize = Collections.max(
                     Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
-                    new Comparator<Size>() {
-                        @Override
-                        public int compare(Size lhs, Size rhs) {
-                            return Long.signum((long) lhs.getWidth() * lhs.getHeight() -
-                                    (long) rhs.getWidth() * rhs.getHeight());
-                        }
-                    });
+                    (Size lhs, Size rhs) ->
+                            Long.signum((long) lhs.getWidth() * lhs.getHeight() -
+                                    (long) rhs.getWidth() * rhs.getHeight())
+
+            );
             activeCameraId = cameraId;
             break;
         }
@@ -309,5 +308,12 @@ public class CameraFragment extends BaseTabFragment {
 
     private void requestCameraPermission() {
         requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+    }
+
+    private void openPermissionSetting(){
+        Intent intent = new Intent();
+        intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+        intent.setData(Uri.fromParts("package", mParentActivity.getPackageName(), null));
+        startActivity(intent);
     }
 }

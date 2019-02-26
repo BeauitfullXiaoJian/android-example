@@ -3,27 +3,29 @@
     package="com.example.cool1024.android_example">
 
     <!-- 权限列表 -->
+
     <!-- 网络权限，加载网络图片，其他相关数据使用 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- 安装应用权限 -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
     <!-- 本地存储读取权限，选择头像（相册）使用 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- 本地存储写入权限，文件下载使用 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- VISIBILITY_HIDDEN表示不显示任何通知栏提示的权限 -->
-    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
-    <!-- DownloadManager -->
+    <!--<uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" /> &lt;!&ndash; DownloadManager &ndash;&gt;-->
+    <!-- 使用下载管理器 -->
     <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
     <!-- 使用蓝牙 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATIONS" />
-    <!-- 使用摄像头 -->
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATIONS" /> <!-- 使用摄像头 -->
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -34,6 +36,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".services.MusicService"
+            android:exported="false" />
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -43,35 +48,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".UserInfoActivity" />
-        <activity android:name=".DetailActivity" />
+        <activity android:name=".CardDetailActivity" />
         <activity
-            android:name=".FragmentDevActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
-
-        <service
-            android:name=".services.MusicService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".services.DownloadService"
-            android:enabled="true"
-            android:exported="false" />
-
-        <receiver
-            android:name=".receivers.ApkInstallReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REPLACED" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
-
+            android:name=".DevActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
     </application>
 
 </manifest>

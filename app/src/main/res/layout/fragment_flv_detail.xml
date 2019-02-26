@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/flv_detail_swipe"
@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".fragments.FlvFragments.FlvDetailFragment">
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
@@ -29,12 +29,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="@dimen/default_padding">
+                    android:padding="@dimen/padding_lg">
 
                     <ImageView
                         android:id="@+id/flv_up_avatar"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="@dimen/avatar_size"
+                        android:layout_height="@dimen/avatar_size"
                         android:contentDescription="@string/avatar"
                         android:src="@drawable/avatar"
                         tools:srcCompat="@tools:sample/avatars" />
@@ -42,7 +42,7 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/default_margin"
+                        android:layout_marginStart="@dimen/margin_lg"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -53,7 +53,7 @@
                             android:layout_margin="3dp"
                             android:text="@string/flv_up"
                             android:textColor="@android:color/black"
-                            android:textSize="@dimen/item_subject_size" />
+                            android:textSize="@dimen/text_md" />
 
                         <TextView
                             android:id="@+id/flv_up_fans"
@@ -62,91 +62,108 @@
                             android:layout_marginStart="3dp"
                             android:text="@string/flv_fans"
                             android:textColor="@color/colorSecondary"
-                            android:textSize="@dimen/item_tag_size" />
+                            android:textSize="@dimen/text_sm" />
 
                     </LinearLayout>
 
-                    <Button
-                        android:id="@+id/button"
-                        android:layout_width="70dp"
-                        android:layout_height="30dp"
-                        android:background="@color/colorPrimary"
-                        android:drawableStart="@drawable/ic_focus"
-                        android:foreground="?attr/selectableItemBackground"
-                        android:paddingStart="@dimen/default_padding"
-                        android:paddingEnd="@dimen/default_padding"
-                        android:text="@string/focus" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/click_active_bg"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingStart="@dimen/padding_lg"
+                        android:paddingTop="@dimen/padding_sm"
+                        android:paddingEnd="@dimen/padding_lg"
+                        android:paddingBottom="@dimen/padding_sm">
+
+                        <ImageView
+                            android:layout_width="@dimen/icon_sm"
+                            android:layout_height="@dimen/icon_sm"
+                            android:contentDescription="@string/focus"
+                            android:src="@drawable/ic_focus" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/focus"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/text_sm" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/margin_lg"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/flv_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/default_margin"
+                        android:layout_marginBottom="@dimen/margin_lg"
                         android:ellipsize="end"
                         android:maxLines="2"
                         android:text="@string/flv_title"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/item_title_size" />
+                        android:textSize="@dimen/text_md" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/margin_lg"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="@dimen/item_icon_size"
-                        android:layout_height="@dimen/item_icon_size"
-                        android:layout_marginEnd="@dimen/default_margin"
+                        android:layout_width="@dimen/icon_sm"
+                        android:layout_height="@dimen/icon_sm"
+                        android:layout_marginEnd="@dimen/margin_lg"
                         android:contentDescription="@string/flv_view"
-                        android:src="@drawable/ic_play" />
+                        android:src="@drawable/ic_play_count_muted" />
 
                     <TextView
                         android:id="@+id/flv_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/flv_view"
-                        android:textSize="@dimen/item_tag_size" />
+                        android:textSize="@dimen/text_sm" />
 
                     <ImageView
-                        android:layout_width="@dimen/item_icon_size"
-                        android:layout_height="@dimen/item_icon_size"
-                        android:layout_marginStart="@dimen/default_margin"
-                        android:layout_marginEnd="@dimen/default_margin"
+                        android:layout_width="@dimen/icon_sm"
+                        android:layout_height="@dimen/icon_sm"
+                        android:layout_marginStart="@dimen/margin_lg"
+                        android:layout_marginEnd="@dimen/margin_lg"
                         android:contentDescription="@string/flv_comment"
-                        android:src="@drawable/ic_comment" />
+                        android:src="@drawable/ic_comment_muted" />
 
                     <TextView
                         android:id="@+id/flv_comment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/flv_comment"
-                        android:textSize="@dimen/item_tag_size" />
+                        android:textSize="@dimen/text_sm" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/default_margin"
+                        android:layout_marginStart="@dimen/margin_lg"
                         android:text="2018-12-20"
-                        android:textSize="@dimen/item_tag_size" />
+                        android:textSize="@dimen/text_sm" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/default_margin"
+                        android:layout_marginStart="@dimen/margin_lg"
                         android:text="AV23795430"
-                        android:textSize="@dimen/item_tag_size" />
+                        android:textSize="@dimen/text_sm" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -154,128 +171,128 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin"
-                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginTop="@dimen/margin_lg"
+                android:layout_marginBottom="@dimen/margin_lg"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:contentDescription="@string/image"
-                        app:srcCompat="@drawable/ic_good" />
+                        android:contentDescription="@string/like"
+                        app:srcCompat="@drawable/ic_like" />
 
                     <TextView
+                        android:id="@+id/like_num"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="135"
-                        android:textSize="@dimen/item_tag_size" />
+                        android:textSize="@dimen/text_sm" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:contentDescription="@string/image"
-                        app:srcCompat="@drawable/ic_bad" />
+                        android:contentDescription="@string/dislike"
+                        app:srcCompat="@drawable/ic_dislike_muted" />
 
                     <TextView
+                        android:id="@+id/dislike_num"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="135"
-                        android:textSize="@dimen/item_tag_size" />
+                        android:textSize="@dimen/text_sm" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:contentDescription="@string/image"
-                        app:srcCompat="@drawable/ic_heart" />
+                        android:contentDescription="@string/coin"
+                        app:srcCompat="@drawable/ic_coin_muted" />
 
                     <TextView
+                        android:id="@+id/coin_num"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="135"
-                        android:textSize="@dimen/item_tag_size" />
+                        android:textSize="@dimen/text_sm" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:contentDescription="@string/image"
-                        app:srcCompat="@drawable/ic_start" />
+                        android:contentDescription="@string/collect"
+                        app:srcCompat="@drawable/ic_collect_muted" />
 
                     <TextView
+                        android:id="@+id/collect_num"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="135"
-                        android:textSize="@dimen/item_tag_size" />
+                        android:textSize="@dimen/text_sm" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:contentDescription="@string/image"
-                        app:srcCompat="@drawable/ic_share" />
+                        android:contentDescription="@string/share"
+                        app:srcCompat="@drawable/ic_share_muted" />
 
                     <TextView
+                        android:id="@+id/share_num"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="135"
-                        android:textSize="@dimen/item_tag_size" />
+                        android:textSize="@dimen/text_sm" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -285,15 +302,22 @@
                 android:layout_height="1dp"
                 android:background="@color/colorLine" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLine" />
+
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
-</android.support.v4.widget.SwipeRefreshLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 

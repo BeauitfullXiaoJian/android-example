@@ -1,15 +1,8 @@
 package com.example.cool1024.android_example.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +10,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.request.RequestOptions;
-import com.example.cool1024.android_example.DetailActivity;
+import com.example.cool1024.android_example.CardDetailActivity;
 import com.example.cool1024.android_example.GlideApp;
 import com.example.cool1024.android_example.R;
 import com.example.cool1024.android_example.http.ApiData;
@@ -30,16 +31,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends BaseTabFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = "HomeFragment";
     private static final String SAVE_DATA_TAG = "CARD_DATA";
     private static final Pagination page = new Pagination();
 
-    private Activity mParentActivity;
     private Bundle mSavedInstanceState;
     private RecyclerView mRecyclerView;
     private CardAdapter mCardAdapter;
@@ -47,13 +48,21 @@ public class HomeFragment extends BaseTabFragment implements SwipeRefreshLayout.
     private List<CardData> mCards = new ArrayList<>();
 
     @Override
+    public String getFragmentTag() {
+        return TAG;
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_home, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mSavedInstanceState = savedInstanceState;
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
         findView(view);
         initView();
         recoverState();
-        return view;
     }
 
     @Override
@@ -61,6 +70,14 @@ public class HomeFragment extends BaseTabFragment implements SwipeRefreshLayout.
         Log.d(TAG, "SAVE_DATA");
         super.onSaveInstanceState(outState);
         outState.putSerializable(SAVE_DATA_TAG, new CardDataList().cardListToJsonString(mCards));
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden == Boolean.FALSE) {
+            Log.d(TAG, "显示HOME");
+        }
     }
 
     @Override
@@ -114,7 +131,7 @@ public class HomeFragment extends BaseTabFragment implements SwipeRefreshLayout.
     /**
      * 数据载入方法
      */
-    public void loadData() {
+    private void loadData() {
         page.setLoading();
         RequestAsyncTask.get("https://www.cool1024.com:8000/list?" + page.toQueryString()
                 , HomeFragment.this).execute();
@@ -141,7 +158,6 @@ public class HomeFragment extends BaseTabFragment implements SwipeRefreshLayout.
 
     private void initView() {
         Log.d(TAG, "INIT_VIEW");
-        mParentActivity = getActivity();
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 1);
         mCardAdapter = new CardAdapter(mCards);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -216,7 +232,7 @@ public class HomeFragment extends BaseTabFragment implements SwipeRefreshLayout.
         }
     }
 
-    public static class CardData {
+    public static class CardData implements Serializable {
         private String cardTitle;
         private String cardBody;
         private String cardContent;
@@ -250,22 +266,6 @@ public class HomeFragment extends BaseTabFragment implements SwipeRefreshLayout.
         public String getCardContent() {
             return cardContent;
         }
-
-        String toJsonString() {
-            Gson gson = new Gson();
-            return gson.toJson(this);
-        }
-
-        public static CardData formJsonString(String jsonString) {
-            JsonParser parser = new JsonParser();
-            JsonObject jsonObject = parser.parse(jsonString).getAsJsonObject();
-            String cardTitle = jsonObject.get("cardTitle").getAsString();
-            String cardBody = jsonObject.get("cardBody").getAsString();
-            String cardContent = jsonObject.get("cardContent").getAsString();
-            String cardAvatarUrl = jsonObject.get("cardAvatarUrl").getAsString();
-            String cardImageUrl = jsonObject.get("cardImageUrl").getAsString();
-            return new CardData(cardTitle, cardBody, cardContent, cardAvatarUrl, cardImageUrl);
-        }
     }
 
     public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
@@ -284,7 +284,8 @@ public class HomeFragment extends BaseTabFragment implements SwipeRefreshLayout.
             if (mContext == null) {
                 mContext = parent.getContext();
             }
-            View view = LayoutInflater.from(mContext).inflate(R.layout.card_item, parent, false);
+            View view = LayoutInflater.from(mContext).inflate(R.layout.fragment_home_card, parent,
+                    false);
             return new ViewHolder(view);
         }
 
@@ -294,7 +295,7 @@ public class HomeFragment extends BaseTabFragment implements SwipeRefreshLayout.
             if (position == 0) {
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.cardView.getLayoutParams();
                 float density = getResources().getDisplayMetrics().density;
-                params.topMargin = (int) (getResources().getInteger(R.integer.default_margin_num) * density);
+                params.topMargin = (int) (getResources().getInteger(R.integer.space_lg_num) * density);
             }
             GlideApp.with(HomeFragment.this)
                     .load(cardData.getCardAvatarUrl())
@@ -305,10 +306,10 @@ public class HomeFragment extends BaseTabFragment implements SwipeRefreshLayout.
                     .placeholder(R.drawable.bg)
                     .into(holder.cardImageView);
 
-            holder.cardImageView.setOnClickListener(new View.OnClickListener() {
+            holder.cardItem.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Intent intent = new Intent(mParentActivity, DetailActivity.class);
-                    intent.putExtra(DetailActivity.TAG, cardData.toJsonString());
+                    Intent intent = new Intent(getActivity(), CardDetailActivity.class);
+                    intent.putExtra(CardDetailActivity.TAG, cardData);
                     startActivity(intent);
                 }
             });
@@ -322,10 +323,10 @@ public class HomeFragment extends BaseTabFragment implements SwipeRefreshLayout.
             return mDataList.size();
         }
 
-
         class ViewHolder extends RecyclerView.ViewHolder {
 
             CardView cardView;
+            View cardItem;
             ImageView avatarImageView;
             ImageView cardImageView;
             TextView titleTextView;
@@ -335,6 +336,7 @@ public class HomeFragment extends BaseTabFragment implements SwipeRefreshLayout.
             ViewHolder(View view) {
                 super(view);
                 cardView = (CardView) view;
+                cardItem = view.findViewById(R.id.card_item);
                 avatarImageView = view.findViewById(R.id.card_avatar);
                 cardImageView = view.findViewById(R.id.card_image);
                 titleTextView = view.findViewById(R.id.card_title);

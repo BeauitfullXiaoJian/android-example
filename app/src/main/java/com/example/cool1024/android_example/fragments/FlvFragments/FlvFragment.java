@@ -3,14 +3,15 @@ package com.example.cool1024.android_example.fragments.FlvFragments;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -28,12 +29,13 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.android.material.tabs.TabLayout;
 import com.example.cool1024.android_example.R;
 import com.example.cool1024.android_example.classes.DMManager;
 import com.example.cool1024.android_example.classes.FlvDetail;
 import com.example.cool1024.android_example.classes.FragmentPage;
 import com.example.cool1024.android_example.classes.ViewDisappearHandler;
-import com.example.cool1024.android_example.fragments.BaseTabFragment;
+import com.example.cool1024.android_example.fragments.BaseFragment;
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 
@@ -48,7 +50,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 /**
  * B站播放器演示.
  */
-public class FlvFragment extends BaseTabFragment implements
+public class FlvFragment extends BaseFragment implements
         SurfaceHolder.Callback,
         View.OnClickListener,
         View.OnTouchListener,
@@ -72,8 +74,6 @@ public class FlvFragment extends BaseTabFragment implements
     private DMManager mDMManager;
     // 当前的播放状态
     private int mPlayStatus = PlayStatus.PLAYING;
-    // 当前是否为加载状态
-    private Boolean mIsLoading = Boolean.FALSE;
     // 当前是否在跳转
     private Boolean mIsSeeking = Boolean.FALSE;
     // 播放器快照状态
@@ -169,14 +169,13 @@ public class FlvFragment extends BaseTabFragment implements
         }
     }
 
-
     /**
      * 准备弹幕播放器
      */
     private void prepareMessageView() {
         InputStream inputStream = getResources().openRawResource(R.raw.comments);
         mMessageView.prepare(mDMManager.createParser(inputStream), mDMManager.getDMContext());
-        mMessageView.showFPS(true);
+        // mMessageView.showFPS(true);
         mMessageView.enableDanmakuDrawingCache(true);
     }
 
@@ -184,26 +183,15 @@ public class FlvFragment extends BaseTabFragment implements
      * 设置当前为加载状态
      */
     private void setLoadingStatus() {
-        mIsLoading = Boolean.TRUE;
-        mParentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mLoadingBar.setVisibility(View.VISIBLE);
-            }
-        });
+        mParentActivity.runOnUiThread(() -> mLoadingBar.setVisibility(View.VISIBLE));
     }
 
     /**
      * 设置当前为就绪状态
      */
     private void setPreparedStatus() {
-        mIsLoading = Boolean.FALSE;
-        mParentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mLoadingBar.setVisibility(View.INVISIBLE);
-            }
-        });
+        mParentActivity.runOnUiThread(() ->
+                mLoadingBar.setVisibility(View.INVISIBLE));
     }
 
     /**
@@ -211,12 +199,8 @@ public class FlvFragment extends BaseTabFragment implements
      */
     private void setPlayingStatus() {
         mPlayStatus = PlayStatus.PLAYING;
-        mParentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mPlayBtn.setImageDrawable(mParentActivity.getDrawable(R.drawable.ic_pause_black_24dp));
-            }
-        });
+        mParentActivity.runOnUiThread(() ->
+                mPlayBtn.setImageDrawable(mParentActivity.getDrawable(R.drawable.ic_play_stop)));
     }
 
     /**
@@ -224,21 +208,19 @@ public class FlvFragment extends BaseTabFragment implements
      */
     private void setPauseStatus() {
         mPlayStatus = PlayStatus.PAUSED;
-        mParentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mPlayBtn.setImageDrawable(mParentActivity.getDrawable(R.drawable.ic_play_arrow_black_24dp));
-            }
-        });
+        mParentActivity.runOnUiThread(() ->
+                mPlayBtn.setImageDrawable(mParentActivity.getDrawable(R.drawable.ic_play)));
     }
 
     /**
      * 保存播放器快照状态
      */
     private void savePlaySnapshot() {
-        mPlaySnapshotStatus = mPlayStatus;
-        mIjkMediaPlayer.pause();
-        Log.d(TAG, "保存快照数据，当前播放状态:" + mPlayStatus);
+        if (mIjkMediaPlayer != null) {
+            mPlaySnapshotStatus = mPlayStatus;
+            mIjkMediaPlayer.pause();
+            Log.d(TAG, "保存快照数据，当前播放状态:" + mPlayStatus);
+        }
     }
 
     /**
@@ -258,30 +240,71 @@ public class FlvFragment extends BaseTabFragment implements
      * 设置全屏状态
      */
     private void setFullScreen() {
+        savePlaySnapshot();
         View decorView = mParentActivity.getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         mParentActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         DisplayMetrics displaymetrics = new DisplayMetrics();
         mParentActivity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mPlayPad.getLayoutParams();
+        params.width = displaymetrics.widthPixels;
         params.height = displaymetrics.heightPixels;
         mPlayPad.setLayoutParams(params);
-        mMsgInput.setVisibility(View.VISIBLE);
+        // 设置播放器边距
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mPlayView.getLayoutParams();
+        layoutParams.width = params.width;
+        layoutParams.height = (int) (params.width / (16.0 / 9));
+        // 如果高度不够，那么缩小
+        if (layoutParams.height > params.height) {
+            layoutParams.width = (int) (params.height * (16.0 / 9));
+            layoutParams.height = params.height;
+            int margin = (params.width - layoutParams.width) / 2;
+            layoutParams.leftMargin = margin;
+            layoutParams.rightMargin = margin;
+        }else{
+            int margin = (params.height - layoutParams.height) / 2;
+            layoutParams.topMargin = margin;
+            layoutParams.bottomMargin = margin;
+        }
+        mPlayView.setLayoutParams(layoutParams);
+        mMsgInput.setVisibility(View.GONE);
     }
 
     /**
      * 设置默认（竖屏）状态
      */
     private void setDefaultScreen() {
+        savePlaySnapshot();
         View decorView = mParentActivity.getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
         mParentActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         DisplayMetrics displaymetrics = new DisplayMetrics();
         mParentActivity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mPlayPad.getLayoutParams();
-        params.height = (int) (displaymetrics.widthPixels / (16.0 / 9));
+        params.width = displaymetrics.widthPixels;
+        params.height = (int) (params.width / (16.0 / 9));
         mPlayPad.setLayoutParams(params);
+        // 设置播放器边距
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mPlayView.getLayoutParams();
+        layoutParams.width = params.width;
+        layoutParams.height = params.height;
+        layoutParams.topMargin = 0;
+        layoutParams.bottomMargin = 0;
+        layoutParams.leftMargin = 0;
+        layoutParams.rightMargin = 0;
+        mPlayView.setLayoutParams(layoutParams);
         mMsgInput.setVisibility(View.GONE);
+    }
+
+    private void autoScreen() {
+        // 获取当前是横屏还是竖屏
+        Configuration configuration = getResources().getConfiguration();
+        // 根据横竖屏调整布局大小
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setFullScreen();
+        } else {
+            setDefaultScreen();
+        }
     }
 
     /**
@@ -322,7 +345,6 @@ public class FlvFragment extends BaseTabFragment implements
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             // 如果当前是横屏，那么退出横屏（全屏）
-            savePlaySnapshot();
             setDefaultScreen();
             return Boolean.FALSE;
         } else {
@@ -358,17 +380,27 @@ public class FlvFragment extends BaseTabFragment implements
         mPlayView.setOnTouchListener(FlvFragment.this);
         mControlDisappearHandler = new ViewDisappearHandler(mainView.findViewById(R.id.play_control));
         mGestureDetector = new GestureDetector(mParentActivity, new GestureListener());
-        setDefaultScreen();
-        FragmentManager fragmentManager = mParentActivity.getSupportFragmentManager();
+
+        // 调整全屏/默认
+        autoScreen();
+        // setDefaultScreen();
+        FragmentManager fragmentManager = getChildFragmentManager();
         TabLayout tabLayout = mainView.findViewById(R.id.tab_layout);
         ViewPager viewPager = mainView.findViewById(R.id.view_pager);
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setAdapter(new FlvFragmentPagerAdapter(fragmentManager));
         viewPager.setCurrentItem(0);
+        viewPager.clearOnPageChangeListeners();
         mControlDisappearHandler.hideView(5000);
         mDMManager = new DMManager(mMessageView);
         prepareMessageView();
         return mainView;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        pausePlayer();
     }
 
     @Override
@@ -511,8 +543,14 @@ public class FlvFragment extends BaseTabFragment implements
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             Log.d(TAG, "双击事件");
-            savePlaySnapshot();
-            setFullScreen();
+            int orientation = getResources().getConfiguration().orientation;
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                // 如果当前是竖屏，那么转为横屏（全屏）
+                setFullScreen();
+            } else {
+                // 如果是横屏，那么转为竖屏（默认）
+                setDefaultScreen();
+            }
             return true;
         }
     }
@@ -533,6 +571,7 @@ public class FlvFragment extends BaseTabFragment implements
             return pages.size();
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             return pages.get(position).getFragment();

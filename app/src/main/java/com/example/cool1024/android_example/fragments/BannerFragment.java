@@ -1,24 +1,24 @@
 package com.example.cool1024.android_example.fragments;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 
-import com.bumptech.glide.Glide;
+import com.example.cool1024.android_example.GlideApp;
 import com.example.cool1024.android_example.R;
 import com.example.cool1024.android_example.components.TouchImageView;
 
-public class BannerFragment extends BaseTabFragment {
+public class BannerFragment extends BaseFragment {
 
     public static final String TAG = "BannerFragmentLog";
     private static final String IMAGE_URLS_PARAM = "IMAGE_URLS_PARAM";
@@ -44,7 +44,6 @@ public class BannerFragment extends BaseTabFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_banner, container, false);
     }
 
@@ -98,7 +97,10 @@ public class BannerFragment extends BaseTabFragment {
             Context context = getContext();
             TouchImageView imageView = new TouchImageView(context);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(2000, 2000));
-            Glide.with(container).load(mImageUrls[position]).into(imageView);
+            GlideApp.with(container)
+                    .load(mImageUrls[position])
+                    .placeholder(R.drawable.bg)
+                    .into(imageView);
             container.addView(imageView);
             Log.d(TAG, "实例化" + position);
             return imageView;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -19,73 +19,96 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/default_padding">
+            android:padding="@dimen/padding_lg">
 
             <ImageView
-                android:id="@+id/flv_thumb"
+                android:id="@+id/flv_item_thumb"
                 android:layout_width="130dp"
                 android:layout_height="90dp"
                 android:contentDescription="@string/image"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/bg"
                 tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginStart="@dimen/margin_lg"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/flv_title"
+                    android:id="@+id/flv_item_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/default_margin"
+                    android:layout_marginBottom="@dimen/margin_lg"
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:minLines="2"
                     android:text="@string/flv_title"
                     android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/item_title_size" />
-
-                <TextView
-                    android:id="@+id/flv_up"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/default_sm_margin"
-                    android:drawableStart="@drawable/ic_user"
-                    android:drawablePadding="@dimen/default_padding"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/flv_up"
-                    android:textSize="@dimen/item_tag_size" />
+                    android:textSize="@dimen/text_md" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/margin_md"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/flv_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:drawableStart="@drawable/ic_play"
-                        android:drawablePadding="@dimen/default_padding"
-                        android:text="@string/flv_view"
-                        android:textSize="@dimen/item_tag_size" />
+                    <ImageView
+                        android:layout_width="@dimen/icon_sm"
+                        android:layout_height="@dimen/icon_sm"
+                        android:contentDescription="@string/flv_view"
+                        android:src="@drawable/ic_user_muted" />
 
                     <TextView
-                        android:id="@+id/flv_comment"
+                        android:id="@+id/flv_item_up"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_lg"
+                        android:drawablePadding="@dimen/padding_lg"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/flv_up"
+                        android:textSize="@dimen/text_sm" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/icon_sm"
+                        android:layout_height="@dimen/icon_sm"
+                        android:contentDescription="@string/flv_view"
+                        android:src="@drawable/ic_play_count_muted" />
+
+                    <TextView
+                        android:id="@+id/flv_item_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_lg"
                         android:layout_weight="1"
-                        android:drawableStart="@drawable/ic_comment"
-                        android:drawablePadding="@dimen/default_padding"
+                        android:text="@string/flv_view"
+                        android:textSize="@dimen/text_sm" />
+
+                    <ImageView
+                        android:layout_width="@dimen/icon_sm"
+                        android:layout_height="@dimen/icon_sm"
+                        android:contentDescription="@string/flv_comment"
+                        android:src="@drawable/ic_comment_muted" />
+
+                    <TextView
+                        android:id="@+id/flv_item_comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_lg"
+                        android:layout_weight="1"
                         android:text="@string/flv_comment"
-                        android:textSize="@dimen/item_tag_size" />
+                        android:textSize="@dimen/text_sm" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -96,9 +119,9 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginStart="@dimen/margin_lg"
             android:background="@color/colorLine" />
 
     </LinearLayout>
 
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

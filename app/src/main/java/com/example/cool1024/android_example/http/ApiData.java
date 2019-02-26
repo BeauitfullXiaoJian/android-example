@@ -1,26 +1,24 @@
 package com.example.cool1024.android_example.http;
 
-import android.util.Base64;
 import android.util.Log;
 
-import com.example.cool1024.android_example.classes.Album;
-import com.example.cool1024.android_example.classes.FlvDetail;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.internal.Primitives;
 
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class ApiData {
     private final static String TAG = "ApiDataLog";
 
     private boolean result;
+    private int requestCode;
     private String message;
     private JsonElement data;
     private JSONObject pageData;
@@ -42,7 +40,7 @@ public class ApiData {
         try {
             result = jsonObject.get("result").getAsBoolean();
             message = jsonObject.get("message").getAsString();
-            data = jsonObject.get("data" + "s");
+            data = jsonObject.has("data") ? jsonObject.get("data") : jsonObject.get("data" + "s");
         } catch (Exception e) {
             e.printStackTrace();
             message = "响应解析失败，响应内容格式错误";
@@ -55,6 +53,15 @@ public class ApiData {
 
     public String getMessage() {
         return message;
+    }
+
+
+    public int getRequestCode() {
+        return requestCode;
+    }
+
+    public void setRequestCode(int requestCode) {
+        this.requestCode = requestCode;
     }
 
     public JsonElement getData() {

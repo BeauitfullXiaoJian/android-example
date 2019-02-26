@@ -1,22 +1,31 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="default_margin">12dp</dimen>
-    <dimen name="default_sm_margin">6dp</dimen>
-    <integer name="default_margin_num">12</integer>
-    <dimen name="default_padding">@dimen/default_margin</dimen>
-    <dimen name="default_line_height">22dp</dimen>
-    <dimen name="button_padding">10dp</dimen>
-    <dimen name="activity_horizontal_margin">@dimen/default_margin</dimen>
-    <dimen name="activity_vertical_margin">@dimen/default_margin</dimen>
-    <dimen name="default_text_size">14sp</dimen>
-    <dimen name="default_body_size">16sp</dimen>
-    <dimen name="default_title_size">18sp</dimen>
-    <dimen name="content_line_height">6</dimen>
-    <dimen name="avatar_size">50dp</dimen>
-    <dimen name="item_avatar_size">40dp</dimen>
-    <dimen name="item_title_size">15sp</dimen>
-    <dimen name="item_subject_size">14sp</dimen>
-    <dimen name="item_tag_size">12sp</dimen>
-    <dimen name="item_icon_size">14dp</dimen>
-    <dimen name="item_btn_size">18dp</dimen>
+    <integer name="space_sm_num">6</integer>
+    <integer name="space_md_num">9</integer>
+    <integer name="space_lg_num">12</integer>
+    <dimen name="margin_sm">6dp</dimen>
+    <dimen name="margin_md">9dp</dimen>
+    <dimen name="margin_lg">12dp</dimen>
+    <dimen name="margin_xl">20dp</dimen>
+    <dimen name="padding_sm">@dimen/margin_sm</dimen>
+    <dimen name="padding_md">@dimen/margin_md</dimen>
+    <dimen name="padding_lg">@dimen/margin_lg</dimen>
+    <dimen name="padding_xl">@dimen/margin_xl</dimen>
+    <dimen name="text_lg">20sp</dimen>
+    <dimen name="text_md">16sp</dimen>
+    <dimen name="text_sm">12sp</dimen>
+    <dimen name="icon_lg">30dp</dimen>
+    <dimen name="icon_md">20dp</dimen>
+    <dimen name="icon_sm">15dp</dimen>
+    <dimen name="avatar_size">45dp</dimen>
+    <dimen name="avatar_lg_size">65dp</dimen>
+    <!-- 首页卡片相关尺寸大小参数 -->
+    <dimen name="home_card_title_size">20sp</dimen>
+    <dimen name="home_card_subject_size">18sp</dimen>
+    <dimen name="home_card_content_size">16sp</dimen>
+    <dimen name="home_card_content_height">4sp</dimen>
+    <dimen name="home_card_btn_size">16sp</dimen>
+    <!-- 我的图片按钮相关尺寸大小参数 -->
+    <dimen name="center_btn_image_size">20dp</dimen>
+    <dimen name="center_btn_text_size">13sp</dimen>
 </resources>

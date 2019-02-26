@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:checkableBehavior="single"
+    tools:showIn="navigation">
+    <group android:id="@+id/dev_group">
+        <item
+            android:id="@+id/menu_banner"
+            android:icon="@drawable/ic_banner"
+            android:title="@string/banner" />
+        <item
+            android:icon="@drawable/ic_draw"
+            android:title="@string/draw" />
+        <item
+            android:icon="@drawable/ic_flv"
+            android:title="@string/flv" />
+        <item
+            android:icon="@drawable/ic_camera"
+            android:title="@string/camera" />
+    </group>
+    <group android:id="@+id/main_group">
+        <item
+            android:id="@+id/menu_home"
+            android:icon="@drawable/ic_square"
+            android:title="@string/home" />
+    </group>
+</menu>

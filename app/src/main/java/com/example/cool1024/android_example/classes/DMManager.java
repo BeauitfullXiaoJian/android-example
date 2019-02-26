@@ -72,7 +72,7 @@ public class DMManager implements DrawHandler.Callback {
     }
 
     public void prepared() {
-        mView.start();
+        // mView.start();
     }
 
     public void updateTimer(DanmakuTimer timer) {
