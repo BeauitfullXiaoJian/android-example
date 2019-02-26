@@ -40,4 +40,4 @@
 * [授权管理](https://github.com/permissions-dispatcher/PermissionsDispatcher)
 
 ## 预览
-![预览图](home.jpg)
+<img src="home.jpg" alert="预览图" width="300">
