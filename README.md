@@ -41,3 +41,4 @@
 
 ## 预览
 <img src="home.jpg" alert="预览图" width="300">
+<img src="preview.jpg" alert="预览图" width="300">
