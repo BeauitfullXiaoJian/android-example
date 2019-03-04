@@ -2,6 +2,7 @@ package com.example.cool1024.android_example.fragments.FlvFragments;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Point;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,7 +31,6 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.google.android.material.tabs.TabLayout;
 import com.example.cool1024.android_example.R;
 import com.example.cool1024.android_example.classes.DMManager;
 import com.example.cool1024.android_example.classes.FlvDetail;
@@ -242,13 +243,21 @@ public class FlvFragment extends BaseFragment implements
     private void setFullScreen() {
         savePlaySnapshot();
         View decorView = mParentActivity.getWindow().getDecorView();
-        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        Display display = mParentActivity.getWindowManager().getDefaultDisplay();
+        Point sizePoint = new Point();
+        display.getRealSize(sizePoint);
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         mParentActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         DisplayMetrics displaymetrics = new DisplayMetrics();
         mParentActivity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mPlayPad.getLayoutParams();
-        params.width = displaymetrics.widthPixels;
-        params.height = displaymetrics.heightPixels;
+        params.width = Math.max(sizePoint.x, sizePoint.y);
+        params.height = Math.min(sizePoint.x, sizePoint.y);
         mPlayPad.setLayoutParams(params);
         // 设置播放器边距
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mPlayView.getLayoutParams();
@@ -261,7 +270,7 @@ public class FlvFragment extends BaseFragment implements
             int margin = (params.width - layoutParams.width) / 2;
             layoutParams.leftMargin = margin;
             layoutParams.rightMargin = margin;
-        }else{
+        } else {
             int margin = (params.height - layoutParams.height) / 2;
             layoutParams.topMargin = margin;
             layoutParams.bottomMargin = margin;
@@ -275,13 +284,11 @@ public class FlvFragment extends BaseFragment implements
      */
     private void setDefaultScreen() {
         savePlaySnapshot();
-        View decorView = mParentActivity.getWindow().getDecorView();
-        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
         mParentActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         DisplayMetrics displaymetrics = new DisplayMetrics();
         mParentActivity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mPlayPad.getLayoutParams();
-        params.width = displaymetrics.widthPixels;
+        params.width = Math.min(displaymetrics.widthPixels, displaymetrics.heightPixels);
         params.height = (int) (params.width / (16.0 / 9));
         mPlayPad.setLayoutParams(params);
         // 设置播放器边距
@@ -385,9 +392,7 @@ public class FlvFragment extends BaseFragment implements
         autoScreen();
         // setDefaultScreen();
         FragmentManager fragmentManager = getChildFragmentManager();
-        TabLayout tabLayout = mainView.findViewById(R.id.tab_layout);
         ViewPager viewPager = mainView.findViewById(R.id.view_pager);
-        tabLayout.setupWithViewPager(viewPager);
         viewPager.setAdapter(new FlvFragmentPagerAdapter(fragmentManager));
         viewPager.setCurrentItem(0);
         viewPager.clearOnPageChangeListeners();
