@@ -176,6 +176,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/btn_like"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -189,7 +190,7 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:contentDescription="@string/like"
-                        app:srcCompat="@drawable/ic_like" />
+                        app:srcCompat="@drawable/ic_like_muted" />
 
                     <TextView
                         android:id="@+id/like_num"
@@ -200,6 +201,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/btn_dislike"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

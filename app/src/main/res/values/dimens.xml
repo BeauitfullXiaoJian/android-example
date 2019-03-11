@@ -14,6 +14,9 @@
     <dimen name="text_lg">20sp</dimen>
     <dimen name="text_md">16sp</dimen>
     <dimen name="text_sm">12sp</dimen>
+    <dimen name="font_lg">14sp</dimen>
+    <dimen name="font_md">12sp</dimen>
+    <dimen name="font_sm">10sp</dimen>
     <dimen name="icon_lg">30dp</dimen>
     <dimen name="icon_md">20dp</dimen>
     <dimen name="icon_sm">15dp</dimen>
@@ -28,4 +31,8 @@
     <!-- 我的图片按钮相关尺寸大小参数 -->
     <dimen name="center_btn_image_size">20dp</dimen>
     <dimen name="center_btn_text_size">13sp</dimen>
+    <!-- 导航高度 -->
+    <dimen name="actionbar_height">50dp</dimen>
+    <dimen name="bottom_nav_height">@dimen/actionbar_height</dimen>
+
 </resources>

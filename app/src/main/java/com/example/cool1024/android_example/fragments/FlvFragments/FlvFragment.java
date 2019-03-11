@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.example.cool1024.android_example.R;
@@ -37,6 +38,7 @@ import com.example.cool1024.android_example.classes.FlvDetail;
 import com.example.cool1024.android_example.classes.FragmentPage;
 import com.example.cool1024.android_example.classes.ViewDisappearHandler;
 import com.example.cool1024.android_example.fragments.BaseFragment;
+import com.google.android.material.tabs.TabLayout;
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 
@@ -146,6 +148,7 @@ public class FlvFragment extends BaseFragment implements
         if (mIjkMediaPlayer != null) {
             setPlayingStatus();
             mIjkMediaPlayer.start();
+            // mMessageView.start(mMessageView.getCurrentTime());
         }
     }
 
@@ -157,6 +160,7 @@ public class FlvFragment extends BaseFragment implements
         if (mIjkMediaPlayer != null) {
             setPauseStatus();
             mIjkMediaPlayer.pause();
+            // mMessageView.pause();
         }
     }
 
@@ -309,8 +313,10 @@ public class FlvFragment extends BaseFragment implements
         // 根据横竖屏调整布局大小
         if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             setFullScreen();
+            Log.d(TAG, "全屏");
         } else {
             setDefaultScreen();
+            Log.d(TAG, "默认");
         }
     }
 
@@ -396,6 +402,8 @@ public class FlvFragment extends BaseFragment implements
         viewPager.setAdapter(new FlvFragmentPagerAdapter(fragmentManager));
         viewPager.setCurrentItem(0);
         viewPager.clearOnPageChangeListeners();
+        TabLayout tabLayout = mainView.findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager, true);
         mControlDisappearHandler.hideView(5000);
         mDMManager = new DMManager(mMessageView);
         prepareMessageView();

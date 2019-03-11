@@ -27,11 +27,13 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/center_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="@dimen/actionbar_height"
+                android:theme="@style/ActionBarStyle"
                 app:layout_collapseMode="pin"
                 app:title="@string/my" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView

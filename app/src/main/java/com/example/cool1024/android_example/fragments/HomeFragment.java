@@ -53,6 +53,11 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
@@ -101,9 +106,9 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 mCards.add(0, cardData);
             }
         }
-        updateView();
         showToast("成功加载条" + rows.size() + "数据");
         page.nextPage();
+        updateView();
     }
 
     @Override
@@ -123,7 +128,6 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         } else {
             showToast("没有新数据了～");
             mSwipeRefreshLayout.setRefreshing(false);
-            updateView();
             Log.d(TAG, "当前数量" + mCards.size());
         }
     }
@@ -146,7 +150,6 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             loadData();
         } else {
             showToast("没有更多数据了～");
-            updateView();
             Log.d(TAG, "当前数量" + mCards.size());
         }
     }
@@ -158,7 +161,7 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     private void initView() {
         Log.d(TAG, "INIT_VIEW");
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 1);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         mCardAdapter = new CardAdapter(mCards);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mCardAdapter);
@@ -184,7 +187,8 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     private void updateView() {
-        mCardAdapter.notifyDataSetChanged();
+        // mCardAdapter.notifyDataSetChanged();
+        mCardAdapter.notifyItemRangeChanged(page.updateStart(), page.updateCount());
     }
 
     /**
@@ -239,7 +243,7 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         private String cardAvatarUrl;
         private String cardImageUrl;
 
-        CardData(String title, String body, String content, String avatarUrl, String imageUrl) {
+        public CardData(String title, String body, String content, String avatarUrl, String imageUrl) {
             cardTitle = title;
             cardBody = body;
             cardContent = content;
@@ -292,11 +296,14 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
             final CardData cardData = mDataList.get(position);
-            if (position == 0) {
-                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.cardView.getLayoutParams();
-                float density = getResources().getDisplayMetrics().density;
-                params.topMargin = (int) (getResources().getInteger(R.integer.space_lg_num) * density);
-            }
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.cardView.getLayoutParams();
+            float density = getResources().getDisplayMetrics().density;
+            params.topMargin = (int) (getResources().getInteger(R.integer.space_sm_num) * density);
+            params.bottomMargin = params.topMargin;
+            params.leftMargin = (int) (getResources().getInteger(R.integer.space_sm_num) * density);
+            params.rightMargin = params.leftMargin;
+            holder.cardView.setLayoutParams(params);
+            Log.d(TAG, holder.cardImageView.getWidth() + "图片宽度");
             GlideApp.with(HomeFragment.this)
                     .load(cardData.getCardAvatarUrl())
                     .apply(new RequestOptions().circleCrop())
@@ -304,14 +311,13 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             GlideApp.with(HomeFragment.this)
                     .load(cardData.getCardImageUrl())
                     .placeholder(R.drawable.bg)
+                    .error(R.drawable.bg)
                     .into(holder.cardImageView);
 
-            holder.cardItem.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), CardDetailActivity.class);
-                    intent.putExtra(CardDetailActivity.TAG, cardData);
-                    startActivity(intent);
-                }
+            holder.cardItem.setOnClickListener((v) -> {
+                Intent intent = new Intent(getActivity(), CardDetailActivity.class);
+                intent.putExtra(CardDetailActivity.TAG, cardData);
+                startActivity(intent);
             });
             holder.titleTextView.setText(cardData.getCardTitle());
             holder.bodyTextView.setText(cardData.getCardBody());

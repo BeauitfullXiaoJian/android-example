@@ -20,9 +20,28 @@ public class Pagination {
     // 加载模式
     public int loadModel = LOAD_MORE;
 
+    private int appendIndex = 0;
+    private int appendCount = 0;
+
     // 偏移量，当前已经显示的数据量
     public int offset() {
         return (this.currentPage - 1) * this.limit;
+    }
+
+    // 保存更新记录
+    public void saveUpdate(int appendIndex, int count) {
+        this.appendIndex = appendIndex;
+        this.appendCount = count;
+    }
+
+    // 当前需要更新的开始位置
+    public int updateStart() {
+        return offset();
+    }
+
+    // 当前需要更新的数据量
+    public int updateCount() {
+        return this.limit;
     }
 
     // 最大页数
@@ -32,13 +51,13 @@ public class Pagination {
 
     // 判断是否有下一页
     public boolean hasNext() {
-        return this.currentPage == 1 ||this.currentPage < maxPage();
+        return this.currentPage == 1 || this.currentPage < maxPage();
     }
 
     // 判断是否有上一页
-    // public boolean hasPre() {
-    //     return this.currentPage > 1;
-    // }
+    public boolean hasPre() {
+        return this.currentPage > 1;
+    }
 
     // 重置分页
     public void reset() {
@@ -56,11 +75,11 @@ public class Pagination {
     }
 
     // 上一页
-    // public void prePage() {
-    //     if (hasPre()) {
-    //        currentPage--;
-    //    }
-    // }
+    public void prePage() {
+        if (hasPre()) {
+            currentPage--;
+        }
+    }
 
     // 转化为queryParams串
     public String toQueryString() {
