@@ -22,6 +22,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.cool1024.android_example.CardDetailActivity;
 import com.example.cool1024.android_example.GlideApp;
 import com.example.cool1024.android_example.R;
+import com.example.cool1024.android_example.classes.HomeViewModel;
 import com.example.cool1024.android_example.http.ApiData;
 import com.example.cool1024.android_example.http.Pagination;
 import com.example.cool1024.android_example.http.RequestAsyncTask;
@@ -46,6 +47,8 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     private CardAdapter mCardAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<CardData> mCards = new ArrayList<>();
+
+    private HomeViewModel mHomeViewModel;
 
     @Override
     public String getFragmentTag() {
