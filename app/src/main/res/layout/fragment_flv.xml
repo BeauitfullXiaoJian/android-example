@@ -93,19 +93,21 @@
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentEnd="true">
-
-            <com.google.android.material.tabs.TabLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_below="@+id/view_pager"
-                android:layout_alignParentTop="true"
-                android:background="@drawable/shadow_bottom"
-                app:tabGravity="fill"
-                app:tabMode="fixed"
-                app:tabSelectedTextColor="@color/colorPrimary" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="36dp"
+            android:background="@color/colorWhite">
 
         </androidx.viewpager.widget.ViewPager>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/shadow_bottom"
+            app:tabGravity="fill"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/colorPrimary" />
 
     </RelativeLayout>
 

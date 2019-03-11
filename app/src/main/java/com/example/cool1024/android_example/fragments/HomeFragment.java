@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -22,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.cool1024.android_example.CardDetailActivity;
 import com.example.cool1024.android_example.GlideApp;
 import com.example.cool1024.android_example.R;
+import com.example.cool1024.android_example.classes.HomeViewModel;
 import com.example.cool1024.android_example.http.ApiData;
 import com.example.cool1024.android_example.http.Pagination;
 import com.example.cool1024.android_example.http.RequestAsyncTask;
@@ -47,9 +49,17 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<CardData> mCards = new ArrayList<>();
 
+    private HomeViewModel mHomeViewModel;
+
     @Override
     public String getFragmentTag() {
         return TAG;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // mHomeViewModel = ViewModelProvider
     }
 
     @Override
@@ -239,7 +249,7 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         private String cardAvatarUrl;
         private String cardImageUrl;
 
-        CardData(String title, String body, String content, String avatarUrl, String imageUrl) {
+        public CardData(String title, String body, String content, String avatarUrl, String imageUrl) {
             cardTitle = title;
             cardBody = body;
             cardContent = content;
