@@ -2,6 +2,7 @@ package com.example.cool1024.android_example.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -190,8 +192,8 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     private void updateView() {
-        // mCardAdapter.notifyDataSetChanged();
-        mCardAdapter.notifyItemRangeChanged(page.updateStart(), page.updateCount());
+        mCardAdapter.notifyDataSetChanged();
+        // mCardAdapter.notifyItemRangeChanged(page.updateStart(), page.updateCount());
     }
 
     /**
@@ -306,16 +308,19 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             params.leftMargin = (int) (getResources().getInteger(R.integer.space_sm_num) * density);
             params.rightMargin = params.leftMargin;
             holder.cardView.setLayoutParams(params);
-            Log.d(TAG, holder.cardImageView.getWidth() + "图片宽度");
             GlideApp.with(HomeFragment.this)
                     .load(cardData.getCardAvatarUrl())
                     .apply(new RequestOptions().circleCrop())
                     .into(holder.avatarImageView);
+            AnimationDrawable animationDrawable = (AnimationDrawable) ContextCompat.getDrawable(getContext(), R.drawable.bg_loading);
+            animationDrawable.start();
             GlideApp.with(HomeFragment.this)
                     .load(cardData.getCardImageUrl())
-                    .placeholder(R.drawable.bg)
-                    .error(R.drawable.bg)
+                    .placeholder(animationDrawable)
                     .into(holder.cardImageView);
+
+            ViewGroup.LayoutParams layoutParams = holder.cardImageView.getLayoutParams();
+            holder.cardImageView.setLayoutParams(layoutParams);
 
             holder.cardItem.setOnClickListener((v) -> {
                 Intent intent = new Intent(getActivity(), CardDetailActivity.class);

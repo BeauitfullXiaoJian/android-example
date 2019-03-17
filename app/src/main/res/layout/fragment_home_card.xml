@@ -7,7 +7,7 @@
     <LinearLayout
         android:id="@+id/card_item"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/click_bg"
         android:clickable="true"
         android:focusable="true"
@@ -15,7 +15,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="@dimen/padding_sm">
@@ -48,36 +48,27 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/card_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/image"
-                android:maxWidth="1000dp"
-                android:maxHeight="1000dp"
-                android:scaleType="centerCrop" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding_lg">
-
-            <TextView
-                android:id="@+id/card_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lineSpacingExtra="@dimen/home_card_content_height"
-                android:lines="2"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/font_md" />
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/image" />
 
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/card_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lineSpacingExtra="@dimen/home_card_content_height"
+            android:lines="2"
+            android:padding="@dimen/padding_sm"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/font_md" />
 
         <LinearLayout
             android:layout_width="match_parent"
