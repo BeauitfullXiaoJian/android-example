@@ -11,12 +11,14 @@
     <dimen name="padding_md">@dimen/margin_md</dimen>
     <dimen name="padding_lg">@dimen/margin_lg</dimen>
     <dimen name="padding_xl">@dimen/margin_xl</dimen>
+    <dimen name="text_xl">24sp</dimen>
     <dimen name="text_lg">20sp</dimen>
     <dimen name="text_md">16sp</dimen>
     <dimen name="text_sm">12sp</dimen>
     <dimen name="font_lg">14sp</dimen>
     <dimen name="font_md">12sp</dimen>
     <dimen name="font_sm">10sp</dimen>
+    <dimen name="icon_xl">40dp</dimen>
     <dimen name="icon_lg">30dp</dimen>
     <dimen name="icon_md">20dp</dimen>
     <dimen name="icon_sm">15dp</dimen>

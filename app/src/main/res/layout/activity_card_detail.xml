@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:toolbar="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,79 +16,87 @@
             android:id="@+id/detail_toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/actionbar_height"
-            android:theme="@style/ActionBarStyle" />
+            android:theme="@style/ActionBarStyle"
+            toolbar:titleTextAppearance="@style/ActionBarTitleStyle">
+
+        </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/padding_lg">
-
-        <ImageView
-            android:id="@+id/author_avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:contentDescription="@string/avatar"
-            tools:srcCompat="@tools:sample/avatars" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/margin_lg"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/author_nick"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="3dp"
-                android:textColor="@android:color/black"
-                android:textSize="@dimen/home_card_title_size"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/label_string"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="3dp"
-                android:text="100人"
-                android:textColor="@color/colorSecondary" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:background="@android:color/transparent"
-            android:drawableStart="@drawable/ic_focus_active"
-            android:padding="@dimen/padding_lg"
-            android:text="@string/focus"
-            android:textColor="@color/colorPrimary" />
-
-
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/card_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_lg"
-        android:layout_marginRight="@dimen/margin_lg"
-        android:contentDescription="@string/image" />
-
-    <TextView
-        android:id="@+id/detail_content"
+    <WebView
+        android:id="@+id/web_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="@dimen/padding_lg"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/home_card_title_size" />
+        android:layout_weight="1" />
 
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:padding="@dimen/padding_lg">-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/author_avatar"-->
+    <!--android:layout_width="50dp"-->
+    <!--android:layout_height="50dp"-->
+    <!--android:contentDescription="@string/avatar"-->
+    <!--tools:srcCompat="@tools:sample/avatars" />-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_marginStart="@dimen/margin_lg"-->
+    <!--android:layout_weight="1"-->
+    <!--android:orientation="vertical">-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/author_nick"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_margin="3dp"-->
+    <!--android:textColor="@android:color/black"-->
+    <!--android:textSize="@dimen/home_card_title_size"-->
+    <!--android:textStyle="bold" />-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/label_string"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginStart="3dp"-->
+    <!--android:text="100人"-->
+    <!--android:textColor="@color/colorSecondary" />-->
+
+    <!--</LinearLayout>-->
+
+    <!--<Button-->
+    <!--android:id="@+id/button"-->
+    <!--android:layout_width="80dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:background="@android:color/transparent"-->
+    <!--android:drawableStart="@drawable/ic_focus_active"-->
+    <!--android:padding="@dimen/padding_lg"-->
+    <!--android:text="@string/focus"-->
+    <!--android:textColor="@color/colorPrimary" />-->
+
+
+    <!--</LinearLayout>-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/card_image"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="@dimen/margin_lg"-->
+    <!--android:layout_marginRight="@dimen/margin_lg"-->
+    <!--android:contentDescription="@string/image" />-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/detail_content"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:padding="@dimen/padding_lg"-->
+    <!--android:textColor="@android:color/black"-->
+    <!--android:textSize="@dimen/home_card_title_size" />-->
 
 </LinearLayout>
 

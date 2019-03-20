@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:toolbar="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -17,7 +18,8 @@
             android:layout_height="@dimen/actionbar_height"
             android:background="@color/colorPrimary"
             android:theme="@style/ActionBarStyle"
-            app:title="@string/home" />
+            app:title="@string/home"
+            toolbar:titleTextAppearance="@style/ActionBarTitleStyle" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -31,7 +33,7 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/padding_sm"/>
+            android:padding="@dimen/padding_sm" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="#89000000"
+            android:background="#00000000"
             android:orientation="horizontal">
 
             <ImageView
@@ -62,7 +62,8 @@
                 android:paddingStart="@dimen/padding_lg"
                 android:paddingEnd="@dimen/padding_lg"
                 android:textColor="@color/colorBlack"
-                android:textSize="@dimen/text_md" />
+                android:textSize="@dimen/text_md"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/play_time"

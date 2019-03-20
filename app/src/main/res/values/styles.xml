@@ -16,4 +16,8 @@
         <item name="android:colorControlNormal">@android:color/white</item>
     </style>
 
+    <style name="ActionBarTitleStyle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">@dimen/text_lg</item>
+    </style>
+
 </resources>
