@@ -1,27 +1,26 @@
 package com.example.cool1024.android_example.services;
 
-import android.app.IntentService;
+import android.app.Service;
 import android.content.Intent;
-import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Binder;
+import android.os.IBinder;
 import android.util.Log;
 
 import java.util.Locale;
 
+import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-public class MusicService extends IntentService {
+public class MusicService extends Service {
 
     public static final String TAG = "MusicService";
-    private static final String MUSIC_URL = "MUSIC_URL";
-    private static final String ACTION_PLAY = "ACTION_PLAY";
-    private static final String ACTION_START = "ACTION_START";
-    private static final String ACTION_PAUSE = "ACTION_PAUSE";
-    public static int sPlayStatus = PlayStatus.EMPTY;
 
+    public static int sPlayStatus = PlayStatus.EMPTY;
     private MediaPlayer mMediaPlayer;
     private LocalBroadcastManager mLocalBroadcastManager;
+    private final MusicBinder mMusicBinder = new MusicBinder();
 
     public interface PlayStatus {
         int EMPTY = 0;
@@ -30,42 +29,24 @@ public class MusicService extends IntentService {
         int PAUSE = 3;
     }
 
-    public MusicService() {
-        super("MusicService");
-    }
-
-    public static void playMusic(Context context, String musicUrl) {
-        Intent intent = new Intent(context, MusicService.class);
-        intent.setAction(ACTION_PLAY);
-        intent.putExtra(MUSIC_URL, musicUrl);
-        context.startService(intent);
-    }
-
-    public static void startMusic(Context context) {
-        Intent intent = new Intent(context, MusicService.class);
-        intent.setAction(ACTION_START);
-        context.startService(intent);
-    }
-
-    public static void pauseMusic(Context context) {
-        Intent intent = new Intent(context, MusicService.class);
-        intent.setAction(ACTION_PAUSE);
-        context.startService(intent);
-    }
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_PLAY.equals(action)) {
-                final String musicUrl = intent.getStringExtra(MUSIC_URL);
-                handleActionPlay(musicUrl);
-            } else if (ACTION_START.equals(action)) {
-                handleActionStart();
-            } else if (ACTION_PAUSE.equals(action)) {
-                handleActionPause();
-            }
+    public class MusicBinder extends Binder {
+        public void playMusic(String musicUrl) {
+            handleActionPlay(musicUrl);
         }
+
+        public void startMusic() {
+            handleActionStart();
+        }
+
+        public void pauseMusic() {
+            handleActionPause();
+        }
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mMusicBinder;
     }
 
     private void handleActionPlay(String musicUrl) {

@@ -3,10 +3,13 @@ package com.example.cool1024.android_example.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +33,7 @@ public class CenterFragment extends BaseFragment implements View.OnClickListener
     public static final String TAG = "CenterFragment";
     private static final int APP_INSTALL_STORAGE_REQUEST_CODE = 1;
     private Activity mParentActivity;
+    private MusicService.MusicBinder mMusicBinder;
 
     @Override
     public String getFragmentTag() {
@@ -124,15 +128,34 @@ public class CenterFragment extends BaseFragment implements View.OnClickListener
             case R.id.btn_music: {
                 switch (MusicService.sPlayStatus) {
                     case MusicService.PlayStatus.EMPTY: {
-                        MusicService.playMusic(getActivity(), "https://cool1024.com/upload/c2d8f23c236f257039305cc263ec6439.mp3");
+                        if (mMusicBinder == null) {
+                            Intent intent = new Intent(mParentActivity, MusicService.class);
+                            mParentActivity.startService(intent);
+                            mParentActivity.bindService(intent, new ServiceConnection() {
+                                @Override
+                                public void onServiceConnected(ComponentName name, IBinder iBinder) {
+                                    mMusicBinder = (MusicService.MusicBinder) iBinder;
+                                    mMusicBinder.playMusic("https://cool1024.com/upload/c2d8f23c236f257039305cc263ec6439.mp3");
+                                }
+
+                                @Override
+                                public void onServiceDisconnected(ComponentName name) {
+                                    mMusicBinder = null;
+                                }
+                            }, 0);
+                        }
                         break;
                     }
                     case MusicService.PlayStatus.PLAYING: {
-                        MusicService.pauseMusic(getActivity());
+                        if (mMusicBinder != null) {
+                            mMusicBinder.pauseMusic();
+                        }
                         break;
                     }
                     case MusicService.PlayStatus.PAUSE: {
-                        MusicService.startMusic(getActivity());
+                        if (mMusicBinder != null) {
+                            mMusicBinder.startMusic();
+                        }
                         break;
                     }
                 }
