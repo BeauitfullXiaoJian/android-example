@@ -2,6 +2,7 @@ package com.example.cool1024.android_example.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -102,9 +103,11 @@ public class BannerFragment extends BaseFragment {
             Context context = getContext();
             TouchImageView imageView = new TouchImageView(context);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(2000, 2000));
+            AnimationDrawable animationDrawable = (AnimationDrawable) getResources().getDrawable(R.drawable.bg_loading);
+            animationDrawable.start();
             GlideApp.with(container)
                     .load(mImageUrls[position])
-                    .placeholder(R.drawable.bg)
+                    .placeholder(animationDrawable)
                     .into(imageView);
             container.addView(imageView);
             Log.d(TAG, "实例化" + position);
