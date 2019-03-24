@@ -12,12 +12,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
-import com.example.cool1024.android_example.fragments.AnimationFragment;
 import com.example.cool1024.android_example.fragments.BannerFragment;
 import com.example.cool1024.android_example.fragments.BaseFragment;
+import com.example.cool1024.android_example.fragments.CameraFragment;
 import com.example.cool1024.android_example.fragments.CenterFragment;
+import com.example.cool1024.android_example.fragments.DrawFragment;
+import com.example.cool1024.android_example.fragments.FlvFragments.FlvFragment;
 import com.example.cool1024.android_example.fragments.HomeFragment;
 import com.example.cool1024.android_example.fragments.WebViewFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -148,14 +151,7 @@ public class MainActivity extends AppCompatActivity implements
             item.setCheckable(true);
             item.setChecked(true);
             mDrawer.closeDrawers();
-            switch (item.getItemId()) {
-                case R.id.menu_banner: {
-                    Intent intent = new Intent(MainActivity.this, DevActivity.class);
-                    intent.putExtra(DevActivity.FRAGMENT_NAME_PARAM, BannerFragment.TAG);
-                    startActivity(intent);
-                    break;
-                }
-            }
+            DrawerListenerHelp.bindDrawerLayout(MainActivity.this, item);
             return true;
         });
     }
@@ -177,6 +173,65 @@ public class MainActivity extends AppCompatActivity implements
             mHomeFragment = (BaseFragment) mFragmentManager.findFragmentByTag(HomeFragment.TAG);
             mDashboardFragment = (BaseFragment) mFragmentManager.findFragmentByTag(WebViewFragment.TAG);
             mCenterFragment = (BaseFragment) mFragmentManager.findFragmentByTag(CenterFragment.TAG);
+        }
+    }
+
+    private static class DrawerListenerHelp implements DrawerLayout.DrawerListener {
+
+        private MenuItem mActiveMenuItem;
+        private MainActivity mMainActivity;
+
+        private static void bindDrawerLayout(MainActivity activity, MenuItem item) {
+            activity.mDrawer.addDrawerListener(new DrawerListenerHelp(activity, item));
+        }
+
+        private DrawerListenerHelp(MainActivity activity, MenuItem item) {
+            mMainActivity = activity;
+            mActiveMenuItem = item;
+        }
+
+        @Override
+        public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+        }
+
+        @Override
+        public void onDrawerOpened(@NonNull View drawerView) {
+
+        }
+
+        @Override
+        public void onDrawerClosed(@NonNull View drawerView) {
+            mMainActivity.mDrawer.removeDrawerListener(DrawerListenerHelp.this);
+            Intent intent = new Intent(mMainActivity, DevActivity.class);
+            switch (mActiveMenuItem.getItemId()) {
+                case R.id.menu_home: {
+                    mMainActivity.mNavigationView.setSelectedItemId(R.id.navigation_home);
+                    return;
+                }
+                case R.id.menu_banner: {
+                    intent.putExtra(DevActivity.FRAGMENT_NAME_PARAM, BannerFragment.TAG);
+                    break;
+                }
+                case R.id.menu_draw: {
+                    intent.putExtra(DevActivity.FRAGMENT_NAME_PARAM, DrawFragment.TAG);
+                    break;
+                }
+                case R.id.menu_flv: {
+                    intent.putExtra(DevActivity.FRAGMENT_NAME_PARAM, FlvFragment.TAG);
+                    break;
+                }
+                case R.id.menu_camera: {
+                    intent.putExtra(DevActivity.FRAGMENT_NAME_PARAM, CameraFragment.TAG);
+                    break;
+                }
+            }
+            mMainActivity.startActivity(intent);
+        }
+
+        @Override
+        public void onDrawerStateChanged(int newState) {
+
         }
     }
 }

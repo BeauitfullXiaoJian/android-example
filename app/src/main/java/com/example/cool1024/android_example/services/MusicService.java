@@ -35,10 +35,12 @@ public class MusicService extends Service {
         }
 
         public void startMusic() {
+            Log.d(TAG, "播放音乐");
             handleActionStart();
         }
 
         public void pauseMusic() {
+            Log.d(TAG, "暂停音乐");
             handleActionPause();
         }
     }
@@ -87,7 +89,6 @@ public class MusicService extends Service {
     private void handleActionPause() {
         if (mMediaPlayer != null) {
             mMediaPlayer.pause();
-            mMediaPlayer = null;
             sPlayStatus = PlayStatus.PAUSE;
         }
     }
@@ -103,6 +104,7 @@ public class MusicService extends Service {
     }
 
     private void cleanMediaPlayer() {
+        Log.d(TAG, "我被人销毁了！！！！！");
         if (mMediaPlayer != null) {
             mMediaPlayer.release();
         }

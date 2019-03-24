@@ -17,6 +17,4 @@ public class LaunchActivity extends AppCompatActivity {
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
-
-
 }

@@ -76,6 +76,7 @@ public class WebViewFragment extends BaseFragment implements SwipeRefreshLayout.
             }
         });
         mSwipeRefreshLayout.setOnRefreshListener(WebViewFragment.this);
+        mSwipeRefreshLayout.setOnChildScrollUpCallback((p, c) -> mWebView.getScrollY() > 0);
     }
 
     private void initView() {

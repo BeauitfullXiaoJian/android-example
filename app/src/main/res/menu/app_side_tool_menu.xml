@@ -9,12 +9,15 @@
             android:icon="@drawable/ic_banner"
             android:title="@string/banner" />
         <item
+            android:id="@+id/menu_draw"
             android:icon="@drawable/ic_draw"
             android:title="@string/draw" />
         <item
+            android:id="@+id/menu_flv"
             android:icon="@drawable/ic_flv"
             android:title="@string/flv" />
         <item
+            android:id="@+id/menu_camera"
             android:icon="@drawable/ic_camera"
             android:title="@string/camera" />
     </group>

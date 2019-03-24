@@ -50,7 +50,7 @@ public class CardDetailActivity extends AppCompatActivity {
 
         WebView webView = findViewById(R.id.web_view);
         webView.setWebChromeClient(new WebChromeClient());
-        webView.loadData("<style>img{width:100%;}</style>" +
+        webView.loadData("<style>img{width:100%;}*{word-break:break-all;}</style>" +
                         "<h2>Sample</h2>" +
                         "<p>This is an instance of the <a href=\"https://ckeditor.com/docs/ckeditor5/latest/builds/guides/overview.html#classic-editor\">classic editor build</a>.</p>" +
                         "<img src=\"" + cardData.getCardImageUrl() + "\" />" +
