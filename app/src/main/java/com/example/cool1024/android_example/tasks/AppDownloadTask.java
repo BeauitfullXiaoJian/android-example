@@ -23,12 +23,19 @@ public class AppDownloadTask extends AsyncTask<Context, Integer, Boolean> {
     private static String sApkDownloadUrl;
     private static String sDownloadTitle;
     private static long sDownloadId;
+    private static Uri sApkUri;
+    private static DownloadManager.Request sDownloadRequest;
 
-    public static AppDownloadTask getInstance() {
+    public static AppDownloadTask startTask(Context context) {
         if (sInstance == null) {
             sInstance = new AppDownloadTask();
+            sInstance.execute(context);
         }
         return sInstance;
+    }
+
+    public static Uri getApkUri() {
+        return sApkUri;
     }
 
     public static void setApkUrl(String url) {
@@ -37,6 +44,9 @@ public class AppDownloadTask extends AsyncTask<Context, Integer, Boolean> {
 
     public static void setTitle(String title) {
         sDownloadTitle = title;
+        if (sDownloadRequest != null) {
+            sDownloadRequest.setTitle(sDownloadTitle);
+        }
     }
 
     public static void setCompleteListener(DownloadCompleteListener listener) {
@@ -77,6 +87,7 @@ public class AppDownloadTask extends AsyncTask<Context, Integer, Boolean> {
             // setting mime type
             request.setMimeType("application/vnd.android.package-archive");
             sDownloadId = sDownloadManager.enqueue(request);
+            sDownloadRequest = request;
             result = true;
         } else {
             Log.d(TAG, "获取下载管理器失败～");
@@ -109,7 +120,8 @@ public class AppDownloadTask extends AsyncTask<Context, Integer, Boolean> {
 
         if (action.equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE) && sListener != null) {
             Log.d(TAG, "执行完成方法");
-            sListener.onComplete(sDownloadManager.getUriForDownloadedFile(sDownloadId));
+            sApkUri = sDownloadManager.getUriForDownloadedFile(sDownloadId);
+            sListener.onComplete(sApkUri);
         }
     }
 
