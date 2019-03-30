@@ -30,18 +30,15 @@ public class MainActivity extends AppCompatActivity implements
         BottomNavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MainActivity";
-
     private static final String SAVE_DATA_TAG = "ACTIVE_FRAGMENT";
 
     private Bundle mSavedInstanceState;
-
-    private FragmentManager mFragmentManager;
     private BottomNavigationView mNavigationView;
     private NavigationView mNavigationSideView;
     private DrawerLayout mDrawer;
 
+    private FragmentManager mFragmentManager;
     private FragmentTransaction mFragmentTransaction;
-
     private BaseFragment mActiveFragment;
     private BaseFragment mHomeFragment;
     private BaseFragment mDashboardFragment;

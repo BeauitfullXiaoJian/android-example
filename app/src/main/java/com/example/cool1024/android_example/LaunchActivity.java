@@ -14,7 +14,7 @@ public class LaunchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
+        // startActivity(new Intent(this, MainActivity.class));
+        // finish();
     }
 }
