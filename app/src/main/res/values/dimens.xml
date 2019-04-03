@@ -12,9 +12,10 @@
     <dimen name="padding_lg">@dimen/margin_lg</dimen>
     <dimen name="padding_xl">@dimen/margin_xl</dimen>
     <dimen name="text_xl">24sp</dimen>
-    <dimen name="text_lg">20sp</dimen>
-    <dimen name="text_md">16sp</dimen>
-    <dimen name="text_sm">12sp</dimen>
+    <dimen name="text_lg">22sp</dimen>
+    <dimen name="text_md">20sp</dimen>
+    <dimen name="text_sm">18sp</dimen>
+    <dimen name="font_xl">16sp</dimen>
     <dimen name="font_lg">14sp</dimen>
     <dimen name="font_md">12sp</dimen>
     <dimen name="font_sm">10sp</dimen>
@@ -23,16 +24,16 @@
     <dimen name="icon_md">20dp</dimen>
     <dimen name="icon_sm">15dp</dimen>
     <dimen name="avatar_size">45dp</dimen>
+    <dimen name="avatar_md_size">55dp</dimen>
     <dimen name="avatar_lg_size">65dp</dimen>
+    <dimen name="line_height">0.5dp</dimen>
     <!-- 首页卡片相关尺寸大小参数 -->
     <dimen name="home_card_title_size">20sp</dimen>
     <dimen name="home_card_subject_size">18sp</dimen>
     <dimen name="home_card_content_size">16sp</dimen>
     <dimen name="home_card_content_height">4sp</dimen>
     <dimen name="home_card_btn_size">16sp</dimen>
-    <!-- 我的图片按钮相关尺寸大小参数 -->
-    <dimen name="center_btn_image_size">20dp</dimen>
-    <dimen name="center_btn_text_size">13sp</dimen>
+
     <!-- 导航高度 -->
     <dimen name="actionbar_height">50dp</dimen>
     <dimen name="bottom_nav_height">@dimen/actionbar_height</dimen>

@@ -59,4 +59,6 @@
     <string name="fling_animation">惯性动画</string>
     <string name="value_animation">值动画</string>
     <string name="scale_animation">缩放动画</string>
+    <string name="next">下一步</string>
+
 </resources>

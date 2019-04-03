@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/nick"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/text_md" />
+                    android:textSize="@dimen/text_sm" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
                     android:layout_marginStart="@dimen/margin_lg"
                     android:text="@string/lv_5"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/text_md" />
+                    android:textSize="@dimen/text_sm" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
                     android:layout_marginStart="@dimen/margin_lg"
                     android:text="@string/super_vip"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/text_md" />
+                    android:textSize="@dimen/text_sm" />
 
             </LinearLayout>
 
@@ -80,7 +80,7 @@
                     android:layout_weight="1"
                     android:text="@string/b_coin_label"
                     android:textColor="@color/colorLight"
-                    android:textSize="@dimen/text_sm" />
+                    android:textSize="@dimen/font_md" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -88,7 +88,7 @@
                     android:layout_weight="1"
                     android:text="@string/empty_decimal"
                     android:textColor="@color/colorLight"
-                    android:textSize="@dimen/text_sm" />
+                    android:textSize="@dimen/font_lg" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
                     android:layout_weight="1"
                     android:text="@string/coin_label"
                     android:textColor="@color/colorLight"
-                    android:textSize="@dimen/text_sm" />
+                    android:textSize="@dimen/font_lg" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -105,7 +105,7 @@
                     android:layout_weight="1"
                     android:text="@string/empty_decimal"
                     android:textColor="@color/colorLight"
-                    android:textSize="@dimen/text_sm" />
+                    android:textSize="@dimen/font_lg" />
 
             </LinearLayout>
 
@@ -134,14 +134,14 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/empty_num"
-                android:textSize="@dimen/text_md" />
+                android:textSize="@dimen/font_lg" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/article"
-                android:textSize="@dimen/text_sm" />
+                android:textSize="@dimen/font_lg" />
 
         </LinearLayout>
 
@@ -160,14 +160,14 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/empty_num"
-                android:textSize="@dimen/text_md" />
+                android:textSize="@dimen/font_lg" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/focus"
-                android:textSize="@dimen/text_sm" />
+                android:textSize="@dimen/font_lg" />
 
         </LinearLayout>
 
@@ -186,14 +186,14 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/empty_num"
-                android:textSize="@dimen/text_md" />
+                android:textSize="@dimen/font_lg" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/fans"
-                android:textSize="@dimen/text_sm" />
+                android:textSize="@dimen/font_lg" />
 
         </LinearLayout>
 

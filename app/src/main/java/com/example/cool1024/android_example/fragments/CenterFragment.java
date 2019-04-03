@@ -75,7 +75,7 @@ public class CenterFragment extends BaseFragment implements View.OnClickListener
         }
         // 设置顶部背景图片
         final ImageView imageView = view.findViewById(R.id.toolbar_background);
-        GlideApp.with(view).load(R.drawable.banner).into(imageView);
+        GlideApp.with(view).load("https://images.unsplash.com/photo-1463424591693-a7c7ed4e3342?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=600&h=300&fit=crop&ixid=eyJhcHBfaWQiOjF9").into(imageView);
     }
 
     @Override

@@ -70,6 +70,7 @@ public class FlvFragment extends BaseFragment implements
     private ProgressBar mLoadingBar;
     private RelativeLayout mPlayPad;
     private ImageView mPlayBtn;
+    private ImageView mDanBtn;
     private TextView mPlayTime;
     private EditText mMsgInput;
 
@@ -148,7 +149,7 @@ public class FlvFragment extends BaseFragment implements
         if (mIjkMediaPlayer != null) {
             setPlayingStatus();
             mIjkMediaPlayer.start();
-            // mMessageView.start(mMessageView.getCurrentTime());
+            mMessageView.seekTo(mMessageView.getCurrentTime());
         }
     }
 
@@ -256,6 +257,7 @@ public class FlvFragment extends BaseFragment implements
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        mDanBtn.setVisibility(View.VISIBLE);
         mParentActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         DisplayMetrics displaymetrics = new DisplayMetrics();
         mParentActivity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -288,6 +290,7 @@ public class FlvFragment extends BaseFragment implements
      */
     private void setDefaultScreen() {
         savePlaySnapshot();
+        mDanBtn.setVisibility(View.GONE);
         mParentActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         DisplayMetrics displaymetrics = new DisplayMetrics();
         mParentActivity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -383,6 +386,7 @@ public class FlvFragment extends BaseFragment implements
         mSeekBar = mainView.findViewById(R.id.play_progress);
         mLoadingBar = mainView.findViewById(R.id.play_loading);
         mPlayBtn = mainView.findViewById(R.id.btn_play);
+        mDanBtn = mainView.findViewById(R.id.btn_danmaku);
         mPlayTime = mainView.findViewById(R.id.play_time);
         mSeekBar.setOnSeekBarChangeListener(FlvFragment.this);
         mPlayPad = mainView.findViewById(R.id.play_pad);
@@ -417,12 +421,6 @@ public class FlvFragment extends BaseFragment implements
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        destroyPlayer();
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_play: {
@@ -432,6 +430,10 @@ public class FlvFragment extends BaseFragment implements
                 } else if (mPlayStatus == PlayStatus.PAUSED) {
                     startPlayer();
                 }
+                break;
+            }
+            case R.id.btn_danmaku:{
+                mMessageView.start();
                 break;
             }
         }

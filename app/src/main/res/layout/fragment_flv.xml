@@ -73,6 +73,21 @@
                 android:gravity="center"
                 android:text="@string/play_time"
                 android:textColor="@android:color/white" />
+
+            <ImageView
+                android:visibility="gone"
+                android:alpha="0.6"
+                android:id="@+id/btn_danmaku"
+                android:layout_width="28dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/margin_md"
+                android:background="@drawable/click_bg"
+                android:clickable="true"
+                android:contentDescription="@string/play"
+                android:focusable="true"
+                android:src="@drawable/ic_danmaku_close"
+                android:layout_marginEnd="@dimen/margin_lg"/>
+
         </LinearLayout>
 
         <ProgressBar

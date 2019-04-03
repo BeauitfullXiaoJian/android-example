@@ -5,6 +5,6 @@
     android:layout_height="match_parent"
     android:layout_gravity="start"
     app:headerLayout="@layout/app_side_tool_header"
-    app:itemTextColor="@color/colorText"
+    app:itemTextColor="@color/colorPrimary"
     app:itemIconTint="@color/colorSecondary"
     app:menu="@menu/app_side_tool_menu" />
