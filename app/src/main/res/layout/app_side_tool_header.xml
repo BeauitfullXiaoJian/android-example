@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/nick"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/text_sm" />
+                    android:textSize="@dimen/font_xl" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
                     android:layout_marginStart="@dimen/margin_lg"
                     android:text="@string/lv_5"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/text_sm" />
+                    android:textSize="@dimen/font_xl" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
                     android:layout_marginStart="@dimen/margin_lg"
                     android:text="@string/super_vip"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/text_sm" />
+                    android:textSize="@dimen/font_xl" />
 
             </LinearLayout>
 

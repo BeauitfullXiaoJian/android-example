@@ -11,4 +11,6 @@
     <color name="colorLine">#0d000000</color>
     <color name="colorLight">#f4f4f4</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorPink">#FFA1D3</color>
+    <color name="colorDanger">#F44336</color>
 </resources>

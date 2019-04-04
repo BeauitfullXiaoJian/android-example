@@ -3,6 +3,10 @@
     <integer name="space_sm_num">6</integer>
     <integer name="space_md_num">9</integer>
     <integer name="space_lg_num">12</integer>
+    <dimen name="border_sm">1dp</dimen>
+    <dimen name="border_md">2dp</dimen>
+    <dimen name="border_lg">3dp</dimen>
+    <dimen name="border_xl">4dp</dimen>
     <dimen name="margin_sm">6dp</dimen>
     <dimen name="margin_md">9dp</dimen>
     <dimen name="margin_lg">12dp</dimen>

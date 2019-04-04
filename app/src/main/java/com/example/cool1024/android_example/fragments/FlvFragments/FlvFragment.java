@@ -381,12 +381,13 @@ public class FlvFragment extends BaseFragment implements
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View mainView = inflater.inflate(R.layout.fragment_flv, container, false);
-        mainView.findViewById(R.id.btn_play).setOnClickListener(FlvFragment.this);
         mParentActivity = (AppCompatActivity) getActivity();
         mSeekBar = mainView.findViewById(R.id.play_progress);
         mLoadingBar = mainView.findViewById(R.id.play_loading);
         mPlayBtn = mainView.findViewById(R.id.btn_play);
+        mPlayBtn.setOnClickListener(FlvFragment.this);
         mDanBtn = mainView.findViewById(R.id.btn_danmaku);
+        mDanBtn.setOnClickListener(FlvFragment.this);
         mPlayTime = mainView.findViewById(R.id.play_time);
         mSeekBar.setOnSeekBarChangeListener(FlvFragment.this);
         mPlayPad = mainView.findViewById(R.id.play_pad);

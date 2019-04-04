@@ -10,65 +10,120 @@
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:contentScrim="@color/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:statusBarScrim="@android:color/transparent"
             app:titleEnabled="false">
 
             <RelativeLayout
-                app:layout_collapseMode="parallax"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="200dp"
+                app:layout_collapseMode="parallax">
 
                 <ImageView
                     android:id="@+id/toolbar_background"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/image" />
+                    android:layout_height="200dp"
+                    android:contentDescription="@string/image"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/bg_center" />
 
                 <LinearLayout
-                    android:background="#5C5E5E5E"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:background="@drawable/window"
+                    android:gravity="bottom"
+                    android:orientation="vertical"
+                    android:padding="@dimen/padding_lg">
 
-                    <LinearLayout
-                        android:padding="@dimen/padding_lg"
-                        android:layout_marginTop="@dimen/actionbar_height"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="bottom"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:contentDescription="@string/avatar"
-                            android:layout_width="@dimen/avatar_md_size"
-                            android:layout_height="@dimen/avatar_md_size"
-                            android:src="@drawable/avatar"/>
-
-                        <ImageView
-                            android:layout_marginStart="@dimen/margin_lg"
-                            android:contentDescription="@string/lv_6"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_lv6"/>
-
-                    </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:orientation="horizontal"
+                        android:paddingTop="@dimen/padding_lg"
+                        android:paddingBottom="@dimen/padding_lg">
+
+                        <ImageView
+                            android:layout_width="@dimen/avatar_md_size"
+                            android:layout_height="@dimen/avatar_md_size"
+                            android:background="@color/colorWhite"
+                            android:contentDescription="@string/avatar"
+                            android:padding="2dp"
+                            android:src="@drawable/ic_avatar1" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_lg"
+                            android:background="@drawable/label_danger"
+                            android:padding="@dimen/border_md"
+                            android:text="年度大会员"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/font_md" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/nick"
+                            android:text="梦想的乡"
                             android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/text_md" />
+
+                        <ImageView
+                            android:layout_width="@dimen/icon_md"
+                            android:layout_height="@dimen/icon_md"
                             android:layout_marginStart="@dimen/margin_lg"
-                            android:textSize="@dimen/text_lg"/>
+                            android:contentDescription="@string/girl"
+                            android:src="@drawable/ic_gender_girl" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_lg"
+                            android:contentDescription="@string/lv_6"
+                            android:src="@drawable/ic_lv2" />
 
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_sm"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="20关注"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/font_md" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_lg"
+                            android:text="10粉丝"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/font_md" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_sm"
+                        android:text="这个人很懒，什么也没写～"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/font_md" />
 
                 </LinearLayout>
 
@@ -103,13 +158,13 @@
                 android:background="@drawable/shadow_bottom"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_lg"
-                    android:text="@string/example"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_md" />
+                <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="@dimen/padding_lg"-->
+                <!--android:text="@string/example"-->
+                <!--android:textColor="@color/colorPrimary"-->
+                <!--android:textSize="@dimen/text_md" />-->
 
                 <!--<View-->
                 <!--android:layout_width="match_parent"-->
@@ -302,6 +357,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/btn_tv"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -381,27 +437,38 @@
                     android:focusable="true"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="@dimen/padding_lg">
+                    android:padding="@dimen/padding_md">
+
                     <ImageView
                         android:layout_width="@dimen/icon_lg"
                         android:layout_height="@dimen/icon_lg"
+                        android:layout_marginStart="@dimen/margin_sm"
+                        android:layout_marginEnd="@dimen/margin_sm"
                         android:contentDescription="@string/animation"
                         android:src="@drawable/ic_magic" />
+
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_lg"
+                        android:layout_weight="1"
                         android:text="@string/spring_animation"
-                        android:textSize="@dimen/font_xl"
-                        android:textColor="@color/colorText" />
+                        android:textColor="@color/colorText"
+                        android:textSize="@dimen/font_xl" />
+
                     <ImageView
-                        android:contentDescription="@string/next"
-                        android:src="@drawable/ic_muted_next"
                         android:layout_width="@dimen/icon_sm"
-                        android:layout_height="@dimen/icon_sm" />
+                        android:layout_height="@dimen/icon_sm"
+                        android:contentDescription="@string/next"
+                        android:src="@drawable/ic_muted_next" />
                 </LinearLayout>
-                <View android:layout_marginStart="50dp" android:layout_height="@dimen/line_height" android:layout_width="match_parent" android:background="@color/colorLine"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/line_height"
+                    android:layout_marginStart="50dp"
+                    android:background="@color/colorLine" />
+
                 <LinearLayout
                     android:id="@+id/btn_fling"
                     android:layout_width="match_parent"
@@ -411,32 +478,39 @@
                     android:focusable="true"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="@dimen/padding_lg">
+                    android:padding="@dimen/padding_md">
 
                     <ImageView
                         android:layout_width="@dimen/icon_lg"
                         android:layout_height="@dimen/icon_lg"
+                        android:layout_marginStart="@dimen/margin_sm"
+                        android:layout_marginEnd="@dimen/margin_sm"
                         android:contentDescription="@string/animation"
                         android:src="@drawable/ic_audio"
                         android:textSize="@dimen/text_md" />
+
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_lg"
+                        android:layout_weight="1"
                         android:text="@string/fling_animation"
-                        android:textSize="@dimen/font_xl"
-                        android:textColor="@color/colorText" />
+                        android:textColor="@color/colorText"
+                        android:textSize="@dimen/font_xl" />
+
                     <ImageView
-                        android:contentDescription="@string/next"
-                        android:src="@drawable/ic_muted_next"
                         android:layout_width="@dimen/icon_sm"
-                        android:layout_height="@dimen/icon_sm" />
+                        android:layout_height="@dimen/icon_sm"
+                        android:contentDescription="@string/next"
+                        android:src="@drawable/ic_muted_next" />
                 </LinearLayout>
-                <View android:layout_marginStart="50dp"
-                    android:layout_height="@dimen/line_height"
+
+                <View
                     android:layout_width="match_parent"
-                    android:background="@color/colorLine"/>
+                    android:layout_height="@dimen/line_height"
+                    android:layout_marginStart="50dp"
+                    android:background="@color/colorLine" />
+
                 <LinearLayout
                     android:id="@+id/btn_animation"
                     android:layout_width="match_parent"
@@ -446,27 +520,38 @@
                     android:focusable="true"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="@dimen/padding_lg">
+                    android:padding="@dimen/padding_md">
+
                     <ImageView
                         android:layout_width="@dimen/icon_lg"
                         android:layout_height="@dimen/icon_lg"
+                        android:layout_marginStart="@dimen/margin_sm"
+                        android:layout_marginEnd="@dimen/margin_sm"
                         android:contentDescription="@string/animation"
                         android:src="@drawable/ic_game" />
+
                     <TextView
-                        android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_lg"
+                        android:layout_weight="1"
                         android:text="@string/value_animation"
-                        android:textSize="@dimen/font_xl"
-                        android:textColor="@color/colorText" />
+                        android:textColor="@color/colorText"
+                        android:textSize="@dimen/font_xl" />
+
                     <ImageView
-                        android:contentDescription="@string/next"
-                        android:src="@drawable/ic_muted_next"
                         android:layout_width="@dimen/icon_sm"
-                        android:layout_height="@dimen/icon_sm" />
+                        android:layout_height="@dimen/icon_sm"
+                        android:contentDescription="@string/next"
+                        android:src="@drawable/ic_muted_next" />
                 </LinearLayout>
-                <View android:layout_marginStart="50dp" android:layout_height="@dimen/line_height" android:layout_width="match_parent" android:background="@color/colorLine"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/line_height"
+                    android:layout_marginStart="50dp"
+                    android:background="@color/colorLine" />
+
                 <LinearLayout
                     android:id="@+id/btn_scale"
                     android:layout_width="match_parent"
@@ -476,26 +561,30 @@
                     android:focusable="true"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="@dimen/padding_lg">
+                    android:padding="@dimen/padding_md">
+
                     <ImageView
                         android:layout_width="@dimen/icon_lg"
                         android:layout_height="@dimen/icon_lg"
+                        android:layout_marginStart="@dimen/margin_sm"
+                        android:layout_marginEnd="@dimen/margin_sm"
                         android:contentDescription="@string/animation"
                         android:src="@drawable/ic_book" />
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_lg"
+                        android:layout_weight="1"
                         android:text="@string/scale_animation"
-                        android:textSize="@dimen/font_xl"
-                        android:textColor="@color/colorText" />
+                        android:textColor="@color/colorText"
+                        android:textSize="@dimen/font_xl" />
+
                     <ImageView
-                        android:contentDescription="@string/next"
-                        android:src="@drawable/ic_muted_next"
                         android:layout_width="@dimen/icon_sm"
-                        android:layout_height="@dimen/icon_sm" />
+                        android:layout_height="@dimen/icon_sm"
+                        android:contentDescription="@string/next"
+                        android:src="@drawable/ic_muted_next" />
                 </LinearLayout>
             </LinearLayout>
 
