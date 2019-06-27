@@ -139,7 +139,7 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
      */
     private void loadData() {
         page.setLoading();
-        RequestAsyncTask.get("https://www.cool1024.com:8000/list?" + page.toQueryString()
+        RequestAsyncTask.get("https://www.cool1024.com:8001/list?" + page.toQueryString()
                 , HomeFragment.this).execute();
     }
 
